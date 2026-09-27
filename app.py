@@ -4,7 +4,7 @@ import datetime
 import re
 import pandas as pd
 
-# NOTE FOR EVERY APP VERSION - V177
+# NOTE FOR EVERY APP VERSION - V200
 # This app can be used in 3 languages: English, Urdu and Arabic.
 # Words from a different language must not be used anywhere in the app while another language is active.
 # English is default language.
@@ -18,7 +18,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V199"  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200"  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -33,29 +33,97 @@ st.set_page_config(page_title="Herbal Clinic International", page_icon="\U0001f3
 
 st.markdown("""
 <style>
-/* V199 - Herbal Light Theme - Final - 100% Working */
+/* V200 - Herbal Light Theme - Final + Compact Dashboard + Bigger Fonts */
 html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
-.block-container {
-    max-width: 940px!important;
-    margin: 20px auto!important;
-    padding: 1.6rem 1.8rem!important;
-    background: #FFFFFF!important;
+
+/* Block container */
+.block-container { 
+    max-width: 940px!important; 
+    margin: 20px auto!important; 
+    padding: 1.6rem 1.8rem!important; 
+    background: #FFFFFF!important; 
     border: 3px solid #2E7D5B!important;
-    border-radius: 20px!important;
+    border-radius: 20px!important; 
     box-shadow: 0 4px 20px rgba(46,125,91,0.12)!important;
 }
 #MainMenu, header {visibility: hidden;}
 div[data-testid="stSidebar"] {display: none;}
-.heading-h1 { font-size: 44px!important; font-weight: 900!important; color:#2E7D5B!important; text-align:center; }
-.heading-h2 { font-size: 22px!important; font-weight: 700!important; color:#2E7D5B!important; }
-.heading-h3 { font-size: 26px!important; font-weight: 700!important; color:#1F2D27!important; }
-.heading-h4 { font-size: 22px!important; font-weight: 700!important; color:#1F2D27!important; margin:10px 0!important; }
-.heading-h5 { font-size: 20px!important; font-weight: 600!important; color:#2E7D5B!important; }
-.graceful-card { background: #F1F7F3; border:2px solid #2E7D5B; border-radius:12px; padding:12px; text-align:center; color:#1F2D27!important; }
-.dash-section-title { font-size:18px; font-weight:700; color:#FFFFFF; background:#2E7D5B; padding:8px 14px; border-radius:8px; margin:18px 0 10px 0; }
+
+/* ===== V200 Requirement 5: Bigger Fonts - PC slightly larger than mobile ===== */
+/* Page Titles */
+.heading-h1 { font-size: 48px!important; font-weight: 900!important; color:#2E7D5B!important; text-align:center; }
+.heading-h2 { font-size: 26px!important; font-weight: 800!important; color:#2E7D5B!important; }
+.heading-h3 { font-size: 30px!important; font-weight: 800!important; color:#1F2D27!important; }
+.heading-h4 { font-size: 24px!important; font-weight: 700!important; color:#1F2D27!important; margin:12px 0!important; }
+.heading-h5 { font-size: 22px!important; font-weight: 700!important; color:#2E7D5B!important; }
+
+/* General text bigger */
+.stApp p, .stApp div, .stApp span, .stApp label { font-size: 17px!important; }
+.stApp button { font-size: 18px!important; font-weight: 700!important; }
+
+/* Mobile adjustments - still bigger than before but slightly smaller than PC */
+@media (max-width: 768px) {
+    .heading-h1 { font-size: 34px!important; }
+    .heading-h2 { font-size: 22px!important; }
+    .heading-h3 { font-size: 24px!important; }
+    .heading-h4 { font-size: 20px!important; }
+    .heading-h5 { font-size: 18px!important; }
+    .stApp p, .stApp div, .stApp span, .stApp label { font-size: 16px!important; }
+    .stApp button { font-size: 16px!important; }
+}
+
+/* ===== V200 Requirement 2 & 3: Dashboard compact tabs, icon inside tab, green border only on hover ===== */
+.graceful-card { 
+    background: #F1F7F3; 
+    border: 2px solid transparent!important; 
+    border-radius: 12px; 
+    padding: 6px!important; 
+    text-align:center; 
+    color:#1F2D27!important; 
+    transition: all 0.25s ease;
+}
+.graceful-card:hover { 
+    border: 2px solid #2E7D5B!important; 
+    box-shadow: 0 4px 12px rgba(46,125,91,0.20)!important;
+    background: #FFFFFF!important;
+}
+.graceful-card button { 
+    padding: 8px 10px!important; 
+    min-height: 52px!important;
+    font-size: 15px!important;
+}
+@media (max-width: 768px) {
+    .graceful-card button { min-height: 48px!important; font-size: 14px!important; }
+}
+
+/* Compact dashboard grid */
+.dash-section-title { font-size:20px!important; font-weight:800!important; color:#FFFFFF; background:#2E7D5B; padding:10px 16px; border-radius:10px; margin:20px 0 12px 0; }
+
 .demo-card { background: #F1F7F3; border:1px solid #C8E6D5; border-radius:14px; padding:16px; color:#1F2D27!important; }
-.footer-sharp { text-align:center; color:#5a6d65!important; font-size:12px!important; margin-top:30px; border-top:1px solid #C8E6D5; padding:14px; }
+.footer-sharp { text-align:center; color:#5a6d65!important; font-size:14px!important; margin-top:30px; border-top:1px solid #C8E6D5; padding:14px; }
 .history-card { background:#F1F7F3; border:1px solid #C8E6D5; border-radius:12px; padding:12px; margin-bottom:10px; color:#1F2D27; }
+
+/* ===== V200 Requirement 4: Ad link - center aligned, right side above Streamlit, dark golden border, fixed ===== */
+.ad-note {
+    position: fixed!important;
+    bottom: 90px!important;
+    right: 18px!important;
+    z-index: 999999!important;
+    background: #FFFFFF!important;
+    border: 2.5px solid #B8860B!important; /* Dark golden */
+    border-radius: 12px!important;
+    padding: 10px 16px!important;
+    text-align: center!important;
+    font-size: 13px!important;
+    font-weight: 600!important;
+    color: #1F2D27!important;
+    box-shadow: 0 4px 16px rgba(184,134,11,0.25)!important;
+    max-width: 180px!important;
+    line-height: 1.3!important;
+}
+@media (max-width: 768px) {
+    .ad-note { bottom: 80px!important; right: 10px!important; max-width: 150px!important; font-size: 12px!important; }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -1846,16 +1914,17 @@ def get_app_setting(key, default="Yes"):
     except:
         return default
 
+
 def dashboard_welcome_page():
     language_selector()
     clinic_heading_banner()
     top_nav_dashboard()
     st.markdown("<div class='dash-section-title'>Clinic Section</div>", unsafe_allow_html=True)
-    # V176 - Laptop: icon merged with tab, gap zero, thick raised clear bounding box on all sides
-    r1c1,r1c2,r1c3=st.columns(3)
+    # V200 - Compact tabs, icon inside tab field, green border only on hover
+    r1c1,r1c2,r1c3,r1c4=st.columns(4)
     with r1c1:
-        st.markdown("<div class='graceful-card' style='padding:4px;'>", unsafe_allow_html=True)
-        if st.button("🧑‍⚕️ New Patient", use_container_width=True, key="dash_new_v176"):
+        st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
+        if st.button("🧑‍⚕️ New Patient", use_container_width=True, key="dash_new_v200"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.form_version+=1
@@ -1866,41 +1935,41 @@ def dashboard_welcome_page():
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     with r1c2:
-        st.markdown("<div class='graceful-card' style='padding:4px;'>", unsafe_allow_html=True)
-        if st.button("🔍 Revisit", use_container_width=True, key="dash_rev_v176"):
+        st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
+        if st.button("🔍 Revisit", use_container_width=True, key="dash_rev_v200"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="revisit"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     with r1c3:
-        st.markdown("<div class='graceful-card' style='padding:4px;'>", unsafe_allow_html=True)
-        if st.button("⚕️ Auto-Diagnosis", use_container_width=True, key="dash_auto_v176"):
+        st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
+        if st.button("⚕️ Auto-Diagnosis", use_container_width=True, key="dash_auto_v200"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="auto_selection"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
-    r2c1,r2c2,r2c3=st.columns(3)
-    with r2c1:
-        st.markdown("<div class='graceful-card' style='padding:4px;'>", unsafe_allow_html=True)
-        if st.button("📚 Dictionary", use_container_width=True, key="dash_dict_v176"):
+    with r1c4:
+        st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
+        if st.button("📚 Dictionary", use_container_width=True, key="dash_dict_v200"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="dictionary"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
-    with r2c2:
-        st.markdown("<div class='graceful-card' style='padding:4px;'>", unsafe_allow_html=True)
-        if st.button("📰 Articles", use_container_width=True, key="dash_c_art_v176"):
+    r2c1,r2c2,r2c3,r2c4=st.columns(4)
+    with r2c1:
+        st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
+        if st.button("📰 Articles", use_container_width=True, key="dash_c_art_v200"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="clinic_articles"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
-    with r2c3:
-        st.markdown("<div class='graceful-card' style='padding:4px;'>", unsafe_allow_html=True)
-        if st.button("🌿 Herbs & Pharma", use_container_width=True, key="dash_herb_v176"):
+    with r2c2:
+        st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
+        if st.button("🌿 Herbs & Pharma", use_container_width=True, key="dash_herb_v200"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="clinic_herb_formula"
@@ -1908,10 +1977,9 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     show_offer = get_app_setting("OfferEnabled", get_app_setting("show_offer_tab","Yes"))
     if str(show_offer).lower() in ["yes","on","true","1","enabled"]: 
-        r3c1,r3c2,r3c3=st.columns(3)
-        with r3c1:
-            st.markdown("<div class='graceful-card' style='padding:4px; border:3px solid #00ff88; animation: blinkGreen 1.2s infinite; box-shadow: 0 6px 0 #003d1f, 0 8px 16px rgba(0,255,136,0.3), inset 0 1px 0 rgba(255,255,255,0.15);'>", unsafe_allow_html=True)
-            if st.button("🎁 Offer", use_container_width=True, key="dash_offer_v176"):
+        with r2c3:
+            st.markdown("<div class='graceful-card' style='border:3px solid #00ff88; animation: blinkGreen 1.2s infinite;'>", unsafe_allow_html=True)
+            if st.button("🎁 Offer", use_container_width=True, key="dash_offer_v200"):
                 st.session_state.prev_page = "dashboard_welcome"
                 st.session_state.page_history.append("dashboard_welcome")
                 st.session_state.current_page="offer_page"
@@ -1919,18 +1987,18 @@ def dashboard_welcome_page():
             st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("<div class='dash-section-title'>Home User</div>", unsafe_allow_html=True)
-    h1,h2=st.columns(2)
+    h1,h2,h3,h4=st.columns(4)
     with h1:
-        st.markdown("<div class='graceful-card' style='padding:4px;'>", unsafe_allow_html=True)
-        if st.button("🏠 Home User Page", use_container_width=True, key="dash_home_v176"):
+        st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
+        if st.button("🏠 Home User Page", use_container_width=True, key="dash_home_v200"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="home_user"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     with h2:
-        st.markdown("<div class='graceful-card' style='padding:4px;'>", unsafe_allow_html=True)
-        if st.button("📄 Articles", use_container_width=True, key="dash_home_art_v176"):
+        st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
+        if st.button("📄 Articles", use_container_width=True, key="dash_home_art_v200"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="home_user_articles"
@@ -1939,10 +2007,10 @@ def dashboard_welcome_page():
 
     if st.session_state.get("user_role") in ["Boss","Staff"] or st.session_state.get("user_type")=="Staff":
         st.markdown("<div class='dash-section-title'>App Admin</div>", unsafe_allow_html=True)
-        ac1,ac2,ac3=st.columns(3)
+        ac1,ac2,ac3,ac4=st.columns(4)
         with ac1:
-            st.markdown("<div class='graceful-card' style='padding:4px;'>", unsafe_allow_html=True)
-            if st.button("⚙️ App Admin Panel", use_container_width=True, key="dash_admin_panel_v176"):
+            st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
+            if st.button("⚙️ App Admin Panel", use_container_width=True, key="dash_admin_panel_v200"):
                 st.session_state.prev_page = "dashboard_welcome"
                 st.session_state.page_history.append("dashboard_welcome")
                 st.session_state.current_page="admin"
@@ -1956,8 +2024,9 @@ def dashboard_welcome_page():
     except:
         display=650
     st.markdown("---")
-    st.markdown(f"<div style='text-align:center;'><div class='heading-h4'>Total App Users</div><div style='font-size:32px;font-weight:900;color:#00ff88;'>{display}</div><div style='color:#666;font-size:12px;margin-top:6px;'></div></div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='text-align:center;'><div class='heading-h4'>Total App Users</div><div style='font-size:34px;font-weight:900;color:#2E7D5B;'>{display}</div></div>", unsafe_allow_html=True)
     add_footer()
+
 
 def clinic_login_page():
     language_selector()
@@ -2842,9 +2911,11 @@ def essential_page():
     add_footer()
 
 def main():
+    # V200 - Requirement 1: Persistent login - user stays signed in until explicit Sign Out
     if "logged_in" not in st.session_state:
         st.session_state.logged_in=False
         st.session_state.current_page="clinic_login"
+    # If already logged in, never force back to login until logout
     if not st.session_state.logged_in:
         clinic_login_page()
     else:
