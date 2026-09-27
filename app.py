@@ -18,7 +18,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V199"  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V198"  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -33,28 +33,28 @@ st.set_page_config(page_title="Herbal Clinic International", page_icon="\U0001f3
 
 st.markdown("""
 <style>
-/* V199 - Herbal Light Theme - Final - 100% Working */
-html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
-.block-container {
-    max-width: 940px!important;
-    margin: 20px auto!important;
-    padding: 1.6rem 1.8rem!important;
-    background: #FFFFFF!important;
-    border: 3px solid #2E7D5B!important;
-    border-radius: 20px!important;
-    box-shadow: 0 4px 20px rgba(46,125,91,0.12)!important;
+/* V198 - Herbal Light Theme - Safe minimal CSS */
+html, body, .stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF !important; color: #1F2D27 !important; }
+.block-container { 
+    max-width: 940px !important; 
+    margin: 20px auto !important; 
+    padding: 1.6rem 1.8rem !important; 
+    background: #FFFFFF !important; 
+    border: 3px solid #2E7D5B !important;
+    border-radius: 20px !important; 
+    box-shadow: 0 4px 20px rgba(46,125,91,0.12) !important;
 }
 #MainMenu, header {visibility: hidden;}
 div[data-testid="stSidebar"] {display: none;}
-.heading-h1 { font-size: 44px!important; font-weight: 900!important; color:#2E7D5B!important; text-align:center; }
-.heading-h2 { font-size: 22px!important; font-weight: 700!important; color:#2E7D5B!important; }
-.heading-h3 { font-size: 26px!important; font-weight: 700!important; color:#1F2D27!important; }
-.heading-h4 { font-size: 22px!important; font-weight: 700!important; color:#1F2D27!important; margin:10px 0!important; }
-.heading-h5 { font-size: 20px!important; font-weight: 600!important; color:#2E7D5B!important; }
-.graceful-card { background: #F1F7F3; border:2px solid #2E7D5B; border-radius:12px; padding:12px; text-align:center; color:#1F2D27!important; }
+.heading-h1 { font-size: 44px !important; font-weight: 900 !important; color:#2E7D5B !important; }
+.heading-h2 { font-size: 22px !important; font-weight: 700 !important; color:#2E7D5B !important; }
+.heading-h3 { font-size: 26px !important; font-weight: 700 !important; color:#1F2D27 !important; }
+.heading-h4 { font-size: 22px !important; font-weight: 700 !important; color:#1F2D27 !important; margin:10px 0 !important; }
+.heading-h5 { font-size: 20px !important; font-weight: 600 !important; color:#2E7D5B !important; }
+.graceful-card { background: #F1F7F3; border:2px solid #2E7D5B; border-radius:12px; padding:12px; text-align:center; color:#1F2D27 !important; }
 .dash-section-title { font-size:18px; font-weight:700; color:#FFFFFF; background:#2E7D5B; padding:8px 14px; border-radius:8px; margin:18px 0 10px 0; }
-.demo-card { background: #F1F7F3; border:1px solid #C8E6D5; border-radius:14px; padding:16px; color:#1F2D27!important; }
-.footer-sharp { text-align:center; color:#5a6d65!important; font-size:12px!important; margin-top:30px; border-top:1px solid #C8E6D5; padding:14px; }
+.demo-card { background: #F1F7F3; border:1px solid #C8E6D5; border-radius:14px; padding:16px; color:#1F2D27 !important; }
+.footer-sharp { text-align:center; color:#5a6d65 !important; font-size:12px !important; margin-top:30px; border-top:1px solid #C8E6D5; padding:14px; }
 .history-card { background:#F1F7F3; border:1px solid #C8E6D5; border-radius:12px; padding:12px; margin-bottom:10px; color:#1F2D27; }
 </style>
 """, unsafe_allow_html=True)
