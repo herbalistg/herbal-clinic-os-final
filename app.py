@@ -1,4 +1,4 @@
-# APP VERSION - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.2 - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.2"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -50,7 +50,7 @@ def get_theme_css():
         .graceful-card { background: #A8CCAD!important; border: 2px solid #1B5E20!important; }
         .dash-section-title { background: #1B5E20!important; }
         div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] { background: #E0F0E2!important; border: 2px solid #2E7D32!important; }
-        .ad-note { background: #E0F0E2!important; border-color: #1B5E20!important; }
+        
         """
     else:
         return """
@@ -112,6 +112,34 @@ def scroll_to_top():
 
 st.markdown("""
 <style>
+/* V209.2 Fix 1 - Ad compact 0.5cm down - NOT full page */
+.ad-note { 
+    position: fixed!important;
+    bottom: 8px!important;
+    right: 12px!important;
+    z-index: 999999!important;
+    background: #FFFFFF!important;
+    border: 2px solid #B8860B!important;
+    border-radius: 10px!important;
+    padding: 6px 10px!important;
+    text-align: center!important;
+    font-size: 10px!important;
+    font-weight: 700!important;
+    color: #1F2D27!important;
+    box-shadow: 0 3px 12px rgba(184,134,11,0.25)!important;
+    width: auto!important;
+    max-width: 110px!important;
+    height: auto!important;
+    max-height: 90px!important;
+    line-height: 1.2!important;
+    margin: 0!important;
+}
+/* V209.2 Fix 2 - Mobile tabs colored like laptop */
+@media (max-width: 768px) {
+    .graceful-card { background: #F1F7F3!important; border: 2px solid #2E7D5B!important; box-shadow: 0 4px 12px rgba(46,125,91,0.20)!important; }
+    .graceful-card button { background: #F1F7F3!important; border: 1.5px solid #2E7D5B!important; color: #1F2D27!important; font-weight: 700!important; }
+}
+
 /* V200 - Herbal Light Theme - Final + Compact Dashboard + Bigger Fonts */
 html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
 
@@ -196,37 +224,10 @@ div[data-testid="stSidebar"] {display: none;}
 
 
 /* V209 Fix 1 - Ad 0.5cm down from previous */
-.ad-note { 
-    margin-top: 38px!important; 
-    transform: translateY(0.7cm)!important; 
-    position: relative!important;
-    top: 0.7cm!important;
-    bottom: 2px!important;
-}
 
 
-/* V209 Fix 2 - Mobile dashboard tabs colored like laptop - Strong */
-@media (max-width: 768px) {
-    .graceful-card { 
-        background: #F1F7F3!important; 
-        background-color: #F1F7F3!important;
-        border: 2px solid #2E7D5B!important; 
-        border-radius: 12px!important;
-        box-shadow: 0 4px 12px rgba(46,125,91,0.20)!important;
-    }
-    .graceful-card button, .graceful-card div button { 
-        background: #F1F7F3!important;
-        background-color: #F1F7F3!important;
-        border: 1.5px solid #2E7D5B!important;
-        color: #1F2D27!important;
-        font-weight: 700!important;
-    }
-    .graceful-card:hover { 
-        background: #FFFFFF!important;
-        background-color: #FFFFFF!important;
-        border: 2.5px solid #2E7D5B!important;
-    }
-}
+
+
 
 /* Compact dashboard grid */
 .dash-section-title { font-size:20px!important; font-weight:800!important; color:#FFFFFF; background:#2E7D5B; padding:10px 16px; border-radius:10px; margin:20px 0 12px 0; }
@@ -319,27 +320,9 @@ div[data-testid="stExpander"], div[data-testid="stContainer"] {
 }
 
 /* ===== V201 Requirement 4a,b,c: Ad link small bold 2 lines, box fit to text, near Streamlit button ===== */
-.ad-note {
-    position: fixed!important;
-    bottom: 68px!important; /* Near Streamlit button */
-    right: 12px!important;
-    z-index: 999999!important;
-    background: #FFFFFF!important;
-    border: 2px solid #B8860B!important; /* Dark golden */
-    border-radius: 10px!important;
-    padding: 6px 10px!important;
-    text-align: center!important;
-    font-size: 10px!important; /* small */
-    font-weight: 700!important; /* bold */
-    color: #1F2D27!important;
-    box-shadow: 0 3px 12px rgba(184,134,11,0.25)!important;
-    width: fit-content!important;
-    max-width: fit-content!important;
-    min-width: 0!important;
-    line-height: 1.2!important;
-}
+
 @media (max-width: 768px) {
-    .ad-note { bottom: 2px!important; /* V209 Fix 1 - 0.7cm down */ right: 8px!important; font-size: 9px!important; padding: 5px 8px!important; }
+    
 }
 </style>
 """, unsafe_allow_html=True)
@@ -1034,7 +1017,7 @@ def add_footer():
     show_urdu_work_in_progress_note()
     st.markdown(f"<div class='footer-sharp'>by mian Nadeem{ver_txt}</div>", unsafe_allow_html=True)
     st.markdown("""
-    <div class="ad-note" style="margin-top:38px!important; transform: translateY(1.2cm)!important; position: relative!important; top: 0.7cm!important;">There is<br>no need<br>to open<br>this ad.</div>
+    <div class="ad-note">There is<br>no need<br>to open<br>this ad.</div>
     """, unsafe_allow_html=True)
 
 def under_development_footer(page_title=""):
