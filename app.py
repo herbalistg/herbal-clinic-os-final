@@ -1,3 +1,7 @@
+# APP VERSION - V206 - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
+# Previous: V204, V203, V202, V201, V200
+
 
 import streamlit as st
 import datetime
@@ -18,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V205"  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V206"  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -31,72 +35,57 @@ def sanitize_for_sheet(text):
 
 st.set_page_config(page_title="Herbal Clinic International", page_icon="\U0001f33f", layout="centered", initial_sidebar_state="collapsed")
 
-# ===== V205 - User Theme System (Light/Dark/Dim) - User Choice =====
+# ===== V206 - User Theme System - Light + Dim only (Dark removed as per requirement 1c) =====
 if "theme" not in st.session_state:
-    st.session_state.theme = "light"  # light, dark, dim
+    st.session_state.theme = "light"  # light, dim only
 
 def get_theme_css():
     theme = st.session_state.get("theme", "light")
-    if theme == "dark":
+    if theme == "dim":
+        # V206 Requirement 1d: Same green shade but stronger/darker, screen feels slightly dark
         return """
-        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #0E1117!important; color: #E0E0E0!important; }
-        .block-container { background: #1A1C23!important; border: 3px solid #2E7D5B!important; box-shadow: 0 4px 20px rgba(0,0,0,0.4)!important; }
-        .heading-h1, .heading-h2, .heading-h3, .heading-h4, .heading-h5 { color: #81C784!important; }
-        .graceful-card { background: #2A2D35!important; border: 1.5px solid #3A3D45!important; color: #E0E0E0!important; }
-        .dash-section-title { background: #2E7D5B!important; }
-        div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] { background: #2A2D35!important; color: #E0E0E0!important; border-color: #3A3D45!important; }
+        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #DDE8E0!important; color: #1A2E1E!important; }
+        .block-container { background: #EAF2EC!important; border: 3px solid #1B5E20!important; box-shadow: 0 6px 24px rgba(27,94,32,0.25)!important; }
+        .heading-h1 { color: #1B5E20!important; }
+        .graceful-card { background: #C8E6C9!important; border: 2px solid #2E7D32!important; }
+        .dash-section-title { background: #2E7D32!important; }
+        div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] { background: #E8F5E9!important; border: 1.5px solid #2E7D32!important; }
+        .ad-note { background: #E8F5E9!important; }
         """
-    elif theme == "dim":
-        return """
-        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #F5F0E8!important; color: #3E2723!important; }
-        .block-container { background: #FFF8F0!important; border: 3px solid #8D6E63!important; box-shadow: 0 4px 20px rgba(141,110,99,0.15)!important; }
-        .heading-h1 { color: #5D4037!important; }
-        .graceful-card { background: #FFF3E0!important; border: 1.5px solid #D7CCC8!important; }
-        .dash-section-title { background: #8D6E63!important; }
-        """
-    else:  # light - default herbal light
+    else:  # light - default herbal light with light green shade
         return """
         html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
         .block-container { background: #FFFFFF!important; border: 3px solid #2E7D5B!important; }
         """
 
 def theme_selector_ui():
-    """V205 - User can choose theme - Light/Dark/Dim"""
+    """V206 Requirement 1a,b,c,e: No extra text, no Dark, only Light/Dim icons, same line as language"""
     import streamlit.components.v1 as components
-    # Read theme from localStorage via JS and sync to session_state if needed
-    c1,c2 = st.columns([3,2])
-    with c1:
-        st.markdown("<div style='font-size:12px;color:#5a6d65;'>Theme for your comfort</div>", unsafe_allow_html=True)
-    with c2:
-        # Theme buttons
-        col_l, col_d, col_dim = st.columns(3)
-        with col_l:
-            if st.button("☀️ Light", key="theme_light_v205", help="Bright light - Default"):
-                st.session_state.theme = "light"
-                components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
-                st.rerun()
-        with col_d:
-            if st.button("🌙 Dark", key="theme_dark_v205", help="Dark mode - For low light"):
-                st.session_state.theme = "dark"
-                components.html("<script>localStorage.setItem('hci_theme','dark');</script>", height=0)
-                st.rerun()
-        with col_dim:
-            if st.button("🌿 Dim", key="theme_dim_v205", help="Soft herbal dim"):
-                st.session_state.theme = "dim"
-                components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
-                st.rerun()
+    # Theme toggle - compact icons only, no text labels as per 1a,b
+    col_lang, col_light, col_dim = st.columns([6,1,1])
+    with col_light:
+        if st.button("☀️", key="theme_light_v206"):
+            st.session_state.theme = "light"
+            components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
+            st.rerun()
+    with col_dim:
+        if st.button("🌿", key="theme_dim_v206"):
+            st.session_state.theme = "dim"
+            components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
+            st.rerun()
+    # With col_lang we will handle language in language_selector itself - this function now only provides buttons
+    # But for same-line requirement 1e, we will integrate in language_selector below
     
-    # JS to restore theme from localStorage on load
+    # JS to restore theme from localStorage
     if "theme_restored" not in st.session_state:
         components.html("""
         <script>
         try{
             const saved = localStorage.getItem('hci_theme');
-            if(saved && !window.location.search.includes('hci_theme=')){
+            if(saved && saved!=='light'){
                 const url = new URL(window.location.href);
-                url.searchParams.set('hci_theme', saved);
-                // Don't reload if already correct, just store
-                if(saved !== 'light'){
+                if(!url.searchParams.get('hci_theme')){
+                    url.searchParams.set('hci_theme', saved);
                     window.parent.location = url.toString();
                 }
             }
@@ -105,9 +94,52 @@ def theme_selector_ui():
         """, height=0)
         st.session_state.theme_restored = True
 
-    # Apply theme CSS
     theme_css = get_theme_css()
     st.markdown(f"<style>{theme_css}</style>", unsafe_allow_html=True)
+
+def theme_selector_compact():
+    """V206 Requirement 1e: Theme 2 icons + language icon in same line - compact"""
+    import streamlit.components.v1 as components
+    c1,c2,c3,c4 = st.columns([5,1,1,1])
+    with c2:
+        if st.button("☀️", key="theme_light_compact_v206"):
+            st.session_state.theme = "light"
+            components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
+            st.rerun()
+    with c3:
+        if st.button("🌿", key="theme_dim_compact_v206"):
+            st.session_state.theme = "dim"
+            components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
+            st.rerun()
+    with c4:
+        # Language icon - triggers language change
+        if st.button("🌐", key="lang_toggle_v206"):
+            # Cycle languages en -> ur -> ar -> en
+            curr = st.session_state.get("app_language", "en")
+            nxt = {"en":"ur", "ur":"ar", "ar":"en"}[curr]
+            st.session_state.app_language = nxt
+            st.rerun()
+    with c1:
+        st.markdown(f"<div style='font-size:11px;color:#5a6d65;text-align:right;'>Lang: {st.session_state.get('app_language','en').upper()} | Theme: {st.session_state.get('theme','light')}</div>", unsafe_allow_html=True)
+    
+    if "theme_restored" not in st.session_state:
+        components.html("""
+        <script>
+        try{
+            const saved = localStorage.getItem('hci_theme');
+            if(saved && saved!=='light'){
+                const url = new URL(window.location.href);
+                if(!url.searchParams.get('hci_theme')){
+                    url.searchParams.set('hci_theme', saved);
+                    window.parent.location = url.toString();
+                }
+            }
+        }catch(e){}
+        </script>
+        """, height=0)
+        st.session_state.theme_restored = True
+    st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
+
 
 
 st.markdown("""
@@ -486,6 +518,7 @@ def clinic_heading_banner_compact():
 
 
 def top_nav_inner():
+    scroll_to_top()
     c1,c2=st.columns([1,1])
     with c1:
         if st.button("Back", key=f"back_{st.session_state.current_page}_v172"):
@@ -507,6 +540,7 @@ def top_nav_inner():
     st.divider()
 
 def top_nav_dashboard():
+    scroll_to_top()
     import streamlit.components.v1 as components
     c1,c2=st.columns([4,1])
     with c2:
@@ -628,23 +662,48 @@ def get_all_records_cached(sheet_name):
     except: return []
 
 def save_patient(data):
-    # V202 Requirement 10: Save both local and Google Sheet
-    local_ok = save_to_local_csv("New_patient", data)
+    # V206 Requirement 8 Fix: Ensure data goes to Google Sheet + Local
+    # First sanitize data
+    try:
+        # Clean data for sheet
+        cleaned = {}
+        for k,v in data.items():
+            cleaned[k] = sanitize_for_sheet(v) if isinstance(v, str) else v
+    except:
+        cleaned = data
+    
+    local_ok = save_to_local_csv("New_patient", cleaned)
+    sheet_ok = False
+    sheet_msg = ""
     try:
         ws=get_sheet_safe("New_patient")
-        if not ws: 
-            # If no sheet, return local save status
-            return (True, f"Saved Locally (Sheet not connected) - {local_ok}") if local_ok else (False, "Demo Mode - Local save also failed")
-        hdr=ws.row_values(1) if ws.row_values(1) else list(data.keys())
-        row=[data.get(h,"") for h in hdr]
-        ws.append_row(row, value_input_option="RAW")
-        get_all_records_cached.clear()
-        return True, f"Saved to Sheet + Local Backup"
-    except Exception as e: 
-        # Even if sheet fails, local save may have succeeded
-        if local_ok:
-            return True, f"Saved Locally (Sheet error: {e})"
-        return False,str(e)
+        if ws:
+            hdr=ws.row_values(1)
+            if not hdr:
+                hdr = SHEET_HEADERS.get("New_patient", list(cleaned.keys()))
+            row=[cleaned.get(h,"") for h in hdr]
+            # Ensure row length matches hdr
+            if len(row) < len(hdr):
+                row += [""]*(len(hdr)-len(row))
+            ws.append_row(row, value_input_option="RAW")
+            get_all_records_cached.clear()
+            sheet_ok = True
+            sheet_msg = "Sheet saved"
+        else:
+            sheet_msg = "Sheet not connected - Demo mode"
+    except Exception as e:
+        sheet_msg = f"Sheet error: {str(e)[:100]}"
+        sheet_ok = False
+    
+    if sheet_ok and local_ok:
+        return True, "Saved to Google Sheet + Local Backup"
+    elif sheet_ok:
+        return True, f"Saved to Google Sheet ({sheet_msg})"
+    elif local_ok:
+        return True, f"Saved Locally - {sheet_msg} - Please check Sheet connection in Streamlit Secrets"
+    else:
+        return False, f"Failed both - {sheet_msg}"
+
 
 def get_next_numbers(clinic_name):
     try:
@@ -1051,7 +1110,7 @@ def render_patient_form(is_revisit=False):
             st.markdown(f"<div class='history-card'><b>Name:</b> {r.get('Name','')} | <b>Age:</b> {r.get('Age','')} | <b>Gender:</b> {r.get('Gender','')} | <b>Phone:</b> {r.get('Phone','')}<br><b>Address:</b> {r.get('Address','')} | <b>CNIC:</b> {r.get('CNIC','')} | <b>Last Date:</b> {r.get('Date','')}<br><b>Chief Complaint:</b> {r.get('ChiefComplaint','')} | <b>Past History:</b> {r.get('PastHistory','')} | <b>Balance:</b> Rs {r.get('Balance','0')}</div>", unsafe_allow_html=True)
 
     with st.container(border=True):
-        st.markdown("<div class='heading-h4'>Personal Information (6 fields visible)</div>", unsafe_allow_html=True)
+        st.markdown("<div class='heading-h4'>Personal Information</div>", unsafe_allow_html=True)
         # V197 Requirement 2: Only 6 fields visible by default
         c1,c2,c3=st.columns(3)
         with c1:
@@ -1335,7 +1394,7 @@ def render_auto_form(prefix, is_home=False):
         with st.container(border=True):
             st.markdown(f"<div class='history-card'><b>Name:</b> {r.get('Name','')} | <b>Age:</b> {r.get('Age','')} | <b>Phone:</b> {r.get('Phone','')}<br><b>Address:</b> {r.get('Address','')} | <b>Date:</b> {r.get('Date','')}<br><b>Diseases:</b> {r.get('Diseases','')} | <b>Extra:</b> {r.get('ExtraSymptoms','')}</div>", unsafe_allow_html=True)
 
-    st.markdown(f"<div class='heading-h4'>Personal Information (6 fields visible)</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='heading-h4'>Personal Information</div>", unsafe_allow_html=True)
     with st.container(border=True):
         # Prefill helper
         def get_auto_prefill(field, default=""):
@@ -2215,16 +2274,14 @@ def dashboard_welcome_page():
     clinic_heading_banner()
     top_nav_dashboard()
     
-    # V203 Modern Dashboard - Metrics + Graph (Requirement)
+    # V206 Modern Dashboard - Metrics + Graph
     try:
         records = get_all_records_cached("New_patient")
         my_records = [r for r in records if str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
         total_patients = len(my_records)
         today_str = str(datetime.date.today())
         today_patients = len([r for r in my_records if today_str in str(r.get("Date",""))])
-        # For demo, revisit = patients with Balance >0 or FeeStatus Partial
         pending = len([r for r in my_records if str(r.get("Balance","0")).strip() not in ["0","","0.0"]])
-        # Total income simple sum
         total_income = 0
         for r in my_records:
             try:
@@ -2236,7 +2293,7 @@ def dashboard_welcome_page():
         pending = 0
         total_income = 0
     
-    st.markdown("<div class='dash-section-title'>📊 Clinic Overview - Modern Dashboard V203</div>", unsafe_allow_html=True)
+    st.markdown("<div class='dash-section-title'>Clinic Overview</div>", unsafe_allow_html=True)
     m1,m2,m3,m4 = st.columns(4)
     with m1:
         st.markdown(f"<div style='background: linear-gradient(135deg,#E8F5E9,#FFFFFF);border:2px solid #2E7D5B;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(46,125,91,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TOTAL PATIENTS</div><div style='font-size:32px;font-weight:900;color:#2E7D5B;margin-top:6px;'>{total_patients}</div></div>", unsafe_allow_html=True)
@@ -2247,7 +2304,6 @@ def dashboard_welcome_page():
     with m4:
         st.markdown(f"<div style='background: linear-gradient(135deg,#E3F2FD,#FFFFFF);border:2px solid #2196F3;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(33,150,243,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>INCOME</div><div style='font-size:28px;font-weight:900;color:#2196F3;margin-top:6px;'>Rs {total_income:.0f}</div></div>", unsafe_allow_html=True)
     
-    # Small graph last 7 days
     try:
         import pandas as pd
         from datetime import timedelta
@@ -2258,39 +2314,16 @@ def dashboard_welcome_page():
             counts.append(c)
         chart_df = pd.DataFrame({"Date": dates, "Patients": counts})
         chart_df = chart_df.set_index("Date")
-        st.markdown("<div style='margin-top:14px;'><b>Last 7 Days - Patients Trend</b></div>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-top:14px;'><b>Last 7 Days</b></div>", unsafe_allow_html=True)
         st.bar_chart(chart_df, height=180)
     except:
         pass
     
-    # V204 Requirement 2: Free Quiz active for Clinic and Home User both PC and Mobile
-    st.markdown("<div class='dash-section-title'>🎁 Free Health Tools - For Clinic & Home User</div>", unsafe_allow_html=True)
-    fq1,fq2 = st.columns(2)
-    with fq1:
-        st.markdown("<div class='graceful-card' style='background: linear-gradient(135deg,#E8F5E9,#FFFFFF)!important;border:2px solid #2E7D5B!important;'>", unsafe_allow_html=True)
-        if st.button("🎁 Free: Check Your Temperament in 30 Seconds! (Clinic)", use_container_width=True, key="free_quiz_clinic_v204"):
-            st.session_state.prev_page = "dashboard_welcome"
-            st.session_state.page_history.append("dashboard_welcome")
-            st.session_state.current_page="temperament_quiz"
-            st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-        st.caption("Modern quiz - Active on PC & Mobile")
-    with fq2:
-        st.markdown("<div class='graceful-card' style='background: linear-gradient(135deg,#FFF9C4,#FFFFFF)!important;border:2px solid #FF9800!important;'>", unsafe_allow_html=True)
-        if st.button("🏠 Free: Check Temperament (Home User)", use_container_width=True, key="free_quiz_home_v204"):
-            st.session_state.prev_page = "dashboard_welcome"
-            st.session_state.page_history.append("dashboard_welcome")
-            st.session_state.current_page="temperament_quiz"
-            st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-        st.caption("For Home Users - Active on PC & Mobile")
-    
-    st.markdown("<div class='dash-section-title'>Clinic Section - Quick Actions</div>", unsafe_allow_html=True)
-    # V203 - Compact tabs, icon inside tab field, green border only on hover, 2 per line mobile
+    st.markdown("<div class='dash-section-title'>Clinic Section</div>", unsafe_allow_html=True)
     r1c1,r1c2,r1c3,r1c4=st.columns(4)
     with r1c1:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("🧑‍⚕️ New Patient", use_container_width=True, key="dash_new_v203"):
+        if st.button("New Patient", use_container_width=True, key="dash_new_v206"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.form_version+=1
@@ -2302,7 +2335,7 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with r1c2:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("🔍 Revisit", use_container_width=True, key="dash_rev_v203"):
+        if st.button("Revisit", use_container_width=True, key="dash_rev_v206"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="revisit"
@@ -2310,7 +2343,7 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with r1c3:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("⚕️ Auto-Diagnosis", use_container_width=True, key="dash_auto_v203"):
+        if st.button("Auto-Diagnosis", use_container_width=True, key="dash_auto_v206"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="auto_selection"
@@ -2318,7 +2351,7 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with r1c4:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("📚 Dictionary", use_container_width=True, key="dash_dict_v203"):
+        if st.button("Dictionary", use_container_width=True, key="dash_dict_v206"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="dictionary"
@@ -2327,7 +2360,7 @@ def dashboard_welcome_page():
     r2c1,r2c2,r2c3,r2c4=st.columns(4)
     with r2c1:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("📰 Articles", use_container_width=True, key="dash_c_art_v203"):
+        if st.button("Articles", use_container_width=True, key="dash_c_art_v206"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="clinic_articles"
@@ -2335,15 +2368,16 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with r2c2:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("🌿 Herbs & Pharma", use_container_width=True, key="dash_herb_v203"):
+        if st.button("Herbs & Pharma", use_container_width=True, key="dash_herb_v206"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="clinic_herb_formula"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     with r2c3:
-        st.markdown("<div class='graceful-card' style='background: linear-gradient(135deg,#FFF9C4,#FFFFFF)!important;'>", unsafe_allow_html=True)
-        if st.button("🌡️ Temperament Quiz", use_container_width=True, key="dash_quiz_v203"):
+        # V206 Requirement 4b: Free Health Tools tab inside Clinic Section
+        st.markdown("<div class='graceful-card' style='background: linear-gradient(135deg,#FFF9C4,#FFFFFF)!important;border:2px solid #FF9800!important;'>", unsafe_allow_html=True)
+        if st.button("Free Health Tools", use_container_width=True, key="dash_quiz_clinic_v206"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="temperament_quiz"
@@ -2353,7 +2387,7 @@ def dashboard_welcome_page():
     if str(show_offer).lower() in ["yes","on","true","1","enabled"]: 
         with r2c4:
             st.markdown("<div class='graceful-card' style='border:3px solid #00ff88; animation: blinkGreen 1.2s infinite;'>", unsafe_allow_html=True)
-            if st.button("🎁 Offer", use_container_width=True, key="dash_offer_v203"):
+            if st.button("Offer", use_container_width=True, key="dash_offer_v206"):
                 st.session_state.prev_page = "dashboard_welcome"
                 st.session_state.page_history.append("dashboard_welcome")
                 st.session_state.current_page="offer_page"
@@ -2361,10 +2395,10 @@ def dashboard_welcome_page():
             st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("<div class='dash-section-title'>Home User</div>", unsafe_allow_html=True)
-    h1,h2,h3,h4=st.columns(4)
+    h1,h2,h3=st.columns(3)
     with h1:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("🏠 Home User Page", use_container_width=True, key="dash_home_v203"):
+        if st.button("Home User Page", use_container_width=True, key="dash_home_v206"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="home_user"
@@ -2372,10 +2406,19 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with h2:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("📄 Articles", use_container_width=True, key="dash_home_art_v203"):
+        if st.button("Articles", use_container_width=True, key="dash_home_art_v206"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="home_user_articles"
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+    with h3:
+        # V206 Requirement 4b: Free Health Tools inside Home User Section
+        st.markdown("<div class='graceful-card' style='background: linear-gradient(135deg,#E8F5E9,#FFFFFF)!important;border:2px solid #2E7D5B!important;'>", unsafe_allow_html=True)
+        if st.button("Free Health Tools", use_container_width=True, key="dash_home_quiz_v206"):
+            st.session_state.prev_page = "dashboard_welcome"
+            st.session_state.page_history.append("dashboard_welcome")
+            st.session_state.current_page="temperament_quiz"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -2384,7 +2427,7 @@ def dashboard_welcome_page():
         ac1,ac2,ac3,ac4=st.columns(4)
         with ac1:
             st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-            if st.button("⚙️ App Admin Panel", use_container_width=True, key="dash_admin_panel_v203"):
+            if st.button("App Admin Panel", use_container_width=True, key="dash_admin_panel_v206"):
                 st.session_state.prev_page = "dashboard_welcome"
                 st.session_state.page_history.append("dashboard_welcome")
                 st.session_state.current_page="admin"
@@ -2403,46 +2446,55 @@ def dashboard_welcome_page():
 
 
 
+
+
 def clinic_login_page():
     language_selector()
     import streamlit.components.v1 as components
-    # V202 Requirement 4: Same top box on all pages including login/signup
+    # V206 Requirement: Same top box on all pages
     clinic_heading_banner_compact()
     with st.container(border=True):
         t1,t2,t3=st.tabs(["Staff Login","Clinic User","Home User"])
         with t1:
-            u=st.text_input("Username", value="boss", key="login_u_v201")
-            p=st.text_input("Password", type="password", value="boss123", key="login_p_v201")
-            if st.button("Login", use_container_width=True, type="primary", key="staff_login_v201"):
+            u=st.text_input("Username", value="boss", key="login_u_v206")
+            p=st.text_input("Password", type="password", value="boss123", key="login_p_v206")
+            stay = st.checkbox("Stay signed in", value=True, key="stay_staff_v206", help="If ticked, you won't need to sign in again after closing app")
+            if st.button("Login", use_container_width=True, type="primary", key="staff_login_v206"):
                 st.session_state.logged_in=True
                 st.session_state.username=u
                 st.session_state.user_role="Boss"
                 st.session_state.user_type="Staff"
                 st.session_state.clinic_name="Herbal Clinic International"
                 st.session_state.current_page="dashboard_welcome"
-                # V201 - Persistent login: save to query_params + localStorage
+                # V206 Requirement 2: Stay signed in only if checked and admin allows
                 try:
-                    st.query_params["hci_logged"]="1"
-                    st.query_params["hci_user"]=u
-                    st.query_params["hci_role"]="Boss"
-                    st.query_params["hci_type"]="Staff"
-                except: pass
-                components.html(f'''
-                <script>
-                try{{
-                    localStorage.setItem('hci_logged','1');
-                    localStorage.setItem('hci_user','{u}');
-                    localStorage.setItem('hci_role','Boss');
-                    localStorage.setItem('hci_type','Staff');
-                    localStorage.setItem('hci_clinic','Herbal Clinic International');
-                }}catch(e){{}}
-                </script>
-                ''', height=0)
+                    admin_persist = get_app_setting("PersistentLoginEnabled", "Yes")
+                except:
+                    admin_persist = "Yes"
+                if stay and str(admin_persist).lower() in ["yes","true","1","enabled"]:
+                    try:
+                        st.query_params["hci_logged"]="1"
+                        st.query_params["hci_user"]=u
+                        st.query_params["hci_role"]="Boss"
+                        st.query_params["hci_type"]="Staff"
+                    except: pass
+                    components.html(f"""
+                    <script>
+                    try{{
+                        localStorage.setItem('hci_logged','1');
+                        localStorage.setItem('hci_user','{u}');
+                        localStorage.setItem('hci_role','Boss');
+                        localStorage.setItem('hci_type','Staff');
+                        localStorage.setItem('hci_clinic','Herbal Clinic International');
+                    }}catch(e){{}}
+                    </script>
+                    """, height=0)
                 st.rerun()
         with t2:
-            cu=st.text_input("Username", key="clinic_u_v201")
-            cp=st.text_input("Password", type="password", key="clinic_p_v201")
-            if st.button("Login", use_container_width=True, type="primary", key="clinic_login_v201"):
+            cu=st.text_input("Username", key="clinic_u_v206")
+            cp=st.text_input("Password", type="password", key="clinic_p_v206")
+            stay_c = st.checkbox("Stay signed in", value=True, key="stay_clinic_v206")
+            if st.button("Login", use_container_width=True, type="primary", key="clinic_login_v206"):
                 st.session_state.logged_in=True
                 st.session_state.username=cu
                 st.session_state.user_role="clinic"
@@ -2450,27 +2502,33 @@ def clinic_login_page():
                 st.session_state.clinic_name="Herbal Clinic International"
                 st.session_state.current_page="dashboard_welcome"
                 try:
-                    st.query_params["hci_logged"]="1"
-                    st.query_params["hci_user"]=cu
-                    st.query_params["hci_role"]="clinic"
-                    st.query_params["hci_type"]="Clinic"
-                except: pass
-                components.html(f'''
-                <script>
-                try{{
-                    localStorage.setItem('hci_logged','1');
-                    localStorage.setItem('hci_user','{cu}');
-                    localStorage.setItem('hci_role','clinic');
-                    localStorage.setItem('hci_type','Clinic');
-                    localStorage.setItem('hci_clinic','Herbal Clinic International');
-                }}catch(e){{}}
-                </script>
-                ''', height=0)
+                    admin_persist = get_app_setting("PersistentLoginEnabled", "Yes")
+                except:
+                    admin_persist = "Yes"
+                if stay_c and str(admin_persist).lower() in ["yes","true","1","enabled"]:
+                    try:
+                        st.query_params["hci_logged"]="1"
+                        st.query_params["hci_user"]=cu
+                        st.query_params["hci_role"]="clinic"
+                        st.query_params["hci_type"]="Clinic"
+                    except: pass
+                    components.html(f"""
+                    <script>
+                    try{{
+                        localStorage.setItem('hci_logged','1');
+                        localStorage.setItem('hci_user','{cu}');
+                        localStorage.setItem('hci_role','clinic');
+                        localStorage.setItem('hci_type','Clinic');
+                        localStorage.setItem('hci_clinic','Herbal Clinic International');
+                    }}catch(e){{}}
+                    </script>
+                    """, height=0)
                 st.rerun()
         with t3:
-            hu=st.text_input("Username", key="home_u_v201")
-            hp=st.text_input("Password", type="password", key="home_p_v201")
-            if st.button("Login", use_container_width=True, type="primary", key="home_login_v201"):
+            hu=st.text_input("Username", key="home_u_v206")
+            hp=st.text_input("Password", type="password", key="home_p_v206")
+            stay_h = st.checkbox("Stay signed in", value=True, key="stay_home_v206")
+            if st.button("Login", use_container_width=True, type="primary", key="home_login_v206"):
                 st.session_state.logged_in=True
                 st.session_state.username=hu
                 st.session_state.user_role="home_user"
@@ -2478,24 +2536,30 @@ def clinic_login_page():
                 st.session_state.clinic_name="Herbal Clinic International"
                 st.session_state.current_page="home_user"
                 try:
-                    st.query_params["hci_logged"]="1"
-                    st.query_params["hci_user"]=hu
-                    st.query_params["hci_role"]="home_user"
-                    st.query_params["hci_type"]="HomeUser"
-                except: pass
-                components.html(f'''
-                <script>
-                try{{
-                    localStorage.setItem('hci_logged','1');
-                    localStorage.setItem('hci_user','{hu}');
-                    localStorage.setItem('hci_role','home_user');
-                    localStorage.setItem('hci_type','HomeUser');
-                    localStorage.setItem('hci_clinic','Herbal Clinic International');
-                }}catch(e){{}}
-                </script>
-                ''', height=0)
+                    admin_persist = get_app_setting("PersistentLoginEnabled", "Yes")
+                except:
+                    admin_persist = "Yes"
+                if stay_h and str(admin_persist).lower() in ["yes","true","1","enabled"]:
+                    try:
+                        st.query_params["hci_logged"]="1"
+                        st.query_params["hci_user"]=hu
+                        st.query_params["hci_role"]="home_user"
+                        st.query_params["hci_type"]="HomeUser"
+                    except: pass
+                    components.html(f"""
+                    <script>
+                    try{{
+                        localStorage.setItem('hci_logged','1');
+                        localStorage.setItem('hci_user','{hu}');
+                        localStorage.setItem('hci_role','home_user');
+                        localStorage.setItem('hci_type','HomeUser');
+                        localStorage.setItem('hci_clinic','Herbal Clinic International');
+                    }}catch(e){{}}
+                    </script>
+                    """, height=0)
                 st.rerun()
     add_footer()
+
 
 def feedback_page():
     scroll_to_top()
