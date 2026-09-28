@@ -18,7 +18,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V204"  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V205"  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -30,6 +30,85 @@ def sanitize_for_sheet(text):
     return text.strip()
 
 st.set_page_config(page_title="Herbal Clinic International", page_icon="\U0001f33f", layout="centered", initial_sidebar_state="collapsed")
+
+# ===== V205 - User Theme System (Light/Dark/Dim) - User Choice =====
+if "theme" not in st.session_state:
+    st.session_state.theme = "light"  # light, dark, dim
+
+def get_theme_css():
+    theme = st.session_state.get("theme", "light")
+    if theme == "dark":
+        return """
+        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #0E1117!important; color: #E0E0E0!important; }
+        .block-container { background: #1A1C23!important; border: 3px solid #2E7D5B!important; box-shadow: 0 4px 20px rgba(0,0,0,0.4)!important; }
+        .heading-h1, .heading-h2, .heading-h3, .heading-h4, .heading-h5 { color: #81C784!important; }
+        .graceful-card { background: #2A2D35!important; border: 1.5px solid #3A3D45!important; color: #E0E0E0!important; }
+        .dash-section-title { background: #2E7D5B!important; }
+        div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] { background: #2A2D35!important; color: #E0E0E0!important; border-color: #3A3D45!important; }
+        """
+    elif theme == "dim":
+        return """
+        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #F5F0E8!important; color: #3E2723!important; }
+        .block-container { background: #FFF8F0!important; border: 3px solid #8D6E63!important; box-shadow: 0 4px 20px rgba(141,110,99,0.15)!important; }
+        .heading-h1 { color: #5D4037!important; }
+        .graceful-card { background: #FFF3E0!important; border: 1.5px solid #D7CCC8!important; }
+        .dash-section-title { background: #8D6E63!important; }
+        """
+    else:  # light - default herbal light
+        return """
+        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
+        .block-container { background: #FFFFFF!important; border: 3px solid #2E7D5B!important; }
+        """
+
+def theme_selector_ui():
+    """V205 - User can choose theme - Light/Dark/Dim"""
+    import streamlit.components.v1 as components
+    # Read theme from localStorage via JS and sync to session_state if needed
+    c1,c2 = st.columns([3,2])
+    with c1:
+        st.markdown("<div style='font-size:12px;color:#5a6d65;'>Theme for your comfort</div>", unsafe_allow_html=True)
+    with c2:
+        # Theme buttons
+        col_l, col_d, col_dim = st.columns(3)
+        with col_l:
+            if st.button("☀️ Light", key="theme_light_v205", help="Bright light - Default"):
+                st.session_state.theme = "light"
+                components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
+                st.rerun()
+        with col_d:
+            if st.button("🌙 Dark", key="theme_dark_v205", help="Dark mode - For low light"):
+                st.session_state.theme = "dark"
+                components.html("<script>localStorage.setItem('hci_theme','dark');</script>", height=0)
+                st.rerun()
+        with col_dim:
+            if st.button("🌿 Dim", key="theme_dim_v205", help="Soft herbal dim"):
+                st.session_state.theme = "dim"
+                components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
+                st.rerun()
+    
+    # JS to restore theme from localStorage on load
+    if "theme_restored" not in st.session_state:
+        components.html("""
+        <script>
+        try{
+            const saved = localStorage.getItem('hci_theme');
+            if(saved && !window.location.search.includes('hci_theme=')){
+                const url = new URL(window.location.href);
+                url.searchParams.set('hci_theme', saved);
+                // Don't reload if already correct, just store
+                if(saved !== 'light'){
+                    window.parent.location = url.toString();
+                }
+            }
+        }catch(e){}
+        </script>
+        """, height=0)
+        st.session_state.theme_restored = True
+
+    # Apply theme CSS
+    theme_css = get_theme_css()
+    st.markdown(f"<style>{theme_css}</style>", unsafe_allow_html=True)
+
 
 st.markdown("""
 <style>
@@ -347,6 +426,8 @@ def navigate_to(page):
     st.rerun()
 
 def language_selector():
+    # V205 - Theme selector for user comfort - Light/Dark/Dim
+    theme_selector_ui()
     top_c1, top_c2 = st.columns([3,1])
     with top_c1:
         st.markdown(f"<div style='font-size:11px;color:#181819;'></div>", unsafe_allow_html=True)
@@ -3452,6 +3533,14 @@ def main():
         st.session_state.logged_in=False
         st.session_state.current_page="clinic_login"
     # If already logged in, never force back to login until logout
+    
+    # V205 - Restore theme from query_params for user choice
+    try:
+        qp = st.query_params
+        if "hci_theme" in qp:
+            st.session_state.theme = qp.get("hci_theme", "light")
+    except:
+        pass
     if not st.session_state.logged_in:
         clinic_login_page()
     else:
