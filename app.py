@@ -4,7 +4,7 @@ import datetime
 import re
 import pandas as pd
 
-# NOTE FOR EVERY APP VERSION - V202
+# NOTE FOR EVERY APP VERSION - V203
 # This app can be used in 3 languages: English, Urdu and Arabic.
 # Words from a different language must not be used anywhere in the app while another language is active.
 # English is default language.
@@ -18,7 +18,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V202"  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V203"  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -382,29 +382,26 @@ def get_user_display_h2():
 
 def clinic_heading_banner():
     user_h2 = get_user_display_h2()
-    # V202 - Requirement 1,2,3,4: Bigger fonts, italic temperament, bigger user but decent, same on all pages
-    # Check if user is logged in, if not show generic subtitle
     is_logged = st.session_state.get("logged_in", False)
     user_display = user_h2 if is_logged else "Welcome to Herbal Clinic International"
-    user_style = "font-size:26px; font-weight:800; color:#1F2D27 !important; margin-top:16px; background:#F1F7F3;padding:10px 18px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5;" if is_logged else "font-size:22px; font-weight:600; color:#5a6d65 !important; margin-top:16px;"
-    
+    # V203 Modern - Gradient header, bigger font, italic temperament
     st.markdown(f"""
-    <div style="background:#FFFFFF;border:3px solid #2E7D5B;border-radius:20px;padding:32px 24px;text-align:center;margin-bottom:16px;box-shadow: 0 6px 20px rgba(46,125,91,0.15);">
-        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;color:#2E7D5B !important;background:#F1F7F3;padding:14px 22px;border-radius:14px;display:inline-block;border:2px solid #C8E6D5;font-size:52px; line-height:1.1;">Herbal Clinic International</div>
-        <div style="color:#5a6d65 !important; font-size:20px; font-weight:600; margin-top:16px; font-style:italic !important;">Based on human temperament</div>
-        <div style="{user_style}">{user_display}</div>
+    <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:34px 26px;text-align:center;margin-bottom:18px;box-shadow: 0 8px 28px rgba(46,125,91,0.18), inset 0 1px 0 rgba(255,255,255,0.8);">
+        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: linear-gradient(135deg, #F1F7F3 0%, #FFFFFF 100%);padding:16px 26px;border-radius:16px;display:inline-block;border:2.5px solid #2E7D5B;font-size:56px; line-height:1.1; box-shadow: 0 4px 14px rgba(46,125,91,0.12);">Herbal Clinic International</div>
+        <div style="color:#5a6d65 !important; font-size:21px; font-weight:600; margin-top:18px; font-style:italic !important; letter-spacing:0.5px;">Based on human temperament</div>
+        <div style="font-size:26px; font-weight:800; color:#1F2D27 !important; margin-top:18px; background:#FFFFFF;padding:10px 20px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">{user_display}</div>
     </div>
     """, unsafe_allow_html=True)
 
 def clinic_heading_banner_compact():
-    # For login/signup pages - same box style but compact - Requirement 4
     st.markdown(f"""
-    <div style="background:#FFFFFF;border:3px solid #2E7D5B;border-radius:20px;padding:32px 24px;text-align:center;margin-bottom:16px;box-shadow: 0 6px 20px rgba(46,125,91,0.15);">
-        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;color:#2E7D5B !important;background:#F1F7F3;padding:14px 22px;border-radius:14px;display:inline-block;border:2px solid #C8E6D5;font-size:52px; line-height:1.1;">Herbal Clinic International</div>
-        <div style="color:#5a6d65 !important; font-size:20px; font-weight:600; margin-top:16px; font-style:italic !important;">Based on human temperament</div>
+    <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:34px 26px;text-align:center;margin-bottom:18px;box-shadow: 0 8px 28px rgba(46,125,91,0.18);">
+        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: linear-gradient(135deg, #F1F7F3 0%, #FFFFFF 100%);padding:16px 26px;border-radius:16px;display:inline-block;border:2.5px solid #2E7D5B;font-size:56px; line-height:1.1;">Herbal Clinic International</div>
+        <div style="color:#5a6d65 !important; font-size:21px; font-weight:600; margin-top:18px; font-style:italic !important;">Based on human temperament</div>
         <div style="font-size:22px; font-weight:600; color:#5a6d65 !important; margin-top:16px;">Welcome - Please Sign In</div>
     </div>
     """, unsafe_allow_html=True)
+
 
 
 def top_nav_inner():
@@ -1938,18 +1935,16 @@ def clinic_articles_page():
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
-    st.markdown("<div class='heading-h3'>Articles</div>", unsafe_allow_html=True)
+    st.markdown("<div class='heading-h3'>📰 Articles - Modern Cards V203</div>", unsafe_allow_html=True)
     recs = get_all_records_cached("Articles")
     clinic_recs = [r for r in recs if str(r.get("Audience","")).lower() in ["all","clinic",""]]
     if not clinic_recs:
         clinic_recs = recs
 
-    # Language selection after page title - Task
-    lang_sel = st.radio("Select Language", ["English", "Urdu - اردو", "Arabic - العربية"], horizontal=True, key="clinic_art_lang_v181")
+    lang_sel = st.radio("Select Language", ["English", "Urdu - اردو", "Arabic - العربية"], horizontal=True, key="clinic_art_lang_v203")
     lang_map = {"English":"en", "Urdu - اردو":"ur", "Arabic - العربية":"ar"}
     sel_lang = lang_map[lang_sel]
 
-    # Filter by selected language
     def has_lang(r, lang):
         if lang=="en": return bool(str(r.get("TitleEN","")).strip() or str(r.get("ContentEN","")).strip())
         if lang=="ur": return bool(str(r.get("TitleUR","")).strip() or str(r.get("ContentUR","")).strip())
@@ -1968,25 +1963,37 @@ def clinic_articles_page():
     if "clinic_selected_article_id" not in st.session_state:
         st.session_state.clinic_selected_article_id = None
 
-    # Collapsible list using selectbox - Task
     if not filtered_sorted:
-        st.info(f"No {sel_lang.upper()} articles found")
+        st.info(f"No {sel_lang.upper()} articles found - Add from App Admin")
     else:
-        options = []
-        id_map = {}
-        for r in filtered_sorted:
-            title = ""
-            if sel_lang=="en": title = r.get("TitleEN","")
-            elif sel_lang=="ur": title = r.get("TitleUR","")
-            else: title = r.get("TitleAR","")
-            label = title or "Untitled"
-            options.append(label)
-            id_map[label] = r.get("ID","")
+        # Modern Cards Grid - 2 per row on PC, 1 on mobile via columns
+        st.markdown("<div style='margin-bottom:12px;'><b>Modern Card View - Click to Read</b></div>", unsafe_allow_html=True)
+        # Show as cards grid
+        for i in range(0, len(filtered_sorted[:20]), 2):
+            c1,c2 = st.columns(2)
+            for idx, col in enumerate([c1,c2]):
+                if i+idx < len(filtered_sorted):
+                    r = filtered_sorted[i+idx]
+                    title = ""
+                    if sel_lang=="en": title = r.get("TitleEN","")
+                    elif sel_lang=="ur": title = r.get("TitleUR","")
+                    else: title = r.get("TitleAR","")
+                    content_preview = ""
+                    if sel_lang=="en": content_preview = str(r.get("ContentEN",""))[:120]
+                    elif sel_lang=="ur": content_preview = str(r.get("ContentUR",""))[:120]
+                    else: content_preview = str(r.get("ContentAR",""))[:120]
+                    with col:
+                        st.markdown(f"""
+                        <div style="background: linear-gradient(135deg,#FFFFFF,#F1F7F3);border:2px solid #C8E6D5;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 14px rgba(46,125,91,0.10);min-height:140px;">
+                            <div style="font-size:18px;font-weight:800;color:#2E7D5B;">{title or 'Untitled'}</div>
+                            <div style="font-size:13px;color:#5a6d65;margin-top:8px;">{content_preview}...</div>
+                            <div style="font-size:11px;color:#999;margin-top:8px;">{r.get('MainCategory','')} | {r.get('Date','')}</div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        if st.button(f"Read - {title[:20]}", key=f"clinic_card_{r.get('ID','')}_{i}_{idx}_v203", use_container_width=True):
+                            st.session_state.clinic_selected_article_id = r.get("ID","")
+                            st.rerun()
         
-        sel_label = st.selectbox("Select Article to Read - collapsible list", ["-- Select --"] + options, key="clinic_art_select_v181")
-        if sel_label != "-- Select --":
-            st.session_state.clinic_selected_article_id = id_map.get(sel_label, "")
-
         if st.session_state.clinic_selected_article_id:
             sel = next((r for r in recs if r.get("ID","")==st.session_state.clinic_selected_article_id), None)
             if sel:
@@ -1994,11 +2001,12 @@ def clinic_articles_page():
                 heading = sel.get("TitleEN","") if sel_lang=="en" else sel.get("TitleUR","") if sel_lang=="ur" else sel.get("TitleAR","")
                 content = sel.get("ContentEN","") if sel_lang=="en" else sel.get("ContentUR","") if sel_lang=="ur" else sel.get("ContentAR","")
                 st.markdown(f"<div class='heading-h3'>{heading}</div>", unsafe_allow_html=True)
-                st.markdown(f"<div style='background:#1e1f22;border:2px solid #5a5a5a;border-radius:12px;padding:16px;white-space:pre-wrap;'>{content}</div>", unsafe_allow_html=True)
-                if st.button("Close", key="close_clinic_v181"):
+                st.markdown(f"<div style='background:#FFFFFF;border:2px solid #2E7D5B;border-radius:16px;padding:20px;white-space:pre-wrap;box-shadow:0 6px 18px rgba(46,125,91,0.12);'>{content}</div>", unsafe_allow_html=True)
+                if st.button("Close", key="close_clinic_v203"):
                     st.session_state.clinic_selected_article_id = None
                     st.rerun()
     add_footer()
+
 
 def home_user_articles_page():
     language_selector()
@@ -2083,12 +2091,69 @@ def dashboard_welcome_page():
     language_selector()
     clinic_heading_banner()
     top_nav_dashboard()
-    st.markdown("<div class='dash-section-title'>Clinic Section</div>", unsafe_allow_html=True)
-    # V200 - Compact tabs, icon inside tab field, green border only on hover
+    
+    # V203 Modern Dashboard - Metrics + Graph (Requirement)
+    try:
+        records = get_all_records_cached("New_patient")
+        my_records = [r for r in records if str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
+        total_patients = len(my_records)
+        today_str = str(datetime.date.today())
+        today_patients = len([r for r in my_records if today_str in str(r.get("Date",""))])
+        # For demo, revisit = patients with Balance >0 or FeeStatus Partial
+        pending = len([r for r in my_records if str(r.get("Balance","0")).strip() not in ["0","","0.0"]])
+        # Total income simple sum
+        total_income = 0
+        for r in my_records:
+            try:
+                total_income += float(str(r.get("Total","0") or 0).replace(",","") or 0)
+            except: pass
+    except:
+        total_patients = 0
+        today_patients = 0
+        pending = 0
+        total_income = 0
+    
+    st.markdown("<div class='dash-section-title'>📊 Clinic Overview - Modern Dashboard V203</div>", unsafe_allow_html=True)
+    m1,m2,m3,m4 = st.columns(4)
+    with m1:
+        st.markdown(f"<div style='background: linear-gradient(135deg,#E8F5E9,#FFFFFF);border:2px solid #2E7D5B;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(46,125,91,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TOTAL PATIENTS</div><div style='font-size:32px;font-weight:900;color:#2E7D5B;margin-top:6px;'>{total_patients}</div></div>", unsafe_allow_html=True)
+    with m2:
+        st.markdown(f"<div style='background: linear-gradient(135deg,#FFF3E0,#FFFFFF);border:2px solid #FF9800;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(255,152,0,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TODAY</div><div style='font-size:32px;font-weight:900;color:#FF9800;margin-top:6px;'>{today_patients}</div></div>", unsafe_allow_html=True)
+    with m3:
+        st.markdown(f"<div style='background: linear-gradient(135deg,#FFEBEE,#FFFFFF);border:2px solid #F44336;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(244,67,54,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>PENDING</div><div style='font-size:32px;font-weight:900;color:#F44336;margin-top:6px;'>{pending}</div></div>", unsafe_allow_html=True)
+    with m4:
+        st.markdown(f"<div style='background: linear-gradient(135deg,#E3F2FD,#FFFFFF);border:2px solid #2196F3;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(33,150,243,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>INCOME</div><div style='font-size:28px;font-weight:900;color:#2196F3;margin-top:6px;'>Rs {total_income:.0f}</div></div>", unsafe_allow_html=True)
+    
+    # Small graph last 7 days
+    try:
+        import pandas as pd
+        from datetime import timedelta
+        dates = [(datetime.date.today() - timedelta(days=i)).isoformat() for i in range(6,-1,-1)]
+        counts = []
+        for d in dates:
+            c = len([r for r in my_records if d in str(r.get("Date",""))])
+            counts.append(c)
+        chart_df = pd.DataFrame({"Date": dates, "Patients": counts})
+        chart_df = chart_df.set_index("Date")
+        st.markdown("<div style='margin-top:14px;'><b>Last 7 Days - Patients Trend</b></div>", unsafe_allow_html=True)
+        st.bar_chart(chart_df, height=180)
+    except:
+        pass
+    
+    # Free Quiz Teaser - Lead Magnet
+    st.markdown("""
+    <div style="background: linear-gradient(135deg,#2E7D5B,#81C784);border-radius:16px;padding:16px;margin:16px 0;box-shadow:0 6px 18px rgba(46,125,91,0.25);color:white;text-align:center;">
+        <div style="font-size:20px;font-weight:800;">🎁 Free: Check Your Temperament in 30 Seconds!</div>
+        <div style="font-size:14px;margin-top:6px;opacity:0.95;">Modern quiz to engage users - Builds interest for Pro AI</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<div class='dash-section-title'>Clinic Section - Quick Actions</div>", unsafe_allow_html=True)
+    # V203 - Compact tabs, icon inside tab field, green border only on hover, 2 per line mobile
     r1c1,r1c2,r1c3,r1c4=st.columns(4)
     with r1c1:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("🧑‍⚕️ New Patient", use_container_width=True, key="dash_new_v200"):
+        if st.button("🧑‍⚕️ New Patient", use_container_width=True, key="dash_new_v203"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.form_version+=1
@@ -2100,7 +2165,7 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with r1c2:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("🔍 Revisit", use_container_width=True, key="dash_rev_v200"):
+        if st.button("🔍 Revisit", use_container_width=True, key="dash_rev_v203"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="revisit"
@@ -2108,7 +2173,7 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with r1c3:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("⚕️ Auto-Diagnosis", use_container_width=True, key="dash_auto_v200"):
+        if st.button("⚕️ Auto-Diagnosis", use_container_width=True, key="dash_auto_v203"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="auto_selection"
@@ -2116,7 +2181,7 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with r1c4:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("📚 Dictionary", use_container_width=True, key="dash_dict_v200"):
+        if st.button("📚 Dictionary", use_container_width=True, key="dash_dict_v203"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="dictionary"
@@ -2125,7 +2190,7 @@ def dashboard_welcome_page():
     r2c1,r2c2,r2c3,r2c4=st.columns(4)
     with r2c1:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("📰 Articles", use_container_width=True, key="dash_c_art_v200"):
+        if st.button("📰 Articles", use_container_width=True, key="dash_c_art_v203"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="clinic_articles"
@@ -2133,17 +2198,25 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with r2c2:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("🌿 Herbs & Pharma", use_container_width=True, key="dash_herb_v200"):
+        if st.button("🌿 Herbs & Pharma", use_container_width=True, key="dash_herb_v203"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="clinic_herb_formula"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
+    with r2c3:
+        st.markdown("<div class='graceful-card' style='background: linear-gradient(135deg,#FFF9C4,#FFFFFF)!important;'>", unsafe_allow_html=True)
+        if st.button("🌡️ Temperament Quiz", use_container_width=True, key="dash_quiz_v203"):
+            st.session_state.prev_page = "dashboard_welcome"
+            st.session_state.page_history.append("dashboard_welcome")
+            st.session_state.current_page="temperament_quiz"
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
     show_offer = get_app_setting("OfferEnabled", get_app_setting("show_offer_tab","Yes"))
     if str(show_offer).lower() in ["yes","on","true","1","enabled"]: 
-        with r2c3:
+        with r2c4:
             st.markdown("<div class='graceful-card' style='border:3px solid #00ff88; animation: blinkGreen 1.2s infinite;'>", unsafe_allow_html=True)
-            if st.button("🎁 Offer", use_container_width=True, key="dash_offer_v200"):
+            if st.button("🎁 Offer", use_container_width=True, key="dash_offer_v203"):
                 st.session_state.prev_page = "dashboard_welcome"
                 st.session_state.page_history.append("dashboard_welcome")
                 st.session_state.current_page="offer_page"
@@ -2154,7 +2227,7 @@ def dashboard_welcome_page():
     h1,h2,h3,h4=st.columns(4)
     with h1:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("🏠 Home User Page", use_container_width=True, key="dash_home_v200"):
+        if st.button("🏠 Home User Page", use_container_width=True, key="dash_home_v203"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="home_user"
@@ -2162,7 +2235,7 @@ def dashboard_welcome_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with h2:
         st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("📄 Articles", use_container_width=True, key="dash_home_art_v200"):
+        if st.button("📄 Articles", use_container_width=True, key="dash_home_art_v203"):
             st.session_state.prev_page = "dashboard_welcome"
             st.session_state.page_history.append("dashboard_welcome")
             st.session_state.current_page="home_user_articles"
@@ -2174,7 +2247,7 @@ def dashboard_welcome_page():
         ac1,ac2,ac3,ac4=st.columns(4)
         with ac1:
             st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-            if st.button("⚙️ App Admin Panel", use_container_width=True, key="dash_admin_panel_v200"):
+            if st.button("⚙️ App Admin Panel", use_container_width=True, key="dash_admin_panel_v203"):
                 st.session_state.prev_page = "dashboard_welcome"
                 st.session_state.page_history.append("dashboard_welcome")
                 st.session_state.current_page="admin"
@@ -2190,6 +2263,7 @@ def dashboard_welcome_page():
     st.markdown("---")
     st.markdown(f"<div style='text-align:center;'><div class='heading-h4'>Total App Users</div><div style='font-size:34px;font-weight:900;color:#2E7D5B;'>{display}</div></div>", unsafe_allow_html=True)
     add_footer()
+
 
 
 def clinic_login_page():
@@ -3239,6 +3313,78 @@ def essential_page():
     under_development_footer("Essential")
     add_footer()
 
+
+def temperament_quiz_page():
+    language_selector()
+    clinic_heading_banner()
+    top_nav_inner()
+    st.markdown("<div class='heading-h3'>🌡️ Check Your Temperament - Free</div>", unsafe_allow_html=True)
+    st.markdown("<div style='background: linear-gradient(135deg,#F1F7F3,#FFFFFF);border:2px solid #2E7D5B;border-radius:16px;padding:16px;margin-bottom:14px;'><b>Modern Quiz:</b> Answer 6 quick questions and know your temperament. This builds interest for Pro AI version.</div>", unsafe_allow_html=True)
+    
+    with st.container(border=True):
+        st.markdown("<div class='heading-h4'>Free Temperament Assessment</div>", unsafe_allow_html=True)
+        q1 = st.radio("1. Your body feels more?", ["Hot", "Cold", "Moderate"], key="quiz_q1_v203", horizontal=True)
+        q2 = st.radio("2. Your thirst?", ["High / Excessive", "Low", "Normal"], key="quiz_q2_v203", horizontal=True)
+        q3 = st.radio("3. Your skin?", ["Dry & Rough", "Moist & Oily", "Soft & Normal"], key="quiz_q3_v203", horizontal=True)
+        q4 = st.radio("4. Sleep?", ["Less / Disturbed", "Excess / Deep", "Normal"], key="quiz_q4_v203", horizontal=True)
+        q5 = st.radio("5. Appetite?", ["High", "Low", "Normal"], key="quiz_q5_v203", horizontal=True)
+        q6 = st.radio("6. Preferred weather?", ["Cold / Cool", "Hot / Warm", "Moderate"], key="quiz_q6_v203", horizontal=True)
+        
+        if st.button("Get My Temperament - Free", type="primary", use_container_width=True, key="quiz_submit_v203"):
+            # Simple logic
+            hot = 0
+            cold = 0
+            if q1=="Hot": hot+=2
+            if q1=="Cold": cold+=2
+            if q2=="High / Excessive": hot+=1
+            if q2=="Low": cold+=1
+            if q3=="Dry & Rough": hot+=1
+            if q3=="Moist & Oily": cold+=1
+            if q4=="Less / Disturbed": hot+=1
+            if q4=="Excess / Deep": cold+=1
+            if q5=="High": hot+=1
+            if q5=="Low": cold+=1
+            if q6=="Cold / Cool": hot+=1
+            if q6=="Hot / Warm": cold+=1
+            
+            if hot>cold+1:
+                result = "Hot Dry (گرم خشک)"
+                diet = "Cool foods, Cucumber, Yogurt, Water intake"
+            elif cold>hot+1:
+                result = "Cold Wet (سرد تر)"
+                diet = "Warm foods, Honey, Ginger, Dry fruits"
+            elif hot>cold:
+                result = "Hot Wet (گرم تر)"
+                diet = "Moderate cool, Fresh fruits"
+            elif cold>hot:
+                result = "Cold Dry (سرد خشک)"
+                diet = "Warm & moist, Soups, Milk"
+            else:
+                result = "Moderate / Normal (معتدل)"
+                diet = "Balanced diet"
+            
+            st.balloons()
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg,#2E7D5B,#4CAF50);color:white;padding:22px;border-radius:16px;text-align:center;margin-top:16px;box-shadow:0 8px 20px rgba(46,125,91,0.30);">
+                <div style="font-size:28px;font-weight:900;">Your Temperament: {result}</div>
+                <div style="font-size:18px;margin-top:10px;">Recommended: {diet}</div>
+                <div style="font-size:14px;margin-top:12px;opacity:0.9;">Want detailed AI diet + medicine? Upgrade to Pro in Next Phase!</div>
+            </div>
+            """, unsafe_allow_html=True)
+            # Save to local backup as interest lead
+            try:
+                save_to_local_csv("TemperamentQuiz", {"Date": str(datetime.date.today()), "Q1": q1, "Q2": q2, "Q3": q3, "Result": result, "User": st.session_state.get("username","Guest")})
+            except: pass
+            
+            st.markdown("---")
+            if st.button("🔒 Unlock Full AI Report - Pro Version Coming Soon", use_container_width=True, key="quiz_pro_v203"):
+                st.info("Pro Version will give you full diet, medicines, and lifestyle plan with AI. Stay tuned!")
+    
+    under_development_footer("Temperament Quiz - Free Lead Magnet")
+    add_footer()
+
+
+
 def main():
     # V200 - Requirement 1: Persistent login - user stays signed in until explicit Sign Out
     if "logged_in" not in st.session_state:
@@ -3259,6 +3405,7 @@ def main():
         elif p=="pharmacopoeia": pharmacopoeia_page()
         elif p=="auto_selection": auto_selection_page()
         elif p=="clinic_herb_formula": clinic_herb_formula_page()
+        elif p=="temperament_quiz": temperament_quiz_page()
         elif p=="home_user": home_user_page()
         elif p=="home_user_articles": home_user_articles_page()
         elif p=="articles": articles_page()
