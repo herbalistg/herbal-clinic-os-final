@@ -1,4 +1,4 @@
-# APP VERSION - V209.2 - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.3 - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.2"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.3"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -449,12 +449,12 @@ defaults = {
         "New Patient": True,
         "Revisit": True,
         "Clinic Admin": True,
-        "Auto-Diagnosis": True,
-        "Dictionary": True,
-        "Articles": True,
-        "Herbs & Pharma": True,
-        "Free Health Tools": True,
-        "Offer": True,
+        "Auto-Diagnosis": False,
+        "Dictionary": False,
+        "Articles": False,
+        "Herbs & Pharma": False,
+        "Free Health Tools": False,
+        "Offer": False,
         "Essential": False,
         "Inventory": False,
         "Billing Report": False,
@@ -2456,18 +2456,18 @@ def clinic_admin_page():
     </div>
     """, unsafe_allow_html=True)
     
-    # Ensure settings exist
+    # V209.3 Fix 1 & 2: Ensure settings exist - Only New Patient, Revisit, Clinic Admin ON by default, others OFF, Clinic Admin permanent
     if "clinic_dashboard_settings" not in st.session_state:
         st.session_state.clinic_dashboard_settings = {
             "New Patient": True,
             "Revisit": True,
             "Clinic Admin": True,
-            "Auto-Diagnosis": True,
-            "Dictionary": True,
-            "Articles": True,
-            "Herbs & Pharma": True,
-            "Free Health Tools": True,
-            "Offer": True,
+            "Auto-Diagnosis": False,
+            "Dictionary": False,
+            "Articles": False,
+            "Herbs & Pharma": False,
+            "Free Health Tools": False,
+            "Offer": False,
             "Essential": False,
             "Inventory": False,
             "Billing Report": False,
@@ -2476,6 +2476,10 @@ def clinic_admin_page():
             "Appointments": False,
             "Expenses": False,
         }
+    # Force Clinic Admin always True - permanent, cannot be closed
+    st.session_state.clinic_dashboard_settings["Clinic Admin"] = True
+    st.session_state.clinic_dashboard_settings["New Patient"] = True
+    st.session_state.clinic_dashboard_settings["Revisit"] = True
     
     settings = st.session_state.clinic_dashboard_settings
     
@@ -2609,12 +2613,28 @@ def dashboard_welcome_page():
         pass
     
     st.markdown("<div class='dash-section-title'>Clinic Section</div>", unsafe_allow_html=True)
-    # V209 Fix 8: Clinic Admin Control - Show/Hide tabs based on Clinic Admin settings
+    # V209.3 Fix 1,2,3: Clinic Admin Control - Permanent, Only New Patient+Revisit ON by default, others OFF
+    # Ensure clinic_dashboard_settings exists and Clinic Admin forced ON
+    if "clinic_dashboard_settings" not in st.session_state:
+        st.session_state.clinic_dashboard_settings = {
+            "New Patient": True, "Revisit": True, "Clinic Admin": True,
+            "Auto-Diagnosis": False, "Dictionary": False, "Articles": False,
+            "Herbs & Pharma": False, "Free Health Tools": False, "Offer": False,
+            "Essential": False, "Inventory": False, "Billing Report": False,
+            "Staff Management": False, "Patient Analytics": False, "Appointments": False, "Expenses": False
+        }
+    # Force permanent tabs
+    st.session_state.clinic_dashboard_settings["Clinic Admin"] = True
+    st.session_state.clinic_dashboard_settings["New Patient"] = True
+    st.session_state.clinic_dashboard_settings["Revisit"] = True
+    
     dash_settings = st.session_state.get("clinic_dashboard_settings", {
         "New Patient": True, "Revisit": True, "Clinic Admin": True,
-        "Auto-Diagnosis": True, "Dictionary": True, "Articles": True,
-        "Herbs & Pharma": True, "Free Health Tools": True, "Offer": True
+        "Auto-Diagnosis": False, "Dictionary": False, "Articles": False,
+        "Herbs & Pharma": False, "Free Health Tools": False, "Offer": False
     })
+    # Double ensure Clinic Admin always True even if settings says False
+    dash_settings["Clinic Admin"] = True
     
     r1c1,r1c2,r1c3,r1c4=st.columns(4)
     with r1c1:
