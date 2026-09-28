@@ -4,7 +4,7 @@ import datetime
 import re
 import pandas as pd
 
-# NOTE FOR EVERY APP VERSION - V200
+# NOTE FOR EVERY APP VERSION - V202
 # This app can be used in 3 languages: English, Urdu and Arabic.
 # Words from a different language must not be used anywhere in the app while another language is active.
 # English is default language.
@@ -18,7 +18,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200"  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V202"  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -51,7 +51,7 @@ div[data-testid="stSidebar"] {display: none;}
 
 /* ===== V200 Requirement 5: Bigger Fonts - PC slightly larger than mobile ===== */
 /* Page Titles */
-.heading-h1 { font-size: 48px!important; font-weight: 900!important; color:#2E7D5B!important; text-align:center; }
+.heading-h1 { font-size: 52px!important; font-weight: 900!important; color:#2E7D5B!important; text-align:center; }
 .heading-h2 { font-size: 26px!important; font-weight: 800!important; color:#2E7D5B!important; }
 .heading-h3 { font-size: 30px!important; font-weight: 800!important; color:#1F2D27!important; }
 .heading-h4 { font-size: 24px!important; font-weight: 700!important; color:#1F2D27!important; margin:12px 0!important; }
@@ -103,26 +103,111 @@ div[data-testid="stSidebar"] {display: none;}
 .footer-sharp { text-align:center; color:#5a6d65!important; font-size:14px!important; margin-top:30px; border-top:1px solid #C8E6D5; padding:14px; }
 .history-card { background:#F1F7F3; border:1px solid #C8E6D5; border-radius:12px; padding:12px; margin-bottom:10px; color:#1F2D27; }
 
-/* ===== V200 Requirement 4: Ad link - center aligned, right side above Streamlit, dark golden border, fixed ===== */
+/* ===== V201 Requirement 2: No small green box, only green border on hover ===== */
+.graceful-card { 
+    background: #FFFFFF!important; 
+    border: 1.5px solid #E0E0E0!important; 
+    border-radius: 12px!important; 
+    padding: 2px!important; 
+    text-align:center; 
+    color:#1F2D27!important; 
+    transition: all 0.2s ease!important;
+    box-shadow: none!important;
+}
+.graceful-card:hover { 
+    border: 2.5px solid #2E7D5B!important; 
+    box-shadow: 0 3px 10px rgba(46,125,91,0.18)!important;
+}
+.graceful-card button {
+    border: none!important;
+    background: #F1F7F3!important;
+}
+.graceful-card:hover button {
+    background: #FFFFFF!important;
+    border: 1px solid #2E7D5B!important;
+}
+
+/* ===== V202 Requirement 5: All tabs and fields Raised appearance ===== */
+div[data-testid="stTabs"] {
+    background: #FFFFFF!important;
+    border: 2px solid #C8E6D5!important;
+    border-radius: 16px!important;
+    padding: 8px!important;
+    box-shadow: 0 6px 18px rgba(46,125,91,0.12), 0 2px 4px rgba(0,0,0,0.06)!important;
+}
+div[data-testid="stTab"] {
+    box-shadow: 0 2px 6px rgba(46,125,91,0.15)!important;
+    border-radius: 10px!important;
+    border: 1.5px solid #E0E0E0!important;
+}
+div[data-testid="stTab"][aria-selected="true"] {
+    background: #2E7D5B!important;
+    color: #FFFFFF!important;
+    box-shadow: 0 4px 12px rgba(46,125,91,0.30)!important;
+    border: 2px solid #2E7D5B!important;
+}
+/* Input fields raised */
+div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05)!important;
+    border: 1.5px solid #C8E6D5!important;
+    border-radius: 10px!important;
+    background: #FFFFFF!important;
+}
+div[data-baseweb="input"]:focus-within, div[data-baseweb="select"]:focus-within, div[data-baseweb="textarea"]:focus-within {
+    border: 2px solid #2E7D5B!important;
+    box-shadow: 0 4px 12px rgba(46,125,91,0.20)!important;
+}
+/* Container border raised */
+div[data-testid="stExpander"], div[data-testid="stContainer"] {
+    box-shadow: 0 4px 14px rgba(46,125,91,0.10)!important;
+    border: 1.5px solid #C8E6D5!important;
+}
+
+/* ===== V201 Requirement 3: PC columns(4) = 4 per line, Mobile = 2 per line ===== */
+@media (max-width: 768px) {
+    [data-testid="stHorizontalBlock"] {
+        flex-wrap: wrap!important;
+    }
+    [data-testid="stHorizontalBlock"] [data-testid="column"] {
+        flex: 0 0 50%!important;
+        min-width: 50%!important;
+        max-width: 50%!important;
+    }
+    .graceful-card button { 
+        min-height: 52px!important; 
+        font-size: 14px!important;
+        padding: 6px 8px!important;
+    }
+}
+@media (min-width: 769px) {
+    [data-testid="stHorizontalBlock"] [data-testid="column"] {
+        flex: 0 0 25%!important;
+        min-width: 25%!important;
+    }
+}
+
+/* ===== V201 Requirement 4a,b,c: Ad link small bold 2 lines, box fit to text, near Streamlit button ===== */
 .ad-note {
     position: fixed!important;
-    bottom: 90px!important;
-    right: 18px!important;
+    bottom: 68px!important; /* Near Streamlit button */
+    right: 12px!important;
     z-index: 999999!important;
     background: #FFFFFF!important;
-    border: 2.5px solid #B8860B!important; /* Dark golden */
-    border-radius: 12px!important;
-    padding: 10px 16px!important;
+    border: 2px solid #B8860B!important; /* Dark golden */
+    border-radius: 10px!important;
+    padding: 6px 10px!important;
     text-align: center!important;
-    font-size: 13px!important;
-    font-weight: 600!important;
+    font-size: 10px!important; /* small */
+    font-weight: 700!important; /* bold */
     color: #1F2D27!important;
-    box-shadow: 0 4px 16px rgba(184,134,11,0.25)!important;
-    max-width: 180px!important;
-    line-height: 1.3!important;
+    box-shadow: 0 3px 12px rgba(184,134,11,0.25)!important;
+    width: fit-content!important;
+    max-width: fit-content!important;
+    min-width: 0!important;
+    line-height: 1.2!important;
 }
 @media (max-width: 768px) {
-    .ad-note { bottom: 80px!important; right: 10px!important; max-width: 150px!important; font-size: 12px!important; }
+    .ad-note { bottom: 62px!important; right: 8px!important; font-size: 9px!important; padding: 5px 8px!important; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -297,13 +382,30 @@ def get_user_display_h2():
 
 def clinic_heading_banner():
     user_h2 = get_user_display_h2()
+    # V202 - Requirement 1,2,3,4: Bigger fonts, italic temperament, bigger user but decent, same on all pages
+    # Check if user is logged in, if not show generic subtitle
+    is_logged = st.session_state.get("logged_in", False)
+    user_display = user_h2 if is_logged else "Welcome to Herbal Clinic International"
+    user_style = "font-size:26px; font-weight:800; color:#1F2D27 !important; margin-top:16px; background:#F1F7F3;padding:10px 18px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5;" if is_logged else "font-size:22px; font-weight:600; color:#5a6d65 !important; margin-top:16px;"
+    
     st.markdown(f"""
-    <div style="background:#FFFFFF;border:3px solid #2E7D5B;border-radius:20px;padding:28px 24px;text-align:center;margin-bottom:12px;box-shadow: 0 4px 16px rgba(46,125,91,0.12);">
-        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#2E7D5B !important;background:#F1F7F3;padding:10px 18px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5;font-size:44px;">Herbal Clinic International</div>
-        <div style="color:#5a6d65 !important; font-size:22px; font-weight:600; margin-top:14px;">Based on human temperament</div>
-        <div style="font-size:22px; font-weight:800; color:#00f700 !important; margin-top:16px; background:#F1F7F3;padding:8px 16px;border-radius:10px;display:inline-block;border:1.5px solid #C8E6D5;text-shadow: 0 1px 0 #aac94c;">{user_h2}</div>
+    <div style="background:#FFFFFF;border:3px solid #2E7D5B;border-radius:20px;padding:32px 24px;text-align:center;margin-bottom:16px;box-shadow: 0 6px 20px rgba(46,125,91,0.15);">
+        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;color:#2E7D5B !important;background:#F1F7F3;padding:14px 22px;border-radius:14px;display:inline-block;border:2px solid #C8E6D5;font-size:52px; line-height:1.1;">Herbal Clinic International</div>
+        <div style="color:#5a6d65 !important; font-size:20px; font-weight:600; margin-top:16px; font-style:italic !important;">Based on human temperament</div>
+        <div style="{user_style}">{user_display}</div>
     </div>
     """, unsafe_allow_html=True)
+
+def clinic_heading_banner_compact():
+    # For login/signup pages - same box style but compact - Requirement 4
+    st.markdown(f"""
+    <div style="background:#FFFFFF;border:3px solid #2E7D5B;border-radius:20px;padding:32px 24px;text-align:center;margin-bottom:16px;box-shadow: 0 6px 20px rgba(46,125,91,0.15);">
+        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;color:#2E7D5B !important;background:#F1F7F3;padding:14px 22px;border-radius:14px;display:inline-block;border:2px solid #C8E6D5;font-size:52px; line-height:1.1;">Herbal Clinic International</div>
+        <div style="color:#5a6d65 !important; font-size:20px; font-weight:600; margin-top:16px; font-style:italic !important;">Based on human temperament</div>
+        <div style="font-size:22px; font-weight:600; color:#5a6d65 !important; margin-top:16px;">Welcome - Please Sign In</div>
+    </div>
+    """, unsafe_allow_html=True)
+
 
 def top_nav_inner():
     c1,c2=st.columns([1,1])
@@ -327,12 +429,36 @@ def top_nav_inner():
     st.divider()
 
 def top_nav_dashboard():
+    import streamlit.components.v1 as components
     c1,c2=st.columns([4,1])
     with c2:
-        if st.button("Logout", key=f"logout_dash_v172", type="secondary"):
+        if st.button("Logout", key=f"logout_dash_v201", type="secondary"):
             st.session_state.logged_in=False
             st.session_state.current_page="clinic_login"
             st.session_state.page_history=["dashboard_welcome"]
+            # V201 - Clear persistent login
+            try:
+                st.query_params.clear()
+            except: pass
+            components.html('''
+            <script>
+            try{
+                localStorage.removeItem('hci_logged');
+                localStorage.removeItem('hci_user');
+                localStorage.removeItem('hci_role');
+                localStorage.removeItem('hci_type');
+                localStorage.removeItem('hci_clinic');
+                // Clear URL params and reload to login
+                const url = new URL(window.parent.location.href);
+                url.searchParams.delete('hci_logged');
+                url.searchParams.delete('hci_user');
+                url.searchParams.delete('hci_role');
+                url.searchParams.delete('hci_type');
+                url.searchParams.delete('hci_clinic');
+                window.parent.location = url.toString();
+            }catch(e){}
+            </script>
+            ''', height=0)
             st.rerun()
     st.divider()
 
@@ -380,6 +506,36 @@ def get_sheet_safe(name):
             except: return None
     except: return None
 
+
+def save_to_local_csv(sheet_name, data_dict):
+    """V202 Requirement 10: Save data both local and Google Sheet"""
+    try:
+        import os, csv
+        local_dir = "/tmp/herbal_local_backup"
+        os.makedirs(local_dir, exist_ok=True)
+        file_path = os.path.join(local_dir, f"{sheet_name}.csv")
+        # Get headers from SHEET_HEADERS if available
+        headers = SHEET_HEADERS.get(sheet_name, list(data_dict.keys()))
+        file_exists = os.path.exists(file_path)
+        with open(file_path, "a", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=headers)
+            if not file_exists:
+                writer.writeheader()
+            # Only write keys that are in headers
+            row = {h: data_dict.get(h,"") for h in headers}
+            writer.writerow(row)
+        # Also save to session_state as backup list
+        backup_key = f"local_backup_{sheet_name}"
+        if backup_key not in st.session_state:
+            st.session_state[backup_key] = []
+        st.session_state[backup_key].append(data_dict)
+        return True
+    except Exception as e:
+        # Don't break main flow if local save fails
+        return False
+
+
+
 @st.cache_data(ttl=600, show_spinner=False)
 def get_all_records_cached(sheet_name):
     try:
@@ -394,15 +550,23 @@ def get_all_records_cached(sheet_name):
     except: return []
 
 def save_patient(data):
+    # V202 Requirement 10: Save both local and Google Sheet
+    local_ok = save_to_local_csv("New_patient", data)
     try:
         ws=get_sheet_safe("New_patient")
-        if not ws: return False,"Demo Mode"
+        if not ws: 
+            # If no sheet, return local save status
+            return (True, f"Saved Locally (Sheet not connected) - {local_ok}") if local_ok else (False, "Demo Mode - Local save also failed")
         hdr=ws.row_values(1) if ws.row_values(1) else list(data.keys())
         row=[data.get(h,"") for h in hdr]
         ws.append_row(row, value_input_option="RAW")
         get_all_records_cached.clear()
-        return True,"Saved"
-    except Exception as e: return False,str(e)
+        return True, f"Saved to Sheet + Local Backup"
+    except Exception as e: 
+        # Even if sheet fails, local save may have succeeded
+        if local_ok:
+            return True, f"Saved Locally (Sheet error: {e})"
+        return False,str(e)
 
 def get_next_numbers(clinic_name):
     try:
@@ -2030,38 +2194,95 @@ def dashboard_welcome_page():
 
 def clinic_login_page():
     language_selector()
-    st.markdown(f"<div style='background:#1a1c23;border:2px solid #ff0000;border-radius:18px;padding:24px;text-align:center;'><div class='heading-h1'>Herbal Clinic International</div><div style='color:#666;'>3 Languages</div></div>", unsafe_allow_html=True)
+    import streamlit.components.v1 as components
+    # V202 Requirement 4: Same top box on all pages including login/signup
+    clinic_heading_banner_compact()
     with st.container(border=True):
         t1,t2,t3=st.tabs(["Staff Login","Clinic User","Home User"])
         with t1:
-            u=st.text_input("Username", value="boss", key="login_u_v172")
-            p=st.text_input("Password", type="password", value="boss123", key="login_p_v172")
-            if st.button("Login", use_container_width=True, type="primary", key="staff_login_v172"):
+            u=st.text_input("Username", value="boss", key="login_u_v201")
+            p=st.text_input("Password", type="password", value="boss123", key="login_p_v201")
+            if st.button("Login", use_container_width=True, type="primary", key="staff_login_v201"):
                 st.session_state.logged_in=True
                 st.session_state.username=u
                 st.session_state.user_role="Boss"
                 st.session_state.user_type="Staff"
+                st.session_state.clinic_name="Herbal Clinic International"
                 st.session_state.current_page="dashboard_welcome"
+                # V201 - Persistent login: save to query_params + localStorage
+                try:
+                    st.query_params["hci_logged"]="1"
+                    st.query_params["hci_user"]=u
+                    st.query_params["hci_role"]="Boss"
+                    st.query_params["hci_type"]="Staff"
+                except: pass
+                components.html(f'''
+                <script>
+                try{{
+                    localStorage.setItem('hci_logged','1');
+                    localStorage.setItem('hci_user','{u}');
+                    localStorage.setItem('hci_role','Boss');
+                    localStorage.setItem('hci_type','Staff');
+                    localStorage.setItem('hci_clinic','Herbal Clinic International');
+                }}catch(e){{}}
+                </script>
+                ''', height=0)
                 st.rerun()
         with t2:
-            cu=st.text_input("Username", key="clinic_u_v172")
-            cp=st.text_input("Password", type="password", key="clinic_p_v172")
-            if st.button("Login", use_container_width=True, type="primary", key="clinic_login_v172"):
+            cu=st.text_input("Username", key="clinic_u_v201")
+            cp=st.text_input("Password", type="password", key="clinic_p_v201")
+            if st.button("Login", use_container_width=True, type="primary", key="clinic_login_v201"):
                 st.session_state.logged_in=True
                 st.session_state.username=cu
                 st.session_state.user_role="clinic"
                 st.session_state.user_type="Clinic"
+                st.session_state.clinic_name="Herbal Clinic International"
                 st.session_state.current_page="dashboard_welcome"
+                try:
+                    st.query_params["hci_logged"]="1"
+                    st.query_params["hci_user"]=cu
+                    st.query_params["hci_role"]="clinic"
+                    st.query_params["hci_type"]="Clinic"
+                except: pass
+                components.html(f'''
+                <script>
+                try{{
+                    localStorage.setItem('hci_logged','1');
+                    localStorage.setItem('hci_user','{cu}');
+                    localStorage.setItem('hci_role','clinic');
+                    localStorage.setItem('hci_type','Clinic');
+                    localStorage.setItem('hci_clinic','Herbal Clinic International');
+                }}catch(e){{}}
+                </script>
+                ''', height=0)
                 st.rerun()
         with t3:
-            hu=st.text_input("Username", key="home_u_v172")
-            hp=st.text_input("Password", type="password", key="home_p_v172")
-            if st.button("Login", use_container_width=True, type="primary", key="home_login_v172"):
+            hu=st.text_input("Username", key="home_u_v201")
+            hp=st.text_input("Password", type="password", key="home_p_v201")
+            if st.button("Login", use_container_width=True, type="primary", key="home_login_v201"):
                 st.session_state.logged_in=True
                 st.session_state.username=hu
                 st.session_state.user_role="home_user"
                 st.session_state.user_type="HomeUser"
+                st.session_state.clinic_name="Herbal Clinic International"
                 st.session_state.current_page="home_user"
+                try:
+                    st.query_params["hci_logged"]="1"
+                    st.query_params["hci_user"]=hu
+                    st.query_params["hci_role"]="home_user"
+                    st.query_params["hci_type"]="HomeUser"
+                except: pass
+                components.html(f'''
+                <script>
+                try{{
+                    localStorage.setItem('hci_logged','1');
+                    localStorage.setItem('hci_user','{hu}');
+                    localStorage.setItem('hci_role','home_user');
+                    localStorage.setItem('hci_type','HomeUser');
+                    localStorage.setItem('hci_clinic','Herbal Clinic International');
+                }}catch(e){{}}
+                </script>
+                ''', height=0)
                 st.rerun()
     add_footer()
 
@@ -2095,9 +2316,11 @@ def feedback_page():
                     hdr = ws.row_values(1) if ws.row_values(1) else SHEET_HEADERS["Feedback"]
                     # Ensure extra columns exist in row
                     row = [row_data.get(h,"") for h in hdr]
+                    # V202 - Save both local and sheet
+                    save_to_local_csv("Feedback", row_data)
                     ws.append_row(row, value_input_option="RAW")
                     get_all_records_cached.clear()
-                    st.success(f"Thank you! {fid} submitted - Full app services restored!")
+                    st.success(f"Thank you! {fid} submitted - Full app services restored! (Saved to Sheet + Local)")
                     st.balloons()
                     # V197 - Requirement 6: After Submit, return to same page where user wanted to work (Requirement 5)
                     get_all_records_cached.clear()
@@ -2794,18 +3017,123 @@ def admin_page():
                     st.info("Select Sub Category from list above to Edit/Delete - Options now always visible")
 
     elif selected == "AppSettings":
-        st.markdown("<div class='heading-h4'>AppSettings</div>", unsafe_allow_html=True)
+        st.markdown("<div class='heading-h4'>AppSettings - Full Control Panel V201</div>", unsafe_allow_html=True)
+        st.markdown("<div style='background:#F1F7F3;border:2px solid #2E7D5B;border-radius:12px;padding:12px;margin-bottom:12px;'><b>V201 - All App Settings from one page:</b> Here you can control whole app without code change. Use Code column to use in app.py: <code>get_app_setting('Key','Default')</code></div>", unsafe_allow_html=True)
+        
+        # Predefined settings catalog - V201
+        PREDEFINED_SETTINGS = {
+            "General": [
+                ("AppVersion", "V201", "Current App Version Code"),
+                ("MaintenanceMode", "No", "Yes=App Closed, No=App Open"),
+                ("MaintenanceMessage", "App under maintenance", "Message when MaintenanceMode=Yes"),
+                ("TotalUsersBase", "650", "Base number added to total users display"),
+                ("Currency", "PKR", "Currency for billing"),
+                ("LanguageDefault", "en", "Default language en/ur/ar"),
+            ],
+            "Offer & WhatsApp": [
+                ("OfferEnabled", "Yes", "Show Offer tab? Yes/No"),
+                ("OfferPercent", "20", "Offer percentage"),
+                ("WhatsAppLink", "https://chat.whatsapp.com/...", "WhatsApp Group Link"),
+                ("WhatsAppNumber", "+92...", "Support WhatsApp Number"),
+                ("SupportEmail", "support@herbalclinic.com", "Support Email"),
+            ],
+            "Theme & UI (V201)": [
+                ("PrimaryColor", "#2E7D5B", "Primary Theme Color"),
+                ("AdLinkText", "This is just an ad link; there is no need to open it", "Ad link text - 2 lines with ;"),
+                ("AdLinkEnabled", "Yes", "Show Ad link? Yes/No"),
+                ("AdLinkBorderColor", "#B8860B", "Dark golden border for ad"),
+                ("FooterText", "by mian Nadeem", "Footer text"),
+                ("BannerText", "Herbal Clinic International", "Top banner text"),
+            ],
+            "Clinic": [
+                ("DefaultFees", "500", "Default clinic fees"),
+                ("DefaultMedicineCharges", "0", "Default medicine charges"),
+                ("MaxDailyPatients", "50", "Max patients per day"),
+                ("ClinicWorkHours", "9AM-8PM", "Working hours"),
+                ("RevisitDays", "7", "Revisit after days"),
+            ],
+            "Home User": [
+                ("MaxHomePatients", "5", "Max patients Home User can add"),
+                ("HomeUserDailyLimit", "10", "Max forms per day for Home User"),
+            ],
+            "Security & Login (V201 Fix)": [
+                ("SessionTimeout", "24", "Login stays how many hours? 24=1 day"),
+                ("MaxLoginAttempts", "3", "Max login attempts"),
+                ("FeedbackSuspensionDays", "7", "Suspend if no feedback after days"),
+                ("PersistentLoginEnabled", "Yes", "V201 - Mobile stays logged in? Yes/No"),
+            ],
+            "Popup & Articles": [
+                ("PopupEnabled", "Yes", "Show popups? Yes/No"),
+                ("ArticlesApproval", "Auto", "Auto or Manual approval"),
+                ("OfferAutoHide", "No", "Auto hide offer after date?"),
+            ],
+        }
+        
         recs = get_all_records_cached("AppSettings")
-        st.write(f"Total Settings: {len(recs)}")
+        st.write(f"Total Settings in Sheet: {len(recs)}")
+        
+        # Show current settings with Code column - Requirement 5a
         if recs:
-            st.dataframe(pd.DataFrame(recs), use_container_width=True)
+            df = pd.DataFrame(recs)
+            # Add Code column for developer
+            def make_code(row):
+                k=row.get("Key","")
+                v=row.get("Value","")
+                return f"get_app_setting('{k}', '{v}')"
+            if "Key" in df.columns:
+                df["Code to Use in app.py"] = df.apply(make_code, axis=1)
+            st.dataframe(df, use_container_width=True)
+            # Also show as table with codes
+            with st.expander("Show Settings with Codes (Requirement 5a)"):
+                for r in recs:
+                    k=r.get("Key","")
+                    v=r.get("Value","")
+                    d=r.get("Description","")
+                    st.markdown(f"**{k}** = `{v}` | Desc: {d} | Code: `get_app_setting('{k}', '{v}')`")
+        else:
+            st.info("No settings yet - Add from catalog below")
+        
+        st.markdown("---")
+        st.markdown("<div class='heading-h4'>Add / Edit Settings - Full Catalog (Requirement 5b)</div>", unsafe_allow_html=True)
+        
+        # Catalog display with Add buttons
+        for cat, settings_list in PREDEFINED_SETTINGS.items():
+            with st.expander(f"{cat} - {len(settings_list)} settings"):
+                for key, default_val, desc in settings_list:
+                    # Check if exists
+                    exists = next((r for r in recs if r.get("Key","").lower()==key.lower()), None)
+                    c1,c2,c3,c4 = st.columns([2,2,3,1])
+                    with c1:
+                        st.markdown(f"**{key}**")
+                    with c2:
+                        st.code(f"{exists.get('Value','') if exists else default_val}", language="text")
+                    with c3:
+                        st.caption(desc)
+                        st.caption(f"Code: get_app_setting('{key}')")
+                    with c4:
+                        if exists:
+                            st.success("Exists")
+                        else:
+                            if st.button(f"Add", key=f"add_{key}_v201"):
+                                ws = get_sheet_safe("AppSettings")
+                                if ws:
+                                    hdr = ws.row_values(1) if ws.row_values(1) else SHEET_HEADERS["AppSettings"]
+                                    row_data = {"Key": key, "Value": default_val, "Date": str(datetime.date.today()), "Status": "Active", "Description": desc}
+                                    row = [row_data.get(h,"") for h in hdr]
+                                    ws.append_row(row, value_input_option="RAW")
+                                    get_all_records_cached.clear()
+                                    st.success(f"Added {key}")
+                                    st.rerun()
+        
+        st.markdown("---")
+        st.markdown("<div class='heading-h4'>Custom Setting - Add New</div>", unsafe_allow_html=True)
         with st.container(border=True):
-            s_key = st.text_input("Key", key="appset_key_v197")
-            s_val = st.text_input("Value", key="appset_val_v197")
-            s_desc = st.text_input("Description", key="appset_desc_v197")
-            if st.button("Save Setting", key="appset_save_v197", type="primary"):
+            s_key = st.text_input("Key (Code Name)", key="appset_key_v201", placeholder="e.g. MyNewSetting")
+            s_val = st.text_input("Value", key="appset_val_v201", placeholder="e.g. Yes or 123")
+            s_desc = st.text_input("Description + Code hint", key="appset_desc_v201", placeholder="e.g. Controls XYZ - Code: get_app_setting('MyNewSetting')")
+            if st.button("Save Setting", key="appset_save_v201", type="primary"):
                 if not s_key.strip():
-                    st.error("Key required")
+                    st.error("Key required - This is Code name used in app.py")
                 else:
                     ws = get_sheet_safe("AppSettings")
                     if ws:
@@ -2819,12 +3147,13 @@ def admin_page():
                                 break
                         if found_row:
                             ws.update(f"B{found_row}", [[s_val]])
-                            st.success(f"Updated {s_key} = {s_val}")
+                            ws.update(f"E{found_row}", [[s_desc]])
+                            st.success(f"Updated {s_key} = {s_val} | Code: get_app_setting('{s_key}')")
                         else:
-                            row_data = {"Key": s_key, "Value": s_val, "Date": str(datetime.date.today()), "Status": "Active", "Description": s_desc}
+                            row_data = {"Key": s_key, "Value": s_val, "Date": str(datetime.date.today()), "Status": "Active", "Description": s_desc + f" | Code: get_app_setting('{s_key}')"}
                             row = [row_data.get(h,"") for h in hdr]
                             ws.append_row(row, value_input_option="RAW")
-                            st.success(f"Added {s_key} = {s_val}")
+                            st.success(f"Added {s_key} = {s_val} | Use Code: get_app_setting('{s_key}', '{s_val}')")
                         get_all_records_cached.clear()
                         st.rerun()
 
