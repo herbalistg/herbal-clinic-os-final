@@ -521,13 +521,13 @@ def language_selector():
         # V207 Requirement 1b: Single tab toggles both themes
         if curr_theme == "light":
             # Show Dim option - clicking switches to dim
-            if st.button("🌿", key="theme_toggle_single_v207", help="Dim Theme"):
+            if st.button("🌿", key="theme_toggle_dim_v209", help="Dim Theme"):
                 st.session_state.theme = "dim"
                 components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
                 st.rerun()
         else:
             # Show Light option - clicking switches to light
-            if st.button("☀️", key="theme_toggle_single_v207", help="Light Theme"):
+            if st.button("☀️", key="theme_toggle_light_v209", help="Light Theme"):
                 st.session_state.theme = "light"
                 components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
                 st.rerun()
@@ -2713,40 +2713,15 @@ def dashboard_welcome_page():
                 st.session_state.current_page="temperament_quiz"
                 st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
-    r2c1,r2c2,r2c3,r2c4=st.columns(4)
-    with r2c1:
-        st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("Articles", use_container_width=True, key="dash_c_art_v206"):
-            st.session_state.prev_page = "dashboard_welcome"
-            st.session_state.page_history.append("dashboard_welcome")
-            st.session_state.current_page="clinic_articles"
-            st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-    with r2c2:
-        st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-        if st.button("Herbs & Pharma", use_container_width=True, key="dash_herb_v206"):
-            st.session_state.prev_page = "dashboard_welcome"
-            st.session_state.page_history.append("dashboard_welcome")
-            st.session_state.current_page="clinic_herb_formula"
-            st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-    with r2c3:
-        # V206 Requirement 4b: Free Health Tools tab inside Clinic Section
-        st.markdown("<div class='graceful-card' style='background: linear-gradient(135deg,#FFF9C4,#FFFFFF)!important;border:2px solid #FF9800!important;'>", unsafe_allow_html=True)
-        if st.button("Free Health Tools", use_container_width=True, key="dash_quiz_clinic_v206"):
-            st.session_state.prev_page = "dashboard_welcome"
-            st.session_state.page_history.append("dashboard_welcome")
-            st.session_state.current_page="temperament_quiz"
-            st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+    # V209 Fix - Removed duplicate Articles/Herbs/Free Tools block - keys now unique above
     # V209 Fix 8: Offer tab controlled by both AppSettings and Clinic Admin
-    dash_settings = st.session_state.get("clinic_dashboard_settings", {})
+    r3c1,r3c2,r3c3,r3c4=st.columns(4)
     show_offer_setting = dash_settings.get("Offer", True)
     show_offer = get_app_setting("OfferEnabled", get_app_setting("show_offer_tab","Yes"))
     if str(show_offer).lower() in ["yes","on","true","1","enabled"] and show_offer_setting: 
-        with r2c4:
+        with r3c1:
             st.markdown("<div class='graceful-card' style='border:3px solid #00ff88; animation: blinkGreen 1.2s infinite;'>", unsafe_allow_html=True)
-            if st.button("Offer", use_container_width=True, key="dash_offer_v206"):
+            if st.button("Offer", use_container_width=True, key="dash_offer_v209"):
                 st.session_state.prev_page = "dashboard_welcome"
                 st.session_state.page_history.append("dashboard_welcome")
                 st.session_state.current_page="offer_page"
@@ -2754,15 +2729,14 @@ def dashboard_welcome_page():
             st.markdown("</div>", unsafe_allow_html=True)
     # V209 Fix 8: Essential tab if enabled in Clinic Admin
     if dash_settings.get("Essential", False):
-        with r2c4:
-            if str(show_offer).lower() not in ["yes","on","true","1","enabled"] or not show_offer_setting:
-                st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-                if st.button("Essential", use_container_width=True, key="dash_essential_v209"):
-                    st.session_state.prev_page = "dashboard_welcome"
-                    st.session_state.page_history.append("dashboard_welcome")
-                    st.session_state.current_page="essential_page"
-                    st.rerun()
-                st.markdown("</div>", unsafe_allow_html=True)
+        with r3c2:
+            st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
+            if st.button("Essential", use_container_width=True, key="dash_essential_v209"):
+                st.session_state.prev_page = "dashboard_welcome"
+                st.session_state.page_history.append("dashboard_welcome")
+                st.session_state.current_page="essential_page"
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("<div class='dash-section-title'>Home User</div>", unsafe_allow_html=True)
     h1,h2,h3=st.columns(3)
