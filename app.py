@@ -1,4 +1,4 @@
-# APP VERSION - V206 - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V207 - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V206"  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V207"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -35,111 +35,64 @@ def sanitize_for_sheet(text):
 
 st.set_page_config(page_title="Herbal Clinic International", page_icon="\U0001f33f", layout="centered", initial_sidebar_state="collapsed")
 
-# ===== V206 - User Theme System - Light + Dim only (Dark removed as per requirement 1c) =====
+# ===== V207 - User Theme System - Light + Dim only, single toggle, 1 line top bar =====
 if "theme" not in st.session_state:
-    st.session_state.theme = "light"  # light, dim only
+    st.session_state.theme = "light"
 
 def get_theme_css():
     theme = st.session_state.get("theme", "light")
     if theme == "dim":
-        # V206 Requirement 1d: Same green shade but stronger/darker, screen feels slightly dark
+        # V206 Requirement 1d: Same green shade stronger - screen feels slightly dark
         return """
-        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #DDE8E0!important; color: #1A2E1E!important; }
-        .block-container { background: #EAF2EC!important; border: 3px solid #1B5E20!important; box-shadow: 0 6px 24px rgba(27,94,32,0.25)!important; }
+        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #C8DCCB!important; color: #0F2A14!important; }
+        .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; box-shadow: 0 8px 28px rgba(27,94,32,0.30)!important; }
         .heading-h1 { color: #1B5E20!important; }
-        .graceful-card { background: #C8E6C9!important; border: 2px solid #2E7D32!important; }
-        .dash-section-title { background: #2E7D32!important; }
-        div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] { background: #E8F5E9!important; border: 1.5px solid #2E7D32!important; }
-        .ad-note { background: #E8F5E9!important; }
+        .graceful-card { background: #A8CCAD!important; border: 2px solid #1B5E20!important; }
+        .dash-section-title { background: #1B5E20!important; }
+        div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] { background: #E0F0E2!important; border: 2px solid #2E7D32!important; }
+        .ad-note { background: #E0F0E2!important; border-color: #1B5E20!important; }
         """
-    else:  # light - default herbal light with light green shade
+    else:
         return """
         html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
         .block-container { background: #FFFFFF!important; border: 3px solid #2E7D5B!important; }
         """
 
-def theme_selector_ui():
-    """V206 Requirement 1a,b,c,e: No extra text, no Dark, only Light/Dim icons, same line as language"""
+def show_urdu_work_in_progress_note():
+    if st.session_state.get("logged_in", False):
+        st.markdown("""
+        <div style="background:#FFF9C4;border:2px solid #FBC02D;border-radius:12px;padding:12px;margin-top:20px;text-align:center;">
+            <span style="font-size:16px;font-weight:700;color:#1F2D27;">یہ حتمی نہیں ہے۔ ابھی اس پر کام ہو رہا ہے۔ کام مکمل ہوجانے پر آپ کو مطلع کردیا جائے گا۔</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+def scroll_to_top():
+    """V207 Requirement 2: Force page to open from top - robust JS"""
     import streamlit.components.v1 as components
-    # Theme toggle - compact icons only, no text labels as per 1a,b
-    col_lang, col_light, col_dim = st.columns([6,1,1])
-    with col_light:
-        if st.button("☀️", key="theme_light_v206"):
-            st.session_state.theme = "light"
-            components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
-            st.rerun()
-    with col_dim:
-        if st.button("🌿", key="theme_dim_v206"):
-            st.session_state.theme = "dim"
-            components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
-            st.rerun()
-    # With col_lang we will handle language in language_selector itself - this function now only provides buttons
-    # But for same-line requirement 1e, we will integrate in language_selector below
-    
-    # JS to restore theme from localStorage
-    if "theme_restored" not in st.session_state:
-        components.html("""
-        <script>
+    components.html("""
+    <script>
+    (function(){
         try{
-            const saved = localStorage.getItem('hci_theme');
-            if(saved && saved!=='light'){
-                const url = new URL(window.location.href);
-                if(!url.searchParams.get('hci_theme')){
-                    url.searchParams.set('hci_theme', saved);
-                    window.parent.location = url.toString();
-                }
+            window.scrollTo({top:0, left:0, behavior:'instant'});
+            if(window.parent){
+                window.parent.scrollTo({top:0, left:0, behavior:'instant'});
+                const containers = [
+                    window.parent.document.querySelector('[data-testid="stAppViewContainer"]'),
+                    window.parent.document.querySelector('[data-testid="stMain"]'),
+                    window.parent.document.querySelector('section.main'),
+                    window.parent.document.querySelector('[data-testid="stVerticalBlock"]')
+                ];
+                containers.forEach(c=>{ if(c) c.scrollTop = 0; });
+                // Also try main element
+                const main = window.parent.document.querySelector('main');
+                if(main) main.scrollTop = 0;
             }
         }catch(e){}
-        </script>
-        """, height=0)
-        st.session_state.theme_restored = True
-
-    theme_css = get_theme_css()
-    st.markdown(f"<style>{theme_css}</style>", unsafe_allow_html=True)
-
-def theme_selector_compact():
-    """V206 Requirement 1e: Theme 2 icons + language icon in same line - compact"""
-    import streamlit.components.v1 as components
-    c1,c2,c3,c4 = st.columns([5,1,1,1])
-    with c2:
-        if st.button("☀️", key="theme_light_compact_v206"):
-            st.session_state.theme = "light"
-            components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
-            st.rerun()
-    with c3:
-        if st.button("🌿", key="theme_dim_compact_v206"):
-            st.session_state.theme = "dim"
-            components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
-            st.rerun()
-    with c4:
-        # Language icon - triggers language change
-        if st.button("🌐", key="lang_toggle_v206"):
-            # Cycle languages en -> ur -> ar -> en
-            curr = st.session_state.get("app_language", "en")
-            nxt = {"en":"ur", "ur":"ar", "ar":"en"}[curr]
-            st.session_state.app_language = nxt
-            st.rerun()
-    with c1:
-        st.markdown(f"<div style='font-size:11px;color:#5a6d65;text-align:right;'>Lang: {st.session_state.get('app_language','en').upper()} | Theme: {st.session_state.get('theme','light')}</div>", unsafe_allow_html=True)
-    
-    if "theme_restored" not in st.session_state:
-        components.html("""
-        <script>
-        try{
-            const saved = localStorage.getItem('hci_theme');
-            if(saved && saved!=='light'){
-                const url = new URL(window.location.href);
-                if(!url.searchParams.get('hci_theme')){
-                    url.searchParams.set('hci_theme', saved);
-                    window.parent.location = url.toString();
-                }
-            }
-        }catch(e){}
-        </script>
-        """, height=0)
-        st.session_state.theme_restored = True
-    st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
-
+    })();
+    </script>
+    """, height=0)
+    # Also add anchor at top via markdown
+    st.markdown('<div id="top-anchor"></div>', unsafe_allow_html=True)
 
 
 st.markdown("""
@@ -458,89 +411,62 @@ def navigate_to(page):
     st.rerun()
 
 def language_selector():
-    # V205 - Theme selector for user comfort - Light/Dark/Dim
-    theme_selector_ui()
-    top_c1, top_c2 = st.columns([3,1])
-    with top_c1:
-        st.markdown(f"<div style='font-size:11px;color:#181819;'></div>", unsafe_allow_html=True)
-    with top_c2:
-        # Fixed CSS - only for language icon, not for menu tabs - remove green border from last tab
-        st.markdown('''<style>
-        /* Language icon only - scoped, not affecting menu tabs */
-        </style>''', unsafe_allow_html=True)
-        if st.button("🌐", key=f"global_lang_icon_{st.session_state.current_page}_{st.session_state.form_version}_v179", help="Select Language Bigger Clear"):
-            st.session_state.show_lang_selector = not st.session_state.show_lang_selector
-    if st.session_state.get("show_lang_selector", False):
-        st.markdown("<div style='background:#1a1c23;border:1px solid #333;border-radius:10px;padding:10px;margin-bottom:10px;'>", unsafe_allow_html=True)
-        st.markdown("**Select Language**")
-        lang_choice = st.radio("Language", ["English", "Urdu", "Arabic"], index=["en","ur","ar"].index(st.session_state.get("lang","en")) if st.session_state.get("lang","en") in ["en","ur","ar"] else 0, key=f"lang_radio_v172", label_visibility="collapsed", horizontal=True)
-        if lang_choice == "English": st.session_state.lang = "en"
-        elif lang_choice == "Urdu": st.session_state.lang = "ur"
-        elif lang_choice == "Arabic": st.session_state.lang = "ar"
-        if st.button("Close", key="close_lang_selector_v172"):
-            st.session_state.show_lang_selector = False
+    # V207 Requirement 1a,1b,1e: Theme and language tabs in 1 line, single theme tab
+    import streamlit.components.v1 as components
+    # Single line top bar - Theme toggle (single tab) + Language
+    # Apply theme CSS first
+    st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
+    
+    # 1 line: [spacer, theme single toggle, language]
+    c_spacer, c_theme, c_lang = st.columns([7,1,1])
+    with c_theme:
+        curr_theme = st.session_state.get("theme", "light")
+        # V207 Requirement 1b: Single tab toggles both themes
+        if curr_theme == "light":
+            # Show Dim option - clicking switches to dim
+            if st.button("🌿", key="theme_toggle_single_v207", help="Dim Theme"):
+                st.session_state.theme = "dim"
+                components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
+                st.rerun()
+        else:
+            # Show Light option - clicking switches to light
+            if st.button("☀️", key="theme_toggle_single_v207", help="Light Theme"):
+                st.session_state.theme = "light"
+                components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
+                st.rerun()
+    with c_lang:
+        # Language toggle single icon
+        if st.button("🌐", key="lang_toggle_single_v207", help="Change Language"):
+            curr = st.session_state.get("app_language", "en")
+            nxt = {"en":"ur", "ur":"ar", "ar":"en"}[curr]
+            st.session_state.app_language = nxt
             st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-
-def get_user_display_h2():
-    role = st.session_state.get("user_role","")
-    uname = st.session_state.get("username","")
-    cname = st.session_state.get("clinic_name","Herbal Clinic International")
-    if role == "Boss" or role == "Staff" or st.session_state.get("user_type")=="Staff":
-        return f"Staff - {uname} - {cname}"
-    elif role == "home_user" or st.session_state.get("user_type")=="HomeUser":
-        return f"Home User - {uname} - {cname}"
-    else:
-        return f"Clinic - {uname} - {cname}"
-
-def clinic_heading_banner():
-    user_h2 = get_user_display_h2()
-    is_logged = st.session_state.get("logged_in", False)
-    user_display = user_h2 if is_logged else "Welcome to Herbal Clinic International"
-    # V203 Modern - Gradient header, bigger font, italic temperament
-    st.markdown(f"""
-    <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:34px 26px;text-align:center;margin-bottom:18px;box-shadow: 0 8px 28px rgba(46,125,91,0.18), inset 0 1px 0 rgba(255,255,255,0.8);">
-        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: linear-gradient(135deg, #F1F7F3 0%, #FFFFFF 100%);padding:16px 26px;border-radius:16px;display:inline-block;border:2.5px solid #2E7D5B;font-size:56px; line-height:1.1; box-shadow: 0 4px 14px rgba(46,125,91,0.12);">Herbal Clinic International</div>
-        <div style="color:#5a6d65 !important; font-size:21px; font-weight:600; margin-top:18px; font-style:italic !important; letter-spacing:0.5px;">Based on human temperament</div>
-        <div style="font-size:26px; font-weight:800; color:#1F2D27 !important; margin-top:18px; background:#FFFFFF;padding:10px 20px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">{user_display}</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-def clinic_heading_banner_compact():
-    st.markdown(f"""
-    <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:34px 26px;text-align:center;margin-bottom:18px;box-shadow: 0 8px 28px rgba(46,125,91,0.18);">
-        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: linear-gradient(135deg, #F1F7F3 0%, #FFFFFF 100%);padding:16px 26px;border-radius:16px;display:inline-block;border:2.5px solid #2E7D5B;font-size:56px; line-height:1.1;">Herbal Clinic International</div>
-        <div style="color:#5a6d65 !important; font-size:21px; font-weight:600; margin-top:18px; font-style:italic !important;">Based on human temperament</div>
-        <div style="font-size:22px; font-weight:600; color:#5a6d65 !important; margin-top:16px;">Welcome - Please Sign In</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-
-def top_nav_inner():
-    scroll_to_top()
-    c1,c2=st.columns([1,1])
-    with c1:
-        if st.button("Back", key=f"back_{st.session_state.current_page}_v172"):
-            hist = st.session_state.get("page_history", ["dashboard_welcome"])
-            if len(hist) > 0:
-                prev = hist.pop() if hist else "dashboard_welcome"
-                if prev == st.session_state.current_page and hist:
-                    prev = hist.pop() if hist else "dashboard_welcome"
-                st.session_state.current_page = prev if prev else "dashboard_welcome"
-            else:
-                st.session_state.current_page = st.session_state.get("prev_page","dashboard_welcome")
-            st.rerun()
-    with c2:
-        if st.button("Dashboard", key=f"dash_{st.session_state.current_page}_v172", type="primary"):
-            st.session_state.page_history.append(st.session_state.current_page)
-            st.session_state.prev_page = st.session_state.current_page
-            st.session_state.current_page="dashboard_welcome"
-            st.rerun()
+    with c_spacer:
+        # Show current lang small
+        lang = st.session_state.get("app_language","en")
+        st.markdown(f"<div style='text-align:right;font-size:11px;color:#5a6d65;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+    
+    # Restore theme from localStorage
+    if "theme_restored" not in st.session_state:
+        components.html("""
+        <script>
+        try{
+            const saved = localStorage.getItem('hci_theme');
+            if(saved && saved!=='light'){
+                const url = new URL(window.location.href);
+                if(!url.searchParams.get('hci_theme')){
+                    url.searchParams.set('hci_theme', saved);
+                }
+            }
+        }catch(e){}
+        </script>
+        """, height=0)
+        st.session_state.theme_restored = True
     st.divider()
 
 def top_nav_dashboard():
     scroll_to_top()
+    # V207 - Ensure top anchor
     import streamlit.components.v1 as components
     c1,c2=st.columns([4,1])
     with c2:
@@ -916,9 +842,7 @@ def add_footer():
     show_urdu_work_in_progress_note()
     st.markdown(f"<div class='footer-sharp'>by mian Nadeem{ver_txt}</div>", unsafe_allow_html=True)
     st.markdown("""
-    <div class="ad-note">
-        There is<br>no need<br>to open<br>this ad.
-    </div>
+    <div class="ad-note">There is<br>no need<br>to open<br>this ad.</div>
     """, unsafe_allow_html=True)
 
 def under_development_footer(page_title=""):
