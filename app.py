@@ -4,7 +4,7 @@ import datetime
 import re
 import pandas as pd
 
-# NOTE FOR EVERY APP VERSION - V203
+# NOTE FOR EVERY APP VERSION
 # This app can be used in 3 languages: English, Urdu and Arabic.
 # Words from a different language must not be used anywhere in the app while another language is active.
 # English is default language.
@@ -18,7 +18,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V203"  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V204"  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -213,7 +213,7 @@ div[data-testid="stExpander"], div[data-testid="stContainer"] {
 """, unsafe_allow_html=True)
 
 
-# GOOGLE SHEET - V186 Final Structure - 12 sheets as per user decision
+# GOOGLE SHEET Final Structure - 12 sheets as per user decision
 # General (4): UserSignups, PermissionGranted, Articles, Feedback - displayed in App Admin alongside other tabs, not dashboard
 # Clinic (6): New_patient, Revisit, AutoDiagnosis, Herbs, Pharmacopoeia, Dictionary - for clinics + dashboard
 # Home User (1+1): HomeUsers + Home Treatment form
@@ -355,7 +355,7 @@ def language_selector():
         st.markdown('''<style>
         /* Language icon only - scoped, not affecting menu tabs */
         </style>''', unsafe_allow_html=True)
-        if st.button("🌐", key=f"global_lang_icon_{st.session_state.current_page}_{st.session_state.form_version}_v179", help="Select Language - V179 Bigger Clear"):
+        if st.button("🌐", key=f"global_lang_icon_{st.session_state.current_page}_{st.session_state.form_version}_v179", help="Select Language Bigger Clear"):
             st.session_state.show_lang_selector = not st.session_state.show_lang_selector
     if st.session_state.get("show_lang_selector", False):
         st.markdown("<div style='background:#1a1c23;border:1px solid #333;border-radius:10px;padding:10px;margin-bottom:10px;'>", unsafe_allow_html=True)
@@ -721,6 +721,33 @@ def get_home_user_phone():
     except: pass
     return ""
 
+
+def show_urdu_work_in_progress_note():
+    """V204 Requirement 4: Urdu note on every page after sign in"""
+    if st.session_state.get("logged_in", False):
+        st.markdown("""
+        <div style="background:#FFF9C4;border:2px solid #FBC02D;border-radius:12px;padding:12px;margin-top:20px;text-align:center;">
+            <span style="font-size:16px;font-weight:700;color:#1F2D27;">یہ حتمی نہیں ہے۔ ابھی اس پر کام ہو رہا ہے۔ کام مکمل ہوجانے پر آپ کو مطلع کردیا جائے گا۔</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+def scroll_to_top():
+    """V204 Requirement 5: Each page opens from start"""
+    import streamlit.components.v1 as components
+    components.html("""
+    <script>
+    try{
+        window.scrollTo(0,0);
+        if(window.parent){
+            window.parent.scrollTo(0,0);
+            const main = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+            if(main) main.scrollTop = 0;
+        }
+    }catch(e){}
+    </script>
+    """, height=0)
+
+
 def add_footer():
     is_dash = st.session_state.get("current_page","") == "dashboard_welcome"
     is_admin = st.session_state.get("current_page","") == "admin"
@@ -729,12 +756,6 @@ def add_footer():
     # V197 - Requirement 6: Feedback/WhatsApp on all pages except Dashboard, App Admin, and preceding pages (login/signup/initial)
     if not is_dash and not is_admin and not is_login:
         st.markdown("---")
-        st.markdown("""
-        <div style="background:#161617;border-left:4px solid #ffaa00;padding:14px;border-radius:10px;margin-top:18px;">
-            <b>Note!</b> This is currently a work in progress. Please let us know your suggestions for improving this page.<br>
-            <b>Not!</b> Join us on WhatsApp.
-        </div>
-        """, unsafe_allow_html=True)
         c1,c2=st.columns(2)
         with c1:
             if st.button("Feedback", key=f"fb_btn_footer_{st.session_state.get('current_page','')}_{st.session_state.form_version}_v197", type="primary", use_container_width=True):
@@ -752,10 +773,11 @@ def add_footer():
                 </a>
             </div>
             """, unsafe_allow_html=True)
+    show_urdu_work_in_progress_note()
     st.markdown(f"<div class='footer-sharp'>by mian Nadeem{ver_txt}</div>", unsafe_allow_html=True)
     st.markdown("""
     <div class="ad-note">
-        This is just an ad link;<br>there is no need to open it
+        There is<br>no need<br>to open<br>this ad.
     </div>
     """, unsafe_allow_html=True)
 
@@ -948,7 +970,7 @@ def render_patient_form(is_revisit=False):
             st.markdown(f"<div class='history-card'><b>Name:</b> {r.get('Name','')} | <b>Age:</b> {r.get('Age','')} | <b>Gender:</b> {r.get('Gender','')} | <b>Phone:</b> {r.get('Phone','')}<br><b>Address:</b> {r.get('Address','')} | <b>CNIC:</b> {r.get('CNIC','')} | <b>Last Date:</b> {r.get('Date','')}<br><b>Chief Complaint:</b> {r.get('ChiefComplaint','')} | <b>Past History:</b> {r.get('PastHistory','')} | <b>Balance:</b> Rs {r.get('Balance','0')}</div>", unsafe_allow_html=True)
 
     with st.container(border=True):
-        st.markdown("<div class='heading-h4'>Personal Information - V197 (6 fields visible)</div>", unsafe_allow_html=True)
+        st.markdown("<div class='heading-h4'>Personal Information (6 fields visible)</div>", unsafe_allow_html=True)
         # V197 Requirement 2: Only 6 fields visible by default
         c1,c2,c3=st.columns(3)
         with c1:
@@ -996,7 +1018,7 @@ def render_patient_form(is_revisit=False):
             age_qs = get_age_based_questions(cur_age, cur_gender)
             if age_qs:
                 st.markdown("---")
-                st.markdown(f"<div class='heading-h5'>Age-Based Questions for {cur_gender} (Age: {cur_age}) - V197</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='heading-h5'>Age-Based Questions for {cur_gender} (Age: {cur_age})</div>", unsafe_allow_html=True)
                 cols = st.columns(3)
                 for idx, (q_label, q_type, q_key) in enumerate(age_qs):
                     col = cols[idx % 3]
@@ -1049,9 +1071,9 @@ def render_patient_form(is_revisit=False):
                 elif dis=="Select":
                     st.error("Please select Disease *")
                 elif not no_val:
-                    st.error("Please complete: No/Count * is mandatory - V197")
+                    st.error("Please complete: No/Count * is mandatory")
                 elif dur_val=="Select":
-                    st.error("Please complete: Duration * is mandatory - V197")
+                    st.error("Please complete: Duration * is mandatory")
                 else:
                     entry_text = f"{bp} + {dis} + {no_val} {dur_val}"
                     if "patient_diseases" not in st.session_state:
@@ -1232,7 +1254,7 @@ def render_auto_form(prefix, is_home=False):
         with st.container(border=True):
             st.markdown(f"<div class='history-card'><b>Name:</b> {r.get('Name','')} | <b>Age:</b> {r.get('Age','')} | <b>Phone:</b> {r.get('Phone','')}<br><b>Address:</b> {r.get('Address','')} | <b>Date:</b> {r.get('Date','')}<br><b>Diseases:</b> {r.get('Diseases','')} | <b>Extra:</b> {r.get('ExtraSymptoms','')}</div>", unsafe_allow_html=True)
 
-    st.markdown(f"<div class='heading-h4'>Personal Information - V197 (6 fields visible)</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='heading-h4'>Personal Information (6 fields visible)</div>", unsafe_allow_html=True)
     with st.container(border=True):
         # Prefill helper
         def get_auto_prefill(field, default=""):
@@ -1268,7 +1290,7 @@ def render_auto_form(prefix, is_home=False):
                 st.rerun()
         else:
             st.markdown("---")
-            st.markdown("<div class='heading-h5'>Additional Personal Details (Hidden by default) - V197</div>", unsafe_allow_html=True)
+            st.markdown("<div class='heading-h5'>Additional Personal Details (Hidden by default)</div>", unsafe_allow_html=True)
             c1,c2,c3=st.columns(3)
             with c1:
                 p_blood=st.selectbox("Blood Group", LISTS["blood_group"], key=f"{prefix}_blood_v197")
@@ -1301,7 +1323,7 @@ def render_auto_form(prefix, is_home=False):
             age_qs = get_age_based_questions(p_age, p_gender)
             if age_qs:
                 st.markdown("---")
-                st.markdown(f"<div class='heading-h5'>Age-Based Questions for {p_gender} (Age: {p_age}) - V197</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='heading-h5'>Age-Based Questions for {p_gender} (Age: {p_age})</div>", unsafe_allow_html=True)
                 cols = st.columns(3)
                 for idx, (q_label, q_type, q_key) in enumerate(age_qs):
                     col = cols[idx % 3]
@@ -1331,7 +1353,7 @@ def render_auto_form(prefix, is_home=False):
                             st.error(f"Phone must match Home User signup phone: {home_phone}")
                             st.stop()
                     st.session_state[personal_ok_key] = True
-                    st.success("Personal Information OK - Next section unlocked")
+                    st.success("Personal Information Saved")
                     st.rerun()
         else:
             st.success("Personal Information Completed - OK")
@@ -1345,7 +1367,7 @@ def render_auto_form(prefix, is_home=False):
 
     st.markdown(f"<div class='heading-h4'>Diseases</div>", unsafe_allow_html=True)
     with st.container(border=True):
-        st.markdown("<div class='heading-h5'>Select Body Part and Disease - V197 Fixed Mandatory</div>", unsafe_allow_html=True)
+        st.markdown("<div class='heading-h5'>Select Body Part and Disease</div>", unsafe_allow_html=True)
         c1,c2,c3,c4=st.columns([3,3,2,2])
         with c1:
             body_part = st.selectbox("Body Part *", list(BODY_PARTS.keys()), key=f"{prefix}_body_part_v197")
@@ -1372,8 +1394,8 @@ def render_auto_form(prefix, is_home=False):
             with cq3:
                 rq3_val = st.text_input(related_qs[2] if len(related_qs)>2 else "Associated Symptom", key=f"{prefix}_rel_q3_v197", placeholder="e.g., Nausea")
 
-        # V197 Fix #5: Robust Add Disease - No session_state set after widget to avoid StreamlitWidgetAlreadyInstantiatedError
-        if st.button("Add Disease +", key=f"{prefix}_add_v197", type="secondary", use_container_width=True):
+        # V204 Requirement 7 Fix: Add Disease + works, accumulates to Added Diseases, clears selection fields
+        if st.button("Add Disease +", key=f"{prefix}_add_v204", type="secondary", use_container_width=True):
             bp = st.session_state.get(f"{prefix}_body_part_v197", "Select")
             dis = st.session_state.get(f"{prefix}_disease_sub_v197", "Select")
             no_val = st.session_state.get(f"{prefix}_no_v197", "").strip()
@@ -1382,13 +1404,13 @@ def render_auto_form(prefix, is_home=False):
             r2 = st.session_state.get(f"{prefix}_rel_q2_v197", "").strip()
             r3 = st.session_state.get(f"{prefix}_rel_q3_v197", "").strip()
             if bp=="Select":
-                st.error("Please select Body Part *")
+                st.error("Please select Body Part")
             elif dis=="Select":
-                st.error("Please select Disease *")
+                st.error("Please select Disease")
             elif not no_val:
-                st.error("Please complete: No/Count * is mandatory - V197")
+                st.error("Please enter No/Count")
             elif dur_val=="Select":
-                st.error("Please complete: Duration * is mandatory - V197")
+                st.error("Please select Duration")
             else:
                 entry_text = f"{bp} + {dis} + {no_val} {dur_val}"
                 if r1 and r1!="Select": entry_text += f" + {r1}"
@@ -1398,11 +1420,20 @@ def render_auto_form(prefix, is_home=False):
                 if target_list_key not in st.session_state:
                     st.session_state[target_list_key] = []
                 st.session_state[target_list_key].append({"text": entry_text})
-                # V197 Fix: Don't set session_state after widget instantiation - causes error
-                st.success(f"✅ Added: {entry_text}")
+                # V204: Clear selection fields after adding
+                try:
+                    st.session_state[f"{prefix}_body_part_v197"] = "Select"
+                    st.session_state[f"{prefix}_disease_sub_v197"] = "Select"
+                    st.session_state[f"{prefix}_no_v197"] = ""
+                    st.session_state[f"{prefix}_dur_v197"] = "Select"
+                    st.session_state[f"{prefix}_rel_q1_v197"] = "Select"
+                    st.session_state[f"{prefix}_rel_q2_v197"] = ""
+                    st.session_state[f"{prefix}_rel_q3_v197"] = ""
+                except: pass
+                st.success(f"✅ Added: {entry_text} - Cleared fields for next entry")
                 st.rerun()
 
-    st.markdown("<div class='heading-h5'>Added Diseases (Accumulated with +) - V197</div>", unsafe_allow_html=True)
+    st.markdown("<div class='heading-h5'>Added Diseases</div>", unsafe_allow_html=True)
     diseases_list = st.session_state.get("home_auto_diseases", []) if is_home else st.session_state.get("auto_diseases", [])
     if diseases_list:
         combined_text = " + ".join([d.get("text","") for d in diseases_list])
@@ -1529,23 +1560,25 @@ def render_auto_form(prefix, is_home=False):
         st.session_state.form_version += 1
         st.rerun()
 
-    # V197 Requirement 5: Additional Questions at end before result processing (Personal Information and Home treatment only)
+    # V204 Requirement 6: Additional Questions BEFORE Proceed tab
     try:
         st.markdown("---")
-        st.markdown("<div class='heading-h4'>Additional Questions (Previous Version)</div>", unsafe_allow_html=True)
+        st.markdown("<div class='heading-h4'>Additional Questions</div>", unsafe_allow_html=True)
         with st.container(border=True):
-            st.markdown("<div class='heading-h5'>Previous Version Extra Questions - Moved to end before result</div>", unsafe_allow_html=True)
             add_qs = get_additional_patient_questions()
             cols = st.columns(3)
             for idx, (q_label, q_type, q_key) in enumerate(add_qs):
                 col = cols[idx % 3]
                 with col:
                     if isinstance(q_type, list):
-                        st.selectbox(q_label, q_type, key=f"auto_add_q_{q_key}_{prefix}_v197_end")
+                        st.selectbox(q_label, q_type, key=f"auto_add_q_{q_key}_{prefix}_v204_end")
                     else:
-                        st.text_input(q_label, key=f"auto_add_q_{q_key}_{prefix}_v197_end")
+                        st.text_input(q_label, key=f"auto_add_q_{q_key}_{prefix}_v204_end")
     except:
         pass
+
+    # V204 Requirement 6: Proceed tab below Additional Questions
+
 
     show_note = st.session_state.show_home_proceed_note if is_home else st.session_state.show_proceed_note
     if show_note:
@@ -1575,6 +1608,7 @@ def render_auto_form(prefix, is_home=False):
     return p_name, p_father, p_age, p_phone, p_gender, p_address, diseases_list
 
 def auto_selection_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -1632,6 +1666,7 @@ def auto_selection_page():
     add_footer()
 
 def home_user_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -1714,6 +1749,7 @@ def home_user_page():
     add_footer()
 
 def patient_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -1732,6 +1768,7 @@ def patient_revisit_form_page():
     add_footer()
 
 def revisit_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -1777,6 +1814,7 @@ def revisit_page():
     add_footer()
 
 def dictionary_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -1788,6 +1826,7 @@ def dictionary_page():
     add_footer()
 
 def pharmacopoeia_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -1800,11 +1839,12 @@ def pharmacopoeia_page():
     add_footer()
 
 def clinic_herb_formula_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Herbs & Pharmacopoeia</div>", unsafe_allow_html=True)
-    st.info("Data Source: Google Sheets - Herbs and Formulas sheets. When you add data to sheet, it will appear here automatically - V179")
+    st.info("Data Source: Google Sheets - Herbs and Formulas sheets. When you add data to sheet, it will appear here automatically")
     tab_search_herb, tab_all_herbs, tab_search_form, tab_all_form = st.tabs(["Search Herbs", "All Herbs", "Search Formulas", "All Formulas"])
     with tab_search_herb:
         st.markdown("<div class='heading-h4'>Search Herbs</div>", unsafe_allow_html=True)
@@ -1932,6 +1972,7 @@ def articles_page():
     add_footer()
 
 def clinic_articles_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -2088,6 +2129,7 @@ def get_app_setting(key, default="Yes"):
 
 
 def dashboard_welcome_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_dashboard()
@@ -2140,13 +2182,27 @@ def dashboard_welcome_page():
     except:
         pass
     
-    # Free Quiz Teaser - Lead Magnet
-    st.markdown("""
-    <div style="background: linear-gradient(135deg,#2E7D5B,#81C784);border-radius:16px;padding:16px;margin:16px 0;box-shadow:0 6px 18px rgba(46,125,91,0.25);color:white;text-align:center;">
-        <div style="font-size:20px;font-weight:800;">🎁 Free: Check Your Temperament in 30 Seconds!</div>
-        <div style="font-size:14px;margin-top:6px;opacity:0.95;">Modern quiz to engage users - Builds interest for Pro AI</div>
-    </div>
-    """, unsafe_allow_html=True)
+    # V204 Requirement 2: Free Quiz active for Clinic and Home User both PC and Mobile
+    st.markdown("<div class='dash-section-title'>🎁 Free Health Tools - For Clinic & Home User</div>", unsafe_allow_html=True)
+    fq1,fq2 = st.columns(2)
+    with fq1:
+        st.markdown("<div class='graceful-card' style='background: linear-gradient(135deg,#E8F5E9,#FFFFFF)!important;border:2px solid #2E7D5B!important;'>", unsafe_allow_html=True)
+        if st.button("🎁 Free: Check Your Temperament in 30 Seconds! (Clinic)", use_container_width=True, key="free_quiz_clinic_v204"):
+            st.session_state.prev_page = "dashboard_welcome"
+            st.session_state.page_history.append("dashboard_welcome")
+            st.session_state.current_page="temperament_quiz"
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+        st.caption("Modern quiz - Active on PC & Mobile")
+    with fq2:
+        st.markdown("<div class='graceful-card' style='background: linear-gradient(135deg,#FFF9C4,#FFFFFF)!important;border:2px solid #FF9800!important;'>", unsafe_allow_html=True)
+        if st.button("🏠 Free: Check Temperament (Home User)", use_container_width=True, key="free_quiz_home_v204"):
+            st.session_state.prev_page = "dashboard_welcome"
+            st.session_state.page_history.append("dashboard_welcome")
+            st.session_state.current_page="temperament_quiz"
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+        st.caption("For Home Users - Active on PC & Mobile")
     
     st.markdown("<div class='dash-section-title'>Clinic Section - Quick Actions</div>", unsafe_allow_html=True)
     # V203 - Compact tabs, icon inside tab field, green border only on hover, 2 per line mobile
@@ -2361,6 +2417,7 @@ def clinic_login_page():
     add_footer()
 
 def feedback_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -2419,14 +2476,14 @@ def feedback_page():
             </a>
         </div>
         ''', unsafe_allow_html=True)
-        st.info("This WhatsApp linked tab is now available on Feedback page - V179 fix")
+        st.info("This WhatsApp linked tab is now available on Feedback page fix")
     add_footer()
 
 
 
 
 
-# ========== POPUP & FEEDBACK SUSPENSION SYSTEM - V197 ==========
+# ========== POPUP & FEEDBACK SUSPENSION SYSTEM ==========
 def get_popup_dismissed_key(username, popup_id):
     return f"PopupDismissed_{username}_{popup_id}"
 
@@ -2594,11 +2651,12 @@ def show_feedback_suspension_notice():
         st.session_state.current_page = "feedback_page"
         st.rerun()
 
-# ========== END POPUP & FEEDBACK SYSTEM - V197 ==========
+# ========== END POPUP & FEEDBACK SYSTEM ==========
 
 
-# APP ADMIN LOCKED - V197 - Do not auto-modify this page without user explicit request
+# APP ADMIN LOCKED - Do not auto-modify this page without user explicit request
 def admin_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -2609,7 +2667,7 @@ def admin_page():
     if "admin_selected_section" not in st.session_state:
         st.session_state.admin_selected_section = ""
 
-    # Highlight menu tab that opens - V197 fix
+    # Highlight menu tab that opens fix
     st.markdown('''<style>
     .admin-menu-active {
         background: linear-gradient(145deg, #00ff88, #00cc6a) !important;
@@ -3094,7 +3152,7 @@ def admin_page():
         st.markdown("<div class='heading-h4'>AppSettings - Full Control Panel V201</div>", unsafe_allow_html=True)
         st.markdown("<div style='background:#F1F7F3;border:2px solid #2E7D5B;border-radius:12px;padding:12px;margin-bottom:12px;'><b>V201 - All App Settings from one page:</b> Here you can control whole app without code change. Use Code column to use in app.py: <code>get_app_setting('Key','Default')</code></div>", unsafe_allow_html=True)
         
-        # Predefined settings catalog - V201
+        # Predefined settings catalog
         PREDEFINED_SETTINGS = {
             "General": [
                 ("AppVersion", "V201", "Current App Version Code"),
@@ -3113,7 +3171,7 @@ def admin_page():
             ],
             "Theme & UI (V201)": [
                 ("PrimaryColor", "#2E7D5B", "Primary Theme Color"),
-                ("AdLinkText", "This is just an ad link; there is no need to open it", "Ad link text - 2 lines with ;"),
+                ("AdLinkText", "There is no need to open this ad.", "Ad link text - 2 lines with ;"),
                 ("AdLinkEnabled", "Yes", "Show Ad link? Yes/No"),
                 ("AdLinkBorderColor", "#B8860B", "Dark golden border for ad"),
                 ("FooterText", "by mian Nadeem", "Footer text"),
@@ -3264,6 +3322,7 @@ def admin_feedback_page():
     add_footer()
 
 def offer_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -3306,6 +3365,7 @@ def offer_page():
 
 
 def essential_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -3315,6 +3375,7 @@ def essential_page():
 
 
 def temperament_quiz_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
