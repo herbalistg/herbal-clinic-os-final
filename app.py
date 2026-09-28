@@ -395,6 +395,17 @@ defaults = {
     "section_opened": {"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False},
     "section_unlocked": {"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False},
 }
+def get_user_display_h2():
+    role = st.session_state.get("user_role","")
+    uname = st.session_state.get("username","")
+    cname = st.session_state.get("clinic_name","Herbal Clinic International")
+    if role == "Boss" or role == "Staff" or st.session_state.get("user_type")=="Staff":
+        return f"Staff - {uname} - {cname}"
+    elif role == "home_user" or st.session_state.get("user_type")=="HomeUser":
+        return f"Home User - {uname} - {cname}"
+    else:
+        return f"Clinic - {uname} - {cname}"
+
 for k,v in defaults.items():
     if k not in st.session_state:
         st.session_state[k]=v
@@ -462,6 +473,50 @@ def language_selector():
         </script>
         """, height=0)
         st.session_state.theme_restored = True
+    st.divider()
+
+def clinic_heading_banner():
+    user_h2 = get_user_display_h2()
+    is_logged = st.session_state.get("logged_in", False)
+    user_display = user_h2 if is_logged else "Welcome to Herbal Clinic International"
+    # V203 Modern - Gradient header, bigger font, italic temperament
+    st.markdown(f"""
+    <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:34px 26px;text-align:center;margin-bottom:18px;box-shadow: 0 8px 28px rgba(46,125,91,0.18), inset 0 1px 0 rgba(255,255,255,0.8);">
+        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: linear-gradient(135deg, #F1F7F3 0%, #FFFFFF 100%);padding:16px 26px;border-radius:16px;display:inline-block;border:2.5px solid #2E7D5B;font-size:56px; line-height:1.1; box-shadow: 0 4px 14px rgba(46,125,91,0.12);">Herbal Clinic International</div>
+        <div style="color:#5a6d65 !important; font-size:21px; font-weight:600; margin-top:18px; font-style:italic !important; letter-spacing:0.5px;">Based on human temperament</div>
+        <div style="font-size:26px; font-weight:800; color:#1F2D27 !important; margin-top:18px; background:#FFFFFF;padding:10px 20px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">{user_display}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+def clinic_heading_banner_compact():
+    st.markdown(f"""
+    <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:34px 26px;text-align:center;margin-bottom:18px;box-shadow: 0 8px 28px rgba(46,125,91,0.18);">
+        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: linear-gradient(135deg, #F1F7F3 0%, #FFFFFF 100%);padding:16px 26px;border-radius:16px;display:inline-block;border:2.5px solid #2E7D5B;font-size:56px; line-height:1.1;">Herbal Clinic International</div>
+        <div style="color:#5a6d65 !important; font-size:21px; font-weight:600; margin-top:18px; font-style:italic !important;">Based on human temperament</div>
+        <div style="font-size:22px; font-weight:600; color:#5a6d65 !important; margin-top:16px;">Welcome - Please Sign In</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+def top_nav_inner():
+    scroll_to_top()
+    c1,c2=st.columns([1,1])
+    with c1:
+        if st.button("Back", key=f"back_{st.session_state.current_page}_v172"):
+            hist = st.session_state.get("page_history", ["dashboard_welcome"])
+            if len(hist) > 0:
+                prev = hist.pop() if hist else "dashboard_welcome"
+                if prev == st.session_state.current_page and hist:
+                    prev = hist.pop() if hist else "dashboard_welcome"
+                st.session_state.current_page = prev if prev else "dashboard_welcome"
+            else:
+                st.session_state.current_page = st.session_state.get("prev_page","dashboard_welcome")
+            st.rerun()
+    with c2:
+        if st.button("Dashboard", key=f"dash_{st.session_state.current_page}_v172", type="primary"):
+            st.session_state.page_history.append(st.session_state.current_page)
+            st.session_state.prev_page = st.session_state.current_page
+            st.session_state.current_page="dashboard_welcome"
+            st.rerun()
     st.divider()
 
 def top_nav_dashboard():
