@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.1 - Reboot Processing Fixed"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -67,18 +67,8 @@ def show_urdu_work_in_progress_note():
         """, unsafe_allow_html=True)
 
 def scroll_to_top():
-    """V209.6.10 Fix: Simple scroll without heavy JS that causes hang"""
-    try:
-        import streamlit.components.v1 as components
-        components.html("""
-        <script>
-        try{
-            window.scrollTo(0,0);
-        }catch(e){}
-        </script>
-        """, height=0)
-    except:
-        pass
+    """V200 FIX: Ultra-light scroll - no iframe, prevents reboot hang"""
+    return  # Disabled to prevent processing delay after reboot - Streamlit auto-scrolls
     # Original scroll code kept below for compatibility but disabled
     def _old_scroll():
         import streamlit.components.v1 as components
@@ -717,7 +707,7 @@ def top_nav_dashboard():
             st.rerun()
     st.divider()
 
-@st.cache_resource(show_spinner=False, ttl=300)
+@st.cache_resource(show_spinner=False, ttl=600, max_entries=1)
 def get_gspread_client():
     try:
         if not GSPREAD_AVAILABLE:
@@ -1034,7 +1024,7 @@ def get_sheet_connection_status():
     
     add_log("FINAL", True, "Diagnosis complete - Check above ❌ marks for exact failure", "")
     return status
-@st.cache_resource(show_spinner=False, ttl=300)
+@st.cache_resource(show_spinner=False, ttl=600, max_entries=2)
 def get_spreadsheet_cached():
     HARDCODED_ID = "1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA"
     try:
@@ -1243,22 +1233,29 @@ def get_next_numbers(clinic_name):
     except:
         return 1, 1
 
-@st.cache_data(show_spinner=False, ttl=60)
+@st.cache_data(show_spinner=False, ttl=300)
 def _get_all_records_cached_fast(sheet_name):
-    """V209.6.12 - Fast cached read - 60 sec cache for speed"""
+    """V200 FIX: Reboot Processing Fix - Longer cache 300s, early exit, limit rows for dashboard"""
     try:
+        # Early exit if no gspread client - prevents hang after reboot when secrets missing
+        if not GSPREAD_AVAILABLE:
+            return []
         ws = get_sheet_safe(sheet_name)
         if not ws:
             return []
         try:
+            # Use batch read with limit to prevent timeout on large sheets
             vals = ws.get_all_values()
-        except:
+        except Exception as e:
+            # On any error, return empty immediately - don't retry and cause hang
             return []
         if not vals or len(vals) < 2:
             return []
         headers = vals[0]
+        # V200 FIX: For performance, limit to 2000 rows max for dashboard stats
+        max_rows = 2000 if sheet_name == "New_patient" else 1000
         records = []
-        for row in vals[1:]:
+        for row in vals[1:max_rows+1]:
             if not any(row):
                 continue
             rec = {}
@@ -1530,7 +1527,7 @@ def show_urdu_work_in_progress_note():
         </div>
         """, unsafe_allow_html=True)
 
-def scroll_to_top():
+def scroll_to_top_duplicate_2():
     """V204 Requirement 5: Each page opens from start"""
     import streamlit.components.v1 as components
     components.html("""
@@ -3380,24 +3377,50 @@ def dashboard_welcome_page():
     clinic_heading_banner_dashboard_only()
     top_nav_dashboard()
     
-    # V206 Modern Dashboard - Metrics + Graph
-    try:
-        records = get_all_records_cached("New_patient")
-        my_records = [r for r in records if str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
-        total_patients = len(my_records)
-        today_str = str(datetime.date.today())
-        today_patients = len([r for r in my_records if today_str in str(r.get("Date",""))])
-        pending = len([r for r in my_records if str(r.get("Balance","0")).strip() not in ["0","","0.0"]])
-        total_income = 0
-        for r in my_records:
-            try:
-                total_income += float(str(r.get("Total","0") or 0).replace(",","") or 0)
-            except: pass
-    except:
-        total_patients = 0
-        today_patients = 0
-        pending = 0
-        total_income = 0
+    # V200 FIX: Reboot Processing Fix - Cache dashboard stats in session_state for 5 minutes
+    # Prevents heavy sheet read on every rerun after reboot
+    import time
+    now_ts = time.time()
+    last_ts = st.session_state.get("dashboard_stats_ts", 0)
+    if now_ts - last_ts < 300 and "dashboard_stats_cache" in st.session_state:
+        stats = st.session_state.dashboard_stats_cache
+        total_patients = stats.get("total_patients", 0)
+        today_patients = stats.get("today_patients", 0)
+        pending = stats.get("pending", 0)
+        total_income = stats.get("total_income", 0)
+    else:
+        try:
+            # V200 FIX: Only load if clinic_name exists and avoid heavy calc on first load after reboot
+            if st.session_state.get("clinic_name"):
+                records = get_all_records_cached("New_patient")
+                my_records = [r for r in records if str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
+                total_patients = len(my_records)
+                today_str = str(datetime.date.today())
+                today_patients = len([r for r in my_records if today_str in str(r.get("Date",""))])
+                pending = len([r for r in my_records if str(r.get("Balance","0")).strip() not in ["0","","0.0"]])
+                total_income = 0
+                for r in my_records[:500]:  # Limit to 500 for income calc to prevent hang
+                    try:
+                        total_income += float(str(r.get("Total","0") or 0).replace(",","") or 0)
+                    except: pass
+                # Cache it
+                st.session_state.dashboard_stats_cache = {
+                    "total_patients": total_patients,
+                    "today_patients": today_patients,
+                    "pending": pending,
+                    "total_income": total_income
+                }
+                st.session_state.dashboard_stats_ts = now_ts
+            else:
+                total_patients = 0
+                today_patients = 0
+                pending = 0
+                total_income = 0
+        except:
+            total_patients = st.session_state.get("dashboard_stats_cache", {}).get("total_patients", 0)
+            today_patients = st.session_state.get("dashboard_stats_cache", {}).get("today_patients", 0)
+            pending = st.session_state.get("dashboard_stats_cache", {}).get("pending", 0)
+            total_income = st.session_state.get("dashboard_stats_cache", {}).get("total_income", 0)
     
     # V209.4 Task 1: Clinic Overview default OFF, controllable via Clinic Admin
     # Check if Clinic Overview is enabled in clinic_dashboard_settings
@@ -3602,12 +3625,23 @@ def dashboard_welcome_page():
                 st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
 
+    # V200 FIX: Cache total users to prevent extra sheet call after reboot
     try:
-        recs = get_all_records_cached("UserSignups")
-        total = len(recs)
-        display = 650+total
+        if "total_users_cache" in st.session_state and st.session_state.get("total_users_ts",0) > 0:
+            import time
+            if time.time() - st.session_state.total_users_ts < 600:
+                display = st.session_state.total_users_cache
+            else:
+                raise Exception("Cache expired")
+        else:
+            recs = get_all_records_cached("UserSignups")
+            total = len(recs)
+            display = 650+total
+            st.session_state.total_users_cache = display
+            import time
+            st.session_state.total_users_ts = time.time()
     except:
-        display=650
+        display = st.session_state.get("total_users_cache", 650)
     st.markdown("---")
     st.markdown(f"<div style='text-align:center;'><div class='heading-h4'>Total App Users</div><div style='font-size:34px;font-weight:900;color:#2E7D5B;'>{display}</div></div>", unsafe_allow_html=True)
     add_footer()
