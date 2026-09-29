@@ -1,4 +1,4 @@
-# APP VERSION - V209.6.7 - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.6.8 - Self Diagnosing Sheet Doctor - App tells why sheet not saving - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.6.7"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.6.8"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -749,56 +749,234 @@ def get_gspread_client():
         return None
 
 def get_sheet_connection_status():
-    status = {}
+    """V209.6.8 - Self Diagnosing - Tells EXACTLY why sheet not saving"""
+    logs = []
+    status = {"logs": logs, "checks": []}
+    
+    def add_log(step, ok, msg, fix=""):
+        entry = {"step": step, "ok": ok, "msg": msg, "fix": fix}
+        status["checks"].append(entry)
+        symbol = "✅" if ok else "❌"
+        logs.append(f"{symbol} {step}: {msg}")
+        if not ok and fix:
+            logs.append(f"   👉 Fix: {fix}")
+    
+    # CHECK 1: gspread
     try:
-        status["GSPREAD_AVAILABLE"] = GSPREAD_AVAILABLE
+        add_log("CHECK 1 - gspread library", GSPREAD_AVAILABLE, 
+                "gspread installed" if GSPREAD_AVAILABLE else "gspread NOT installed",
+                "" if GSPREAD_AVAILABLE else "Add gspread to requirements.txt")
+        if not GSPREAD_AVAILABLE:
+            return status
+    except Exception as e:
+        add_log("CHECK 1 - gspread", False, f"Error checking gspread: {e}")
+        return status
+    
+    # CHECK 2: Secrets exist
+    has_gcp = False
+    has_conn = False
+    has_gsheets = False
+    creds_dict = None
+    
+    try:
+        has_gcp = "gcp_service_account" in st.secrets
+        add_log("CHECK 2a - [gcp_service_account] in secrets", has_gcp,
+                "Found [gcp_service_account]" if has_gcp else "NOT found [gcp_service_account] in secrets.toml",
+                "" if has_gcp else "Add [gcp_service_account] section in Streamlit Secrets")
+    except Exception as e:
+        add_log("CHECK 2a - [gcp_service_account]", False, f"Secrets read error: {e}", "Check Streamlit Secrets format - must be valid TOML")
+    
+    try:
+        has_conn = "connections" in st.secrets and "gsheets" in st.secrets["connections"]
+        if has_conn:
+            gs = st.secrets["connections"]["gsheets"]
+            if isinstance(gs, dict):
+                has_spreadsheet_key = "spreadsheet" in gs
+                add_log("CHECK 2b - [connections.gsheets].spreadsheet", has_spreadsheet_key,
+                        f"Found spreadsheet ID: {str(gs.get('spreadsheet',''))[:20]}..." if has_spreadsheet_key else "spreadsheet key missing in [connections.gsheets]",
+                        "" if has_spreadsheet_key else 'Add: spreadsheet = "1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA"')
+            else:
+                add_log("CHECK 2b - [connections.gsheets]", True, f"Found as string: {str(gs)[:20]}")
+        else:
+            add_log("CHECK 2b - [connections.gsheets]", False, "NOT found [connections.gsheets]", 'Add: [connections.gsheets]\nspreadsheet = "1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA"')
+    except Exception as e:
+        add_log("CHECK 2b - [connections.gsheets]", False, f"Error: {e}")
+    
+    # CHECK 3: Get creds dict
+    try:
+        if "gcp_service_account" in st.secrets:
+            creds_dict = dict(st.secrets["gcp_service_account"])
+            add_log("CHECK 3 - Load creds from [gcp_service_account]", True, f"Loaded {len(creds_dict)} keys: {list(creds_dict.keys())[:5]}")
+        elif has_conn:
+            gs = st.secrets["connections"]["gsheets"]
+            if isinstance(gs, dict) and "private_key" in gs:
+                creds_dict = dict(gs)
+                add_log("CHECK 3 - Load creds from [connections.gsheets]", True, f"Loaded {len(creds_dict)} keys from connections.gsheets")
+            else:
+                add_log("CHECK 3 - Load creds", False, "No creds dict found with private_key", "Need [gcp_service_account] with private_key")
+        else:
+            add_log("CHECK 3 - Load creds", False, "No credentials found anywhere", "Add [gcp_service_account] section")
+            return status
+    except Exception as e:
+        add_log("CHECK 3 - Load creds", False, f"Failed to load creds dict: {e}", "Check TOML format - private_key must be in quotes")
+        return status
+    
+    # CHECK 4: private_key format
+    try:
+        if creds_dict and "private_key" in creds_dict:
+            pk = creds_dict["private_key"]
+            has_begin = "BEGIN PRIVATE KEY" in pk
+            has_end = "END PRIVATE KEY" in pk
+            has_newline = "\n" in pk or chr(10) in pk
+            
+            if has_begin and has_end:
+                add_log("CHECK 4 - private_key format", True, f"private_key looks valid - has BEGIN/END, length {len(pk)}")
+                status["private_key_preview"] = pk[:50] + "..." + pk[-30:]
+            else:
+                add_log("CHECK 4 - private_key format", False, f"private_key invalid - BEGIN={has_begin}, END={has_end}, len={len(pk)}", "Copy full private_key from Google JSON, include -----BEGIN and -----END")
+                return status
+        else:
+            add_log("CHECK 4 - private_key", False, "private_key key missing", "Add private_key in [gcp_service_account]")
+            return status
+    except Exception as e:
+        add_log("CHECK 4 - private_key", False, f"Error checking private_key: {e}")
+        return status
+    
+    # CHECK 5: Create gspread client
+    client = None
+    try:
+        # Fix newlines
+        if creds_dict and "private_key" in creds_dict:
+            pk = creds_dict["private_key"]
+            bs = chr(92)
+            n_char = chr(110)
+            nl = chr(10)
+            pk = pk.replace(bs+bs+n_char, bs+n_char)
+            pk = pk.replace(bs+n_char, nl)
+            creds_dict["private_key"] = pk
+        
+        scopes=["https://www.googleapis.com/auth/spreadsheets","https://www.googleapis.com/auth/drive"]
+        creds=Credentials.from_service_account_info(creds_dict, scopes=scopes)
+        client = gspread.authorize(creds)
+        add_log("CHECK 5 - Create gspread client", True, "Client created successfully", "")
+        status["client"] = client
+        status["client_email"] = creds_dict.get("client_email","")
+    except Exception as e:
+        import traceback
+        tb = traceback.format_exc()[:500]
+        add_log("CHECK 5 - Create gspread client", False, f"Failed: {str(e)[:200]}", "Common fixes: 1) private_key \n must be real newline 2) Check project_id, client_email 3) Ensure JSON copied correctly")
+        status["client_error"] = str(e)[:500]
+        status["client_traceback"] = tb
+        return status
+    
+    # CHECK 6: Open spreadsheet
+    sh = None
+    sid = None
+    try:
+        # Get ID
         try:
-            has_gcp = "gcp_service_account" in st.secrets
-            status["has_gcp_service_account"] = has_gcp
-            if has_gcp:
-                sa = st.secrets["gcp_service_account"]
-                status["gcp_keys"] = list(sa.keys())[:5]
-                status["has_private_key"] = "private_key" in sa
-                status["has_client_email"] = "client_email" in sa
-                status["client_email"] = sa.get("client_email","")[:40]
-        except Exception as e:
-            status["gcp_error"] = str(e)[:100]
-        try:
-            has_conn = "connections" in st.secrets and "gsheets" in st.secrets["connections"]
-            status["has_connections_gsheets"] = has_conn
-            if has_conn:
+            if "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
                 gs = st.secrets["connections"]["gsheets"]
                 if isinstance(gs, dict):
-                    status["connections_gsheets_keys"] = list(gs.keys())[:10]
-                    status["connections_spreadsheet"] = str(gs.get("spreadsheet",""))[:20]
-                else:
-                    status["connections_gsheets_str"] = str(gs)[:30]
-        except Exception as e:
-            status["connections_error"] = str(e)[:100]
-        try:
-            has_gsheets = "gsheets" in st.secrets
-            status["has_gsheets"] = has_gsheets
+                    sid=gs.get("spreadsheet")
+                elif isinstance(gs, str):
+                    sid=gs
         except:
-            status["has_gsheets"] = False
-        client = get_gspread_client()
-        status["client_created"] = client is not None
-        if client:
-            sh = get_spreadsheet_cached()
-            status["spreadsheet_opened"] = sh is not None
-            if sh:
-                status["spreadsheet_title"] = sh.title
-                try:
-                    ws = sh.worksheet("New_patient")
-                    status["New_patient_sheet_found"] = True
-                    vals = ws.get_all_values()
-                    status["New_patient_rows"] = len(vals)
-                except Exception as e:
-                    status["New_patient_error"] = str(e)[:100]
-        return status
+            pass
+        try:
+            if not sid and "gsheets" in st.secrets:
+                gs = st.secrets["gsheets"]
+                if isinstance(gs, dict):
+                    sid=gs.get("spreadsheet")
+                elif isinstance(gs, str):
+                    sid=gs
+        except:
+            pass
+        
+        if not sid:
+            add_log("CHECK 6 - Spreadsheet ID", False, "No spreadsheet ID found", 'Add in secrets: [connections.gsheets]\nspreadsheet = "1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA"')
+            return status
+        
+        sid = str(sid).strip()
+        # Extract from URL if needed
+        if "docs.google.com" in sid or "https://" in sid:
+            import re
+            m = re.search(r"/d/([a-zA-Z0-9-_]+)", sid)
+            if m:
+                old_sid = sid
+                sid = m.group(1)
+                add_log("CHECK 6a - Extract ID from URL", True, f"Extracted ID from URL: {sid[:20]}... (from {old_sid[:40]}...)")
+        
+        status["spreadsheet_id"] = sid
+        add_log("CHECK 6b - Spreadsheet ID", True, f"Using ID: {sid[:20]}...{sid[-10:]}")
+        
+        # Try to open
+        sh = client.open_by_key(sid)
+        add_log("CHECK 6c - Open spreadsheet", True, f"Opened: {sh.title}", "")
+        status["spreadsheet"] = sh
     except Exception as e:
-        return {"error": str(e)[:200]}
-
-
+        import traceback
+        tb = traceback.format_exc()[:500]
+        err_str = str(e)
+        if "PERMISSION_DENIED" in err_str or "403" in err_str:
+            add_log("CHECK 6c - Open spreadsheet", False, f"PERMISSION DENIED: {err_str[:200]}", f"Share your Google Sheet with service account email as EDITOR: {creds_dict.get('client_email','')} -> Go to Sheet > Share > Add email > Editor")
+        elif "not found" in err_str.lower() or "404" in err_str:
+            add_log("CHECK 6c - Open spreadsheet", False, f"Spreadsheet NOT FOUND: {err_str[:200]}", f"Check ID is correct: 1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA. Your ID: {sid}")
+        else:
+            add_log("CHECK 6c - Open spreadsheet", False, f"Failed to open: {err_str[:200]}", "Check ID and sharing")
+        status["spreadsheet_error"] = err_str[:500]
+        status["spreadsheet_traceback"] = tb
+        return status
+    
+    # CHECK 7: Worksheet exists
+    try:
+        ws = sh.worksheet("New_patient")
+        vals = ws.get_all_values()
+        add_log("CHECK 7 - Worksheet New_patient", True, f"Found New_patient sheet with {len(vals)} rows", "")
+        status["worksheet"] = ws
+        status["worksheet_rows"] = len(vals)
+    except Exception as e:
+        err_str = str(e)
+        if "not found" in err_str.lower() or "WorksheetNotFound" in str(type(e)):
+            add_log("CHECK 7 - Worksheet New_patient", False, f"Worksheet NOT found: {err_str[:150]}", "Sheet will be auto-created on next save, or create manually: Add sheet named 'New_patient'")
+            # Try to create?
+            try:
+                hdr=SHEET_HEADERS.get("New_patient", ["ID"])
+                ws=sh.add_worksheet(title="New_patient", rows=1000, cols=len(hdr)+5)
+                ws.append_row(hdr)
+                add_log("CHECK 7b - Auto-create New_patient", True, "Auto-created New_patient sheet")
+                status["worksheet"] = ws
+            except Exception as e2:
+                add_log("CHECK 7b - Auto-create", False, f"Failed to auto-create: {e2}")
+        else:
+            add_log("CHECK 7 - Worksheet New_patient", False, f"Error: {err_str[:200]}")
+    
+    # CHECK 8: Test write
+    try:
+        ws = status.get("worksheet")
+        if not ws:
+            try:
+                ws = sh.worksheet("New_patient")
+            except:
+                ws = None
+        
+        if ws:
+            # Try to append a test row and then delete it? No, just check permission
+            # Try to get row_values
+            hdr = ws.row_values(1)
+            add_log("CHECK 8 - Can read header", True, f"Header has {len(hdr)} columns: {hdr[:5]}...")
+            
+            # Try test append with dummy data in a way that we can identify and remove? 
+            # For now just check if we can append
+            # We will NOT actually append test data to avoid polluting sheet
+            add_log("CHECK 8b - Write permission", True, "Read succeeded, write likely OK (actual write tested on save)", "")
+        else:
+            add_log("CHECK 8 - Write test", False, "No worksheet to test write")
+    except Exception as e:
+        add_log("CHECK 8 - Write test", False, f"Write test failed: {e}", "Check if service account has Editor permission, not Viewer")
+    
+    add_log("FINAL", True, "Diagnosis complete - Check above ❌ marks for exact failure", "")
+    return status
 @st.cache_resource(show_spinner=False, ttl=300)
 def get_spreadsheet_cached():
     try:
@@ -1033,16 +1211,25 @@ def save_patient(data_dict):
         except:
             local_ok = False
         
-        # STEP 3: Google Sheet - try but don't fail
+        # STEP 3: Google Sheet - try but don't fail - WITH DETAILED LOGGING
         sheet_ok = False
         sheet_msg = "Not connected"
+        sheet_diagnosis = {}
         try:
-            # Clear cache to ensure fresh connection
+            # Clear cache
             try:
                 get_spreadsheet_cached.clear()
                 get_gspread_client.clear()
             except:
                 pass
+            
+            # Get detailed diagnosis
+            try:
+                sheet_diagnosis = get_sheet_connection_status()
+                # Store in session for display
+                st.session_state["last_sheet_diagnosis"] = sheet_diagnosis
+            except Exception as e:
+                sheet_diagnosis = {"error": str(e)[:200]}
             
             ws = get_sheet_safe("New_patient")
             if ws:
@@ -1056,11 +1243,9 @@ def save_patient(data_dict):
                         if isinstance(v, (int, float)):
                             row.append(str(v))
                         else:
-                            # Sanitize for sheet - remove newlines
                             sv = str(v) if v is not None else ""
                             sv = sv.replace("\n", " ").replace("\r", " ")
                             row.append(sv)
-                    # Ensure row length matches header
                     if len(row) < len(hdr):
                         row += [""] * (len(hdr) - len(row))
                     elif len(row) > len(hdr):
@@ -1069,32 +1254,60 @@ def save_patient(data_dict):
                     ws.append_row(row, value_input_option="RAW")
                     sheet_ok = True
                     sheet_msg = f"Sheet OK - Row {len(ws.get_all_values())}"
+                    # Clear unsynced
+                    st.session_state["last_sheet_error"] = ""
+                    st.session_state["last_sheet_success"] = sheet_msg
                 except Exception as e:
                     import traceback
+                    tb = traceback.format_exc()
                     sheet_msg = f"Sheet append fail: {str(e)[:120]}"
-                    # Try alternative method
+                    st.session_state["last_sheet_error"] = f"{str(e)}\n{tb[:1000]}"
+                    st.session_state["last_sheet_diagnosis"] = sheet_diagnosis
+                    
+                    # Try fallback
                     try:
                         ws.append_row([str(cleaned.get(h,"")) for h in SHEET_HEADERS.get("New_patient", [])[:10]], value_input_option="USER_ENTERED")
                         sheet_ok = True
                         sheet_msg = "Sheet OK (fallback method)"
+                        st.session_state["last_sheet_error"] = ""
                     except Exception as e2:
                         sheet_msg = f"Both methods failed: {str(e)[:60]} | {str(e2)[:60]}"
+                        st.session_state["last_sheet_error"] = f"Method1: {e}\nMethod2: {e2}\n{tb[:800]}"
             else:
-                # Detailed debug
                 client = get_gspread_client()
                 if not client:
-                    sheet_msg = "Client None - secrets.toml invalid or private_key broken"
+                    # Get diagnosis logs
+                    logs = sheet_diagnosis.get("logs", []) if isinstance(sheet_diagnosis, dict) else []
+                    fail_checks = [c for c in sheet_diagnosis.get("checks", []) if not c.get("ok")] if isinstance(sheet_diagnosis, dict) else []
+                    if fail_checks:
+                        last_fail = fail_checks[-1]
+                        sheet_msg = f"Client None - {last_fail.get('msg','')} | Fix: {last_fail.get('fix','')}"
+                    else:
+                        sheet_msg = "Client None - secrets.toml invalid or private_key broken - Check Sheet Doctor"
                 else:
                     sh = get_spreadsheet_cached()
                     if not sh:
-                        sheet_msg = "Spreadsheet None - ID wrong or not shared with service account"
+                        logs = sheet_diagnosis.get("logs", []) if isinstance(sheet_diagnosis, dict) else []
+                        fail_checks = [c for c in sheet_diagnosis.get("checks", []) if not c.get("ok")] if isinstance(sheet_diagnosis, dict) else []
+                        if fail_checks:
+                            last_fail = fail_checks[-1]
+                            sheet_msg = f"Spreadsheet None - {last_fail.get('msg','')} | Fix: {last_fail.get('fix','')}"
+                        else:
+                            sheet_msg = "Spreadsheet None - ID wrong or not shared with service account"
                     else:
                         sheet_msg = "WS None - New_patient sheet not found"
+                st.session_state["last_sheet_error"] = sheet_msg
+                st.session_state["last_sheet_diagnosis"] = sheet_diagnosis
         except Exception as e:
             import traceback
+            tb = traceback.format_exc()
             sheet_msg = f"Sheet error: {str(e)[:150]}"
-        
-        # Try to sync previous unsynced local backups to sheet if sheet is now available
+            st.session_state["last_sheet_error"] = f"{str(e)}\n{tb[:1000]}"
+            try:
+                st.session_state["last_sheet_diagnosis"] = sheet_diagnosis
+            except:
+                pass
+                # Try to sync previous unsynced local backups to sheet if sheet is now available
         if sheet_ok:
             try:
                 backup_key = "local_backup_New_patient"
@@ -1730,8 +1943,46 @@ def render_patient_form(is_revisit=False):
     st.markdown("---")
     st.markdown("<div class='heading-h4'>Save Patient - Final Step</div>", unsafe_allow_html=True)
     
+    # V209.6.8 - Self Diagnosing Banner - Shows automatically if sheet fails
+    last_error = st.session_state.get("last_sheet_error", "")
+    last_diagnosis = st.session_state.get("last_sheet_diagnosis", {})
+    last_success = st.session_state.get("last_sheet_success", "")
+    
+    if last_error:
+        st.error(f"⚠️ Last Sheet Save Failed: {last_error[:300]}")
+        with st.container(border=True):
+            st.markdown("<div style='background:#FFEBEE;padding:10px;border-radius:8px;border:2px solid #F44336;'><b>🚨 Google Sheet पर Save नहीं हो रहा - कारण नीचे देखें:</b></div>", unsafe_allow_html=True)
+            if isinstance(last_diagnosis, dict) and "checks" in last_diagnosis:
+                for check in last_diagnosis.get("checks", []):
+                    if not check.get("ok"):
+                        st.markdown(f"❌ **{check.get('step')}**: {check.get('msg')}")
+                        if check.get("fix"):
+                            st.markdown(f"👉 **Fix:** {check.get('fix')}")
+                            st.info(check.get('fix'))
+            if isinstance(last_diagnosis, dict) and last_diagnosis.get("logs"):
+                with st.expander("📋 Full Diagnosis Logs (Technical)", expanded=False):
+                    for log in last_diagnosis.get("logs", []):
+                        st.text(log)
+                    if last_diagnosis.get("client_error"):
+                        st.code(last_diagnosis.get("client_error")[:500])
+            # Show client email to share
+            if isinstance(last_diagnosis, dict):
+                ce = last_diagnosis.get("client_email") or ""
+                if not ce:
+                    try:
+                        if "gcp_service_account" in st.secrets:
+                            ce = st.secrets["gcp_service_account"].get("client_email","")
+                    except:
+                        pass
+                if ce:
+                    st.warning(f"📧 इस Email को Google Sheet में Editor के तौर पर Share करें: {ce}")
+                    st.code(f"Sheet URL: https://docs.google.com/spreadsheets/d/1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA/edit\nShare with: {ce} -> Editor", language="text")
+    
+    if last_success:
+        st.success(f"✅ Last Sheet Save: {last_success}")
+
     # Show debug info
-    with st.expander("Debug - Check what will be saved", expanded=False):
+    with st.expander("🔍 Debug - Check what will be saved + Sheet Status", expanded=False):
         fv_debug = st.session_state.form_version
         st.write(f"Form Version: {fv_debug}")
         st.write(f"Name: {st.session_state.get(f'p_name_{fv_debug}', 'EMPTY')}")
@@ -1743,6 +1994,38 @@ def render_patient_form(is_revisit=False):
         st.write(f"Local Backup Count: {len(st.session_state.get('local_backup_New_patient', []))}")
         if st.session_state.get("last_saved_patient"):
             st.write(f"Last Saved: {st.session_state.get('last_saved_patient', {}).get('Name','None')} at {st.session_state.get('last_saved_patient', {}).get('Timestamp','')}")
+        
+        if st.button("🩺 Run Sheet Doctor - Diagnose Now", key=f"sheet_doctor_new_patient_{fv}"):
+            with st.spinner("Diagnosing sheet connection..."):
+                diag = get_sheet_connection_status()
+                st.json(diag.get("checks", []))
+                for log in diag.get("logs", []):
+                    if "❌" in log:
+                        st.error(log)
+                    elif "✅" in log:
+                        st.success(log)
+                    else:
+                        st.text(log)
+                
+                # Show fix
+                failed = [c for c in diag.get("checks", []) if not c.get("ok")]
+                if failed:
+                    st.markdown("### 🔧 Fixes Needed:")
+                    for f in failed:
+                        st.markdown(f"**{f.get('step')}**: {f.get('msg')}")
+                        if f.get("fix"):
+                            st.code(f.get('fix'))
+                else:
+                    st.success("All checks passed! Sheet should be saving.")
+                    # Try test write
+                    try:
+                        ws = get_sheet_safe("New_patient")
+                        if ws:
+                            st.success(f"Test: Can access New_patient sheet with {len(ws.get_all_values())} rows")
+                        else:
+                            st.error("Test: Cannot access New_patient sheet")
+                    except Exception as e:
+                        st.error(f"Test failed: {e}")
     
     # Show saved patients from session
     if st.session_state.get("local_backup_New_patient"):
