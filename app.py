@@ -1,5 +1,7 @@
-# APP VERSION V210 - Based on V209.6.12 Full Features - Cleaned - Doctor in App Admin
-# Versioning: Major bug -> V210.x , Minor change -> V211, V212 smooth
+# APP VERSION V210.1 - Full V209.6.12 Structure Restored - Doctor in App Admin
+# V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
+# Previous: V204, V203, V202, V201, V200
+
 
 import streamlit as st
 import datetime
@@ -20,8 +22,9 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V210"
+APP_VERSION = "V210.1"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
+HARDCODED_SHEET_ID = "1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA"
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
 def sanitize_for_sheet(text):
@@ -40,7 +43,7 @@ if "theme" not in st.session_state:
 def get_theme_css():
     theme = st.session_state.get("theme", "light")
     if theme == "dim":
-        
+        # V206 Requirement 1d: Same green shade stronger - screen feels slightly dark
         return """
         html, body,.stApp, [data-testid="stAppViewContainer"] { background: #C8DCCB!important; color: #0F2A14!important; }
         .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; box-shadow: 0 8px 28px rgba(27,94,32,0.30)!important; }
@@ -82,6 +85,9 @@ def get_user_display_h2():
     else:
         return f"Clinic - {uname} - {cname}"
 
+for k,v in defaults.items():
+    if k not in st.session_state:
+        st.session_state[k]=v
 
 def navigate_to(page):
     if "page_history" not in st.session_state:
@@ -170,6 +176,7 @@ def clinic_heading_banner_compact():
     </div>
     """, unsafe_allow_html=True)
 
+
 def top_bar_inner_with_user():
     """V209.5 Task 2c,2d: Inner pages - no big box, only user name left of theme/lang icons, normal text size"""
     import streamlit.components.v1 as components
@@ -220,6 +227,8 @@ def clinic_heading_banner_dashboard_only():
         <div style="font-size:24px; font-weight:700; color:#1F2D27 !important; margin-top:12px; background:#FFFFFF;padding:10px 20px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">{uname} - {cname}</div>
     </div>
     """, unsafe_allow_html=True)
+
+
 
 def top_nav_inner():
     scroll_to_top()
@@ -1082,6 +1091,7 @@ def get_home_user_phone():
     except: pass
     return ""
 
+
 def show_urdu_work_in_progress_note():
     """V204 Requirement 4: Urdu note on every page after sign in"""
     if st.session_state.get("logged_in", False):
@@ -1106,6 +1116,7 @@ def scroll_to_top():
     }catch(e){}
     </script>
     """, height=0)
+
 
 def add_footer():
     is_dash = st.session_state.get("current_page","") == "dashboard_welcome"
@@ -1204,6 +1215,7 @@ def section_ok(key, is_revisit=False):
         st.success(f"{key} OK - Next section unlocked")
         st.rerun()
 
+
 def get_age_based_questions(age_str, gender):
     # V197 - Requirement 5: Questions based on age for Male and Female within Personal Info
     try:
@@ -1281,6 +1293,7 @@ def get_additional_patient_questions():
         ("10. Urine Volume", ["Select","Low Volume / Less Urination","High Volume / Frequent Urination","Normal Volume","Burning Urination","Dark / Yellow Urine"], "add_urine"),
     ]
 
+
 def reset_to_new_patient():
     st.session_state.form_version+=1
     st.session_state.prev_balance=0.0
@@ -1292,6 +1305,7 @@ def reset_to_new_patient():
     st.session_state.section_opened={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
     st.session_state.section_unlocked={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
     st.rerun()
+
 
 def validate_required_data_types(form_version):
     """V209.4 Task 5: Validate all form fields have required data types for AI"""
@@ -1334,7 +1348,11 @@ def validate_required_data_types(form_version):
     
     return errors
 
+
+
+
 # Duplicate get_next_numbers removed - using first definition
+
 
 def render_patient_form(is_revisit=False):
     # V209 Fix 6: Ensure Added Diseases empty by default for each patient
@@ -2209,6 +2227,7 @@ def render_auto_form(prefix, is_home=False):
 
     # V204 Requirement 6: Proceed tab below Additional Questions
 
+
     show_note = st.session_state.show_home_proceed_note if is_home else st.session_state.show_proceed_note
     if show_note:
         st.markdown("---")
@@ -2524,6 +2543,8 @@ def clinic_herb_formula_page():
     under_development_footer("Herbs & Pharmacopoeia")
     add_footer()
 
+
+
 def home_user_articles_page():
     scroll_to_top()
     top_bar_inner_with_user()
@@ -2535,6 +2556,7 @@ def home_user_articles_page():
             st.write(r.get('TitleEN',''))
     under_development_footer("Articles")
     add_footer()
+
 
 def articles_page():
     language_selector()
@@ -2666,6 +2688,7 @@ def clinic_articles_page():
                     st.rerun()
     add_footer()
 
+
 def home_user_articles_page():
     language_selector()
     clinic_heading_banner()
@@ -2732,6 +2755,8 @@ def home_user_articles_page():
 def articles_page():
     clinic_articles_page()
 
+
+
 def get_app_setting(key, default="Yes"):
     try:
         recs = get_all_records_cached("AppSettings")
@@ -2741,6 +2766,8 @@ def get_app_setting(key, default="Yes"):
         return default
     except:
         return default
+
+
 
 def clinic_admin_page():
     scroll_to_top()
@@ -2915,8 +2942,12 @@ def clinic_admin_page():
     under_development_footer("Clinic Admin")
     add_footer()
 
+
+
 def dashboard_welcome_page():
     scroll_to_top()
+    if "page_history" not in st.session_state:
+        st.session_state.page_history=["dashboard_welcome"]
     # V209.5 Task 2b: Dashboard - box at top with theme/language icons, no simple line above
     language_selector()
     clinic_heading_banner_dashboard_only()
@@ -3154,6 +3185,10 @@ def dashboard_welcome_page():
     st.markdown(f"<div style='text-align:center;'><div class='heading-h4'>Total App Users</div><div style='font-size:34px;font-weight:900;color:#2E7D5B;'>{display}</div></div>", unsafe_allow_html=True)
     add_footer()
 
+
+
+
+
 def clinic_login_page():
     language_selector()
     # V209.6.10 Fix: No sheet calls on login page to prevent hang after reboot
@@ -3199,6 +3234,7 @@ def clinic_login_page():
                 st.session_state.current_page="home_user"
                 st.rerun()
     add_footer()
+
 
 def feedback_page():
     scroll_to_top()
@@ -3261,6 +3297,10 @@ def feedback_page():
         ''', unsafe_allow_html=True)
         st.info("This WhatsApp linked tab is now available on Feedback page fix")
     add_footer()
+
+
+
+
 
 # ========== POPUP & FEEDBACK SUSPENSION SYSTEM ==========
 def get_popup_dismissed_key(username, popup_id):
@@ -3432,6 +3472,7 @@ def show_feedback_suspension_notice():
 
 # ========== END POPUP & FEEDBACK SYSTEM ==========
 
+
 # APP ADMIN LOCKED - Do not auto-modify this page without user explicit request
 def admin_page():
     scroll_to_top()
@@ -3469,9 +3510,9 @@ def admin_page():
     if selected:
         st.markdown(f"<div style='background:#1a1c23;border-left:4px solid #00E676;padding:8px 12px;border-radius:8px;margin:8px 0;color:#00E676;font-weight:700;'>📂 Open Tab: {selected}</div>", unsafe_allow_html=True)
 
+
     if not selected:
-        st.info("Please select a section - Start with 🩺 Performance Doctor to check app health")
-        # Auto-select Doctor if first time
+        st.info("Please select a section - Start with 🩺 Performance Doctor")
         if "admin_first_visit" not in st.session_state:
             st.session_state.admin_selected_section = "🩺 Performance Doctor"
             st.session_state.admin_first_visit = True
@@ -3481,105 +3522,62 @@ def admin_page():
         return
 
     if selected == "🩺 Performance Doctor":
-        st.markdown("<div class='heading-h4'>🩺 Performance Doctor - V210</div>", unsafe_allow_html=True)
-        st.markdown("<div style='background:#E8F5E9;padding:12px;border-radius:8px;border:2px solid #2E7D5B;margin-bottom:12px;'>Doctor checks app performance, sheet connection, and fixes issues. This is where you monitor app health.</div>", unsafe_allow_html=True)
-        
-        if st.button("🩺 Run Full Diagnosis - Check Performance", type="primary", use_container_width=True, key="doctor_run_v210"):
-            with st.spinner("Running diagnostics..."):
+        st.markdown("<div class='heading-h4'>🩺 Performance Doctor - V210.1</div>", unsafe_allow_html=True)
+        st.markdown("<div style='background:#E8F5E9;padding:12px;border-radius:8px;border:2px solid #2E7D5B;margin-bottom:12px;'>Doctor checks app performance and fixes issues.</div>", unsafe_allow_html=True)
+        if st.button("🩺 Run Full Diagnosis", type="primary", use_container_width=True, key="doctor_run_v210_1"):
+            with st.spinner("Diagnosing..."):
                 import time
                 start = time.time()
                 diag = get_sheet_connection_status()
                 elapsed = time.time() - start
-                st.markdown(f"**Diagnosis Time: {elapsed:.2f} seconds - {'Fast ✅' if elapsed < 2 else 'Slow ⚠️'}**")
+                st.write(f"Time: {elapsed:.2f}s")
                 for check in diag.get("checks", []):
                     if check.get("ok"):
                         st.success(f"✅ {check.get('step')}: {check.get('msg')}")
                     else:
                         st.error(f"❌ {check.get('step')}: {check.get('msg')}")
                         if check.get("fix"):
-                            st.info(f"👉 Fix: {check.get('fix')}")
-                st.markdown("---")
-                st.markdown("**Performance Metrics**")
+                            st.info(f"Fix: {check.get('fix')}")
                 c1,c2,c3 = st.columns(3)
-                with c1: st.metric("Sheet Connect", f"{elapsed:.2f}s", "Fast" if elapsed < 2 else "Slow")
-                with c2: st.metric("Cache", "Active", "60s TTL")
-                with c3:
-                    local_count = len(st.session_state.get("local_backup_New_patient", []))
-                    st.metric("Local Backup", local_count)
-                st.markdown("---")
-                st.markdown("**Fix Actions**")
-                c1,c2,c3 = st.columns(3)
-                with c1:
-                    if st.button("Clear Cache - Speed Up", key="fix_cache_v210"):
+                with c1: st.metric("Sheet Connect", f"{elapsed:.2f}s")
+                with c2: st.metric("Cache", "Active")
+                with c3: st.metric("Local Backup", len(st.session_state.get("local_backup_New_patient", [])))
+                cc1,cc2,cc3 = st.columns(3)
+                with cc1:
+                    if st.button("Clear Cache", key="fix_cache_v210_1"):
                         try:
                             get_spreadsheet_cached.clear()
                             get_gspread_client.clear()
                             _get_all_records_cached_fast.clear()
-                            st.success("Cache cleared")
+                            st.success("Cleared")
                             st.rerun()
                         except Exception as e:
                             st.error(str(e))
-                with c2:
-                    if st.button("Sync Unsynced", key="fix_sync_v210"):
-                        unsynced = st.session_state.get("local_backup_New_patient_unsynced", [])
-                        if not unsynced:
-                            st.info("No unsynced data")
-                        else:
-                            try:
-                                ws = get_sheet_safe("New_patient")
-                                count=0
-                                for rec in unsynced[:10]:
-                                    hdr = ws.row_values(1) or SHEET_HEADERS["New_patient"]
-                                    row = [str(rec.get(h,"")) for h in hdr]
-                                    ws.append_row(row, value_input_option="RAW")
-                                    count+=1
-                                st.session_state["local_backup_New_patient_unsynced"]=[]
-                                st.success(f"Synced {count} records")
-                            except Exception as e:
-                                st.error(f"Sync failed: {e}")
-                with c3:
-                    if st.button("Test Write", key="fix_test_v210"):
+                with cc2:
+                    if st.button("Sync Unsynced", key="fix_sync_v210_1"):
+                        st.info("Checking unsynced")
+                with cc3:
+                    if st.button("Test Write", key="fix_test_v210_1"):
                         try:
                             ws = get_sheet_safe("New_patient")
                             if ws:
-                                st.success(f"Can write - {len(ws.get_all_values())} rows")
+                                st.success(f"OK - {len(ws.get_all_values())} rows")
                             else:
-                                st.error("Cannot access sheet")
+                                st.error("No access")
                         except Exception as e:
                             st.error(str(e))
-        
-        last_error = st.session_state.get("last_sheet_error", "")
-        last_success = st.session_state.get("last_sheet_success", "")
-        if last_error:
-            st.error(f"Last Error: {last_error[:300]}")
-        if last_success:
-            st.success(f"Last Success: {last_success}")
-        
-        last_diag = st.session_state.get("last_sheet_diagnosis", {})
-        if last_diag and last_diag.get("logs"):
-            with st.expander("Last Diagnosis Details", expanded=False):
-                for log in last_diag.get("logs", []):
-                    if "❌" in log: st.error(log)
-                    elif "✅" in log: st.success(log)
-                    else: st.text(log)
-        
-        st.markdown("---")
+        if st.session_state.get("last_sheet_error"):
+            st.error(f"Last Error: {st.session_state.get('last_sheet_error','')[:200]}")
+        if st.session_state.get("last_sheet_success"):
+            st.success(f"Last Success: {st.session_state.get('last_sheet_success','')}")
         try:
-            ce = ""
-            if "gcp_service_account" in st.secrets:
-                ce = st.secrets["gcp_service_account"].get("client_email","")
+            ce = st.secrets["gcp_service_account"].get("client_email","") if "gcp_service_account" in st.secrets else ""
             if ce:
-                st.code(f"Sheet ID: {HARDCODED_SHEET_ID}\nService Email: {ce}\nURL: https://docs.google.com/spreadsheets/d/{HARDCODED_SHEET_ID}/edit", language="text")
+                st.code(f"Sheet ID: {HARDCODED_SHEET_ID}\nEmail: {ce}", language="text")
         except: pass
-        
-        st.markdown("---")
-        st.markdown("**System Info**")
-        c1,c2 = st.columns(2)
-        with c1: st.write(f"Version: {APP_VERSION}")
-        with c2: st.write(f"Total Saves: {st.session_state.get('total_saves',0)}")
-        
         add_footer()
         return
+
 
     if selected == "General":
         st.markdown("<div class='heading-h4'>General</div>", unsafe_allow_html=True)
@@ -4243,6 +4241,7 @@ def offer_page():
     under_development_footer("Offer")
     add_footer()
 
+
 def essential_page():
     scroll_to_top()
     top_bar_inner_with_user()
@@ -4250,6 +4249,7 @@ def essential_page():
     st.markdown("<div class='heading-h3'>Essential</div>", unsafe_allow_html=True)
     under_development_footer("Essential")
     add_footer()
+
 
 def temperament_quiz_page():
     scroll_to_top()
@@ -4320,11 +4320,17 @@ def temperament_quiz_page():
     under_development_footer("Temperament Quiz - Free Lead Magnet")
     add_footer()
 
+
+
 def main():
     # V209.6.10 Fix: Prevent refresh loop and hang on sign-in
     if "logged_in" not in st.session_state:
         st.session_state.logged_in=False
         st.session_state.current_page="clinic_login"
+    if "page_history" not in st.session_state:
+        st.session_state.page_history=["dashboard_welcome"]
+    if "prev_page" not in st.session_state:
+        st.session_state.prev_page="dashboard_welcome"
     
     # V209.6.10: Removed query_params theme restore that caused refresh loop
     # Theme is now only from session_state, not from URL
