@@ -1,4 +1,4 @@
-# APP VERSION - V209.4 - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.5 - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.4"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.5"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -518,9 +518,7 @@ def navigate_to(page):
     st.rerun()
 
 def language_selector():
-    # V209.4 Task 2: English only - all other languages including Roman Urdu removed by default
-    st.session_state.app_language = "en"
-    st.session_state.lang = "en"
+    # V209.5: Language selector with en/ur/ar, no divider line on top
     # V207 Requirement 1a,1b,1e: Theme and language tabs in 1 line, single theme tab
     import streamlit.components.v1 as components
     # Single line top bar - Theme toggle (single tab) + Language
@@ -545,13 +543,17 @@ def language_selector():
                 components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
                 st.rerun()
     with c_lang:
-        # V209.4 Task 2: Only English by default, all other languages including Roman Urdu removed
-        # Language selector disabled - English only
-        st.session_state.app_language = "en"
-        st.session_state.lang = "en"
+        # Language selector - restored: en/ur/ar cycle
+        if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v209_5", help="Change Language"):
+            curr = st.session_state.get("app_language", "en")
+            nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
+            st.session_state.app_language = nxt
+            st.session_state.lang = nxt
+            st.rerun()
     with c_spacer:
-        # Show English only
-        st.markdown(f"<div style='text-align:right;font-size:11px;color:#5a6d65;margin-top:8px;'>EN</div>", unsafe_allow_html=True)
+        # Show current lang
+        lang = st.session_state.get("app_language","en")
+        st.markdown(f"<div style='text-align:right;font-size:11px;color:#5a6d65;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
     
     # Restore theme from localStorage
     if "theme_restored" not in st.session_state:
@@ -569,7 +571,7 @@ def language_selector():
         </script>
         """, height=0)
         st.session_state.theme_restored = True
-    st.divider()
+    # No divider - Task 2a: simple line removed
 
 def clinic_heading_banner():
     user_h2 = get_user_display_h2()
@@ -592,6 +594,58 @@ def clinic_heading_banner_compact():
         <div style="font-size:22px; font-weight:600; color:#5a6d65 !important; margin-top:16px;">Welcome - Please Sign In</div>
     </div>
     """, unsafe_allow_html=True)
+
+
+def top_bar_inner_with_user():
+    """V209.5 Task 2c,2d: Inner pages - no big box, only user name left of theme/lang icons, normal text size"""
+    import streamlit.components.v1 as components
+    st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
+    
+    # Get user name only (not full display)
+    uname = st.session_state.get("username","User")
+    
+    # Top bar: user name (left, normal text) + theme + lang icons (right)
+    c_user, c_spacer, c_theme, c_lang = st.columns([3,3,1,1])
+    with c_user:
+        # Only user name, normal text size
+        st.markdown(f"<div style='font-size:16px;font-weight:600;color:#1F2D27;margin-top:8px;'>{uname}</div>", unsafe_allow_html=True)
+    with c_theme:
+        curr_theme = st.session_state.get("theme", "light")
+        if curr_theme == "light":
+            if st.button("🌿", key=f"theme_inner_dim_{st.session_state.get('current_page','inner')}_v209_5", help="Dim Theme"):
+                st.session_state.theme = "dim"
+                components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
+                st.rerun()
+        else:
+            if st.button("☀️", key=f"theme_inner_light_{st.session_state.get('current_page','inner')}_v209_5", help="Light Theme"):
+                st.session_state.theme = "light"
+                components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
+                st.rerun()
+    with c_lang:
+        if st.button("🌐", key=f"lang_inner_{st.session_state.get('current_page','inner')}_v209_5", help="Change Language"):
+            curr = st.session_state.get("app_language", "en")
+            nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
+            st.session_state.app_language = nxt
+            st.session_state.lang = nxt
+            st.rerun()
+    with c_spacer:
+        lang = st.session_state.get("app_language","en")
+        st.markdown(f"<div style='text-align:right;font-size:11px;color:#5a6d65;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+
+def clinic_heading_banner_dashboard_only():
+    """V209.5 Task 2b: Dashboard only - big box with 3 lines"""
+    user_h2 = get_user_display_h2()
+    is_logged = st.session_state.get("logged_in", False)
+    user_display = user_h2 if is_logged else "Welcome to Herbal Clinic International"
+    st.markdown(f"""
+    <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:34px 26px;text-align:center;margin-bottom:18px;box-shadow: 0 8px 28px rgba(46,125,91,0.18), inset 0 1px 0 rgba(255,255,255,0.8);">
+        <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: linear-gradient(135deg, #F1F7F3 0%, #FFFFFF 100%);padding:16px 26px;border-radius:16px;display:inline-block;border:2.5px solid #2E7D5B;font-size:56px; line-height:1.1; box-shadow: 0 4px 14px rgba(46,125,91,0.12);">Herbal Clinic International</div>
+        <div style="color:#5a6d65 !important; font-size:21px; font-weight:600; margin-top:18px; font-style:italic !important; letter-spacing:0.5px;">Based on human temperament</div>
+        <div style="font-size:26px; font-weight:800; color:#1F2D27 !important; margin-top:18px; background:#FFFFFF;padding:10px 20px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">{user_display}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
 
 def top_nav_inner():
     scroll_to_top()
@@ -1869,8 +1923,7 @@ def render_auto_form(prefix, is_home=False):
 
 def auto_selection_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Auto-Diagnosis</div>", unsafe_allow_html=True)
     # V172: 2 options before form - New Patient, Revisit
@@ -1927,8 +1980,7 @@ def auto_selection_page():
 
 def home_user_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Home User Page</div>", unsafe_allow_html=True)
     # V172: Tab to add up to 5 patients and create forms; phone must match Home User signup
@@ -2010,8 +2062,7 @@ def home_user_page():
 
 def patient_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>New Patient</div>", unsafe_allow_html=True)
     render_patient_form(is_revisit=False)
@@ -2020,8 +2071,7 @@ def patient_page():
 
 def patient_revisit_form_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Revisit Form</div>", unsafe_allow_html=True)
     render_patient_form(is_revisit=True)
@@ -2030,8 +2080,7 @@ def patient_revisit_form_page():
 
 def revisit_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Revisit - Search Patient</div>", unsafe_allow_html=True)
     st.markdown("<div class='heading-h5'>Search using any of these four fields: Patient Name, Date, Address, or Phone Number</div>", unsafe_allow_html=True)
@@ -2076,8 +2125,7 @@ def revisit_page():
 
 def dictionary_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Dictionary</div>", unsafe_allow_html=True)
     recs=get_all_records_cached("Dictionary")
@@ -2088,8 +2136,7 @@ def dictionary_page():
 
 def pharmacopoeia_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Pharmacopoeia</div>", unsafe_allow_html=True)
     recs=get_all_records_cached("Pharmacopoeia")
@@ -2101,8 +2148,7 @@ def pharmacopoeia_page():
 
 def clinic_herb_formula_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Herbs & Pharmacopoeia</div>", unsafe_allow_html=True)
     st.info("Data Source: Google Sheets - Herbs and Formulas sheets. When you add data to sheet, it will appear here automatically")
@@ -2167,8 +2213,7 @@ def clinic_herb_formula_page():
 
 def home_user_articles_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Articles</div>", unsafe_allow_html=True)
     recs=get_all_records_cached("Articles")
@@ -2235,8 +2280,7 @@ def articles_page():
 
 def clinic_articles_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>📰 Articles - Modern Cards V203</div>", unsafe_allow_html=True)
     recs = get_all_records_cached("Articles")
@@ -2393,8 +2437,7 @@ def get_app_setting(key, default="Yes"):
 
 def clinic_admin_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Clinic Admin - Dashboard Control</div>", unsafe_allow_html=True)
     
@@ -2516,8 +2559,9 @@ def clinic_admin_page():
 
 def dashboard_welcome_page():
     scroll_to_top()
+    # V209.5 Task 2b: Dashboard - box at top with theme/language icons, no simple line above
     language_selector()
-    clinic_heading_banner()
+    clinic_heading_banner_dashboard_only()
     top_nav_dashboard()
     
     # V206 Modern Dashboard - Metrics + Graph
@@ -2871,8 +2915,7 @@ def clinic_login_page():
 
 def feedback_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Feedback</div>", unsafe_allow_html=True)
     page_ref = st.session_state.get("feedback_page_ref","") or "General"
@@ -3110,8 +3153,7 @@ def show_feedback_suspension_notice():
 # APP ADMIN LOCKED - Do not auto-modify this page without user explicit request
 def admin_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown(f"<div class='heading-h3'>App Admin</div>", unsafe_allow_html=True)
     st.markdown("", unsafe_allow_html=True)
@@ -3761,8 +3803,7 @@ def admin_page():
     add_footer()
 
 def admin_feedback_page():
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Feedback Admin</div>", unsafe_allow_html=True)
     recs=get_all_records_cached("Feedback")
@@ -3776,8 +3817,7 @@ def admin_feedback_page():
 
 def offer_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     offer_enabled = get_app_setting("OfferEnabled", get_app_setting("show_offer_tab","Yes"))
     if str(offer_enabled).lower() not in ["yes","on","true","1","enabled"]:
@@ -3819,8 +3859,7 @@ def offer_page():
 
 def essential_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>Essential</div>", unsafe_allow_html=True)
     under_development_footer("Essential")
@@ -3829,8 +3868,7 @@ def essential_page():
 
 def temperament_quiz_page():
     scroll_to_top()
-    language_selector()
-    clinic_heading_banner()
+    top_bar_inner_with_user()
     top_nav_inner()
     st.markdown("<div class='heading-h3'>🌡️ Check Your Temperament - Free</div>", unsafe_allow_html=True)
     st.markdown("<div style='background: linear-gradient(135deg,#F1F7F3,#FFFFFF);border:2px solid #2E7D5B;border-radius:16px;padding:16px;margin-bottom:14px;'><b>Modern Quiz:</b> Answer 6 quick questions and know your temperament. This builds interest for Pro AI version.</div>", unsafe_allow_html=True)
