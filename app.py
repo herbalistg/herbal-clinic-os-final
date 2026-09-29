@@ -1,4 +1,4 @@
-# APP VERSION - V209.3 - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.4 - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.3"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.4"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -67,47 +67,73 @@ def show_urdu_work_in_progress_note():
         """, unsafe_allow_html=True)
 
 def scroll_to_top():
-    """V209 Fix 4: Force page to open from top - robust JS with retry"""
+    """V209.4 Task 4: Force page to open from top - Enhanced robust JS with multiple retries"""
     import streamlit.components.v1 as components
     components.html("""
     <script>
     (function(){
         function doScroll(){
             try{
+                // Scroll window
                 window.scrollTo({top:0, left:0, behavior:'instant'});
                 document.documentElement.scrollTop = 0;
                 document.body.scrollTop = 0;
+                // Scroll parent (Streamlit iframe)
                 if(window.parent){
                     window.parent.scrollTo({top:0, left:0, behavior:'instant'});
                     try{ window.parent.document.documentElement.scrollTop = 0; }catch(e){}
                     try{ window.parent.document.body.scrollTop = 0; }catch(e){}
+                    // Scroll all possible containers
                     const selectors = [
                         '[data-testid="stAppViewContainer"]',
                         '[data-testid="stMain"]',
                         'section.main',
                         '[data-testid="stVerticalBlock"]',
+                        '[data-testid="stAppViewContainer"] > div',
                         'main',
                         '.main',
-                        '[data-testid="stApp"]'
+                        '[data-testid="stApp"]',
+                        '.stApp',
+                        '[data-testid="stVerticalBlock"] > div'
                     ];
                     selectors.forEach(sel => {
                         try{
                             const els = window.parent.document.querySelectorAll(sel);
-                            els.forEach(c=>{ if(c) c.scrollTop = 0; });
+                            els.forEach(c=>{ 
+                                if(c) {
+                                    c.scrollTop = 0;
+                                    c.scrollTo({top:0, behavior:'instant'});
+                                }
+                            });
                         }catch(e){}
                     });
+                    // Also try to find and scroll the main scrollable element
+                    try{
+                        const mainEl = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+                        if(mainEl){
+                            mainEl.scrollTop = 0;
+                            mainEl.scrollTo(0,0);
+                        }
+                    }catch(e){}
                 }
             }catch(e){}
         }
+        // Immediate scroll
         doScroll();
+        // Multiple retries to ensure page opens from top
+        setTimeout(doScroll, 50);
         setTimeout(doScroll, 100);
-        setTimeout(doScroll, 300);
+        setTimeout(doScroll, 200);
+        setTimeout(doScroll, 400);
         setTimeout(doScroll, 600);
+        setTimeout(doScroll, 1000);
+        // Also on load
+        window.addEventListener('load', doScroll);
     })();
     </script>
     """, height=0)
-    st.markdown('<div id="top-anchor-v209"></div>', unsafe_allow_html=True)
-    st.markdown('<style>html{scroll-behavior:auto!important;} body{scroll-behavior:auto!important;}</style>', unsafe_allow_html=True)
+    st.markdown('<div id="top-anchor-v209-4"></div>', unsafe_allow_html=True)
+    st.markdown('<style>html{scroll-behavior:auto!important; scroll-padding-top:0!important;} body{scroll-behavior:auto!important;} [data-testid="stAppViewContainer"]{scroll-behavior:auto!important;}</style>', unsafe_allow_html=True)
 
 
 st.markdown("""
@@ -449,12 +475,13 @@ defaults = {
         "New Patient": True,
         "Revisit": True,
         "Clinic Admin": True,
+        "Clinic Overview": False,
         "Auto-Diagnosis": False,
         "Dictionary": False,
         "Articles": False,
         "Herbs & Pharma": False,
         "Free Health Tools": False,
-        "Offer": False,
+        # Offer removed - controlled by App Admin only
         "Essential": False,
         "Inventory": False,
         "Billing Report": False,
@@ -491,6 +518,9 @@ def navigate_to(page):
     st.rerun()
 
 def language_selector():
+    # V209.4 Task 2: English only - all other languages including Roman Urdu removed by default
+    st.session_state.app_language = "en"
+    st.session_state.lang = "en"
     # V207 Requirement 1a,1b,1e: Theme and language tabs in 1 line, single theme tab
     import streamlit.components.v1 as components
     # Single line top bar - Theme toggle (single tab) + Language
@@ -515,16 +545,13 @@ def language_selector():
                 components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
                 st.rerun()
     with c_lang:
-        # Language toggle single icon
-        if st.button("🌐", key="lang_toggle_single_v207", help="Change Language"):
-            curr = st.session_state.get("app_language", "en")
-            nxt = {"en":"ur", "ur":"ar", "ar":"en"}[curr]
-            st.session_state.app_language = nxt
-            st.rerun()
+        # V209.4 Task 2: Only English by default, all other languages including Roman Urdu removed
+        # Language selector disabled - English only
+        st.session_state.app_language = "en"
+        st.session_state.lang = "en"
     with c_spacer:
-        # Show current lang small
-        lang = st.session_state.get("app_language","en")
-        st.markdown(f"<div style='text-align:right;font-size:11px;color:#5a6d65;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+        # Show English only
+        st.markdown(f"<div style='text-align:right;font-size:11px;color:#5a6d65;margin-top:8px;'>EN</div>", unsafe_allow_html=True)
     
     # Restore theme from localStorage
     if "theme_restored" not in st.session_state:
@@ -670,229 +697,109 @@ def get_sheet_safe(name):
 
 
 def save_to_local_csv(sheet_name, data_dict):
-    """V202 Requirement 10: Save data both local and Google Sheet - V208 Fix 3 Robust Save"""
+    """V209.4 Task 6: Save data locally - Robust with multiple fallbacks - Fixed"""
     try:
-        import os, csv
-        local_dir = "/tmp/herbal_local_backup"
-        os.makedirs(local_dir, exist_ok=True)
+        import os, csv, json
+        from datetime import datetime
+        
+        # Try multiple locations for local backup
+        possible_dirs = [
+            "/tmp/herbal_local_backup",
+            "/tmp",
+            "./local_backup",
+            "/tmp/herbal_clinic_backup"
+        ]
+        
+        local_dir = None
+        for dir_path in possible_dirs:
+            try:
+                os.makedirs(dir_path, exist_ok=True)
+                # Test write
+                test_file = os.path.join(dir_path, "test_write.tmp")
+                with open(test_file, 'w') as f:
+                    f.write("test")
+                os.remove(test_file)
+                local_dir = dir_path
+                break
+            except:
+                continue
+        
+        if not local_dir:
+            local_dir = "/tmp/herbal_local_backup"
+            try:
+                os.makedirs(local_dir, exist_ok=True)
+            except:
+                pass
+        
         file_path = os.path.join(local_dir, f"{sheet_name}.csv")
+        
         # Get headers from SHEET_HEADERS if available
         headers = SHEET_HEADERS.get(sheet_name, list(data_dict.keys()))
+        
+        # Ensure all headers from data_dict are included
+        for key in data_dict.keys():
+            if key not in headers:
+                headers.append(key)
+        
+        # Check if file exists
         file_exists = os.path.exists(file_path)
-        # V208 Fix - ensure all keys are saved even if headers missing
+        
+        # Write to CSV
         try:
-            with open(file_path, "a", newline="", encoding="utf-8") as f:
-                writer = csv.DictWriter(f, fieldnames=headers, extrasaction='ignore')
-                if not file_exists:
+            with open(file_path, 'a', newline='', encoding='utf-8') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=headers, extrasaction='ignore')
+                if not file_exists or os.path.getsize(file_path) == 0:
                     writer.writeheader()
-                row = {h: data_dict.get(h,"") for h in headers}
-                writer.writerow(row)
-        except Exception as e1:
-            # Fallback - write with all keys
-            try:
-                with open(file_path, "a", newline="", encoding="utf-8") as f:
-                    writer = csv.DictWriter(f, fieldnames=list(data_dict.keys()), extrasaction='ignore')
-                    if not file_exists:
-                        writer.writeheader()
-                    writer.writerow(data_dict)
-            except:
-                pass
-        # Also save to session_state as backup list - always
-        try:
+                # Sanitize data for CSV
+                sanitized = {}
+                for k, v in data_dict.items():
+                    if isinstance(v, (int, float)):
+                        sanitized[k] = str(v)
+                    elif v is None:
+                        sanitized[k] = ""
+                    else:
+                        sanitized[k] = str(v).replace('\n', ' ').replace('\r', ' ')
+                writer.writerow(sanitized)
+            
+            # Also save to session_state as backup
             backup_key = f"local_backup_{sheet_name}"
             if backup_key not in st.session_state:
                 st.session_state[backup_key] = []
             st.session_state[backup_key].append(data_dict)
-        except:
-            pass
-        return True
+            
+            # Also save as JSON for extra backup
+            json_path = os.path.join(local_dir, f"{sheet_name}.json")
+            try:
+                existing = []
+                if os.path.exists(json_path):
+                    with open(json_path, 'r', encoding='utf-8') as jf:
+                        existing = json.load(jf)
+                existing.append(data_dict)
+                with open(json_path, 'w', encoding='utf-8') as jf:
+                    json.dump(existing, jf, indent=2, ensure_ascii=False)
+            except:
+                pass
+            
+            return True
+        except Exception as e:
+            # If CSV fails, try session_state backup
+            try:
+                backup_key = f"local_backup_{sheet_name}"
+                if backup_key not in st.session_state:
+                    st.session_state[backup_key] = []
+                st.session_state[backup_key].append(data_dict)
+                return True
+            except:
+                return False
     except Exception as e:
-        # V208 Fix - Even if file fails, return True so patient is considered saved in session
         try:
+            # Last resort - session_state only
             backup_key = f"local_backup_{sheet_name}"
             if backup_key not in st.session_state:
                 st.session_state[backup_key] = []
             st.session_state[backup_key].append(data_dict)
+            return True
         except:
-            pass
-        return True
-
-
-
-@st.cache_data(ttl=600, show_spinner=False)
-def get_all_records_cached(sheet_name):
-    try:
-        ws=get_sheet_safe(sheet_name)
-        if not ws: return []
-        try: return ws.get_all_records()
-        except:
-            vals=ws.get_all_values()
-            if len(vals)<2: return []
-            hdr=vals[0]
-            return [dict(zip(hdr, r+[""]*(len(hdr)-len(r)))) for r in vals[1:]]
-    except: return []
-
-def save_patient(data):
-    # V209 Fix 3: Robust save - Ensure data saves locally AND to Google Sheet, never fails silently
-    # First sanitize data with proper data types for AI
-    try:
-        cleaned = {}
-        for k,v in data.items():
-            if isinstance(v, str):
-                cleaned[k] = sanitize_for_sheet(v)
-            else:
-                cleaned[k] = v  # Keep float/int types for AI
-    except:
-        cleaned = data
-    
-    # V209 Fix 3: Local save always first, must succeed
-    local_ok = False
-    try:
-        local_ok = save_to_local_csv("New_patient", cleaned)
-    except Exception as e:
-        local_ok = False
-        # Even if local fails, try session_state backup
-        try:
-            backup_key = "local_backup_New_patient"
-            if backup_key not in st.session_state:
-                st.session_state[backup_key] = []
-            st.session_state[backup_key].append(cleaned)
-            local_ok = True
-        except:
-            local_ok = False
-    
-    sheet_ok = False
-    sheet_msg = ""
-    try:
-        ws=get_sheet_safe("New_patient")
-        if ws:
-            hdr=ws.row_values(1)
-            if not hdr:
-                hdr = SHEET_HEADERS.get("New_patient", list(cleaned.keys()))
-            # Ensure row matches header - handle data types
-            row=[]
-            for h in hdr:
-                val = cleaned.get(h,"")
-                # Convert float/int to string for sheet but keep original for local
-                if isinstance(val, (int, float)):
-                    row.append(str(val))
-                else:
-                    row.append(str(val) if val is not None else "")
-            if len(row) < len(hdr):
-                row += [""]*(len(hdr)-len(row))
-            ws.append_row(row, value_input_option="RAW")
-            try:
-                get_all_records_cached.clear()
-            except:
-                pass
-            sheet_ok = True
-            sheet_msg = "Sheet saved"
-        else:
-            sheet_msg = "Sheet not connected - Demo mode, saved locally"
-    except Exception as e:
-        sheet_msg = f"Sheet error: {str(e)[:150]}"
-        sheet_ok = False
-    
-    # V209 Fix 3: Return True if either local or sheet saved, prioritize local
-    if local_ok:
-        if sheet_ok:
-            return True, f"✅ Saved to Google Sheet + Local Backup | PatientID {cleaned.get('PatientID','')} | Total Rs {cleaned.get('GrandTotal',0)}"
-        else:
-            return True, f"✅ Saved Locally (Sheet: {sheet_msg}) | PatientID {cleaned.get('PatientID','')} | Please check Sheet Secrets"
-    elif sheet_ok:
-        return True, f"✅ Saved to Google Sheet ({sheet_msg})"
-    else:
-        return False, f"❌ Failed both - {sheet_msg} - Data backed up in session"
-
-
-
-def get_next_numbers(clinic_name):
-    try:
-        records = get_all_records_cached("New_patient")
-        my_records = [r for r in records if str(r.get("ClinicName","")).lower() == str(clinic_name).lower()]
-        max_total=0
-        for r in my_records:
-            try:
-                tn=int(str(r.get("TotalNumber","0") or 0))
-                if tn>max_total: max_total=tn
-            except: pass
-        today_str=str(datetime.date.today())
-        daily_count=len([r for r in my_records if today_str in str(r.get("Date",""))])
-        return daily_count+1, max_total+1 if max_total>0 else 1
-    except: return 1,1
-
-def get_next_auto_id():
-    # V172: New ID for AutoDiagnosis - fixed, gives new ID every entry
-    try:
-        recs = get_all_records_cached("AutoDiagnosis")
-        max_id=0
-        for r in recs:
-            try:
-                # ID format AUTO1, AUTO2 or numeric
-                id_str=str(r.get("ID","") or r.get("PatientID",""))
-                num=''.join(filter(str.isdigit, id_str))
-                if num:
-                    n=int(num)
-                    if n>max_id: max_id=n
-            except: pass
-        return max_id+1
-    except:
-        return int(datetime.datetime.now().timestamp()) % 100000
-
-def get_next_feedback_id():
-    try:
-        recs=get_all_records_cached("Feedback")
-        max_id=0
-        for r in recs:
-            fid=str(r.get("ID",""))
-            if fid.startswith("fd_"):
-                try:
-                    num=int(fid.split("_")[1])
-                    if num>max_id: max_id=num
-                except: pass
-        return f"fd_{max_id+1}"
-    except: return "fd_1"
-
-def get_next_user_signup_id(user_type):
-    # V186 - CU_ for Clinic, HU_ for Home User
-    try:
-        recs = get_all_records_cached("UserSignups")
-        prefix = "CU_" if str(user_type).lower() in ["clinic","clinic_user","cu"] else "HU_"
-        max_n = 0
-        for r in recs:
-            sid = str(r.get("SignupID","") or r.get("ID",""))
-            if sid.startswith(prefix):
-                try:
-                    num = int(sid.split("_")[1])
-                    if num > max_n: max_n = num
-                except: pass
-            # Also handle old numeric IDs for backward compatibility
-            elif sid.startswith("CU") or sid.startswith("HU"):
-                try:
-                    num = int(''.join(filter(str.isdigit, sid)))
-                    if num > max_n: max_n = num
-                except: pass
-        return f"{prefix}{max_n+1}"
-    except:
-        prefix = "CU_" if str(user_type).lower() in ["clinic"] else "HU_"
-        return f"{prefix}1"
-
-def col_idx_to_letter(idx):
-    # 0 -> A, 25 -> Z, 26 -> AA etc
-    letter = ""
-    idx = int(idx)
-    while True:
-        idx, remainder = divmod(idx, 26)
-        letter = chr(65 + remainder) + letter
-        if idx == 0:
-            break
-        idx -= 1
-    return letter
-
-def delete_category_from_appsettings(cat_type, cat_name):
-    try:
-        ws = get_sheet_safe("AppSettings")
-        if not ws:
             return False
         vals = ws.get_all_values()
         # cat_type is MainCategory or SubCategory
@@ -1177,6 +1084,49 @@ def reset_to_new_patient():
     st.session_state.section_unlocked={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
     st.rerun()
 
+
+def validate_required_data_types(form_version):
+    """V209.4 Task 5: Validate all form fields have required data types for AI"""
+    fv = form_version
+    errors = []
+    
+    # Name - Required String, not empty, only letters and spaces
+    p_name = st.session_state.get(f"p_name_{fv}", "").strip()
+    if not p_name:
+        errors.append("Patient Name is required (String type)")
+    elif len(p_name) < 2:
+        errors.append("Patient Name must be at least 2 characters")
+    
+    # Age - Required Integer
+    p_age = st.session_state.get(f"p_age_{fv}", "").strip()
+    if not p_age:
+        errors.append("Age is required (Integer type)")
+    else:
+        try:
+            age_int = int(str(p_age).split()[0])
+            if age_int < 1 or age_int > 120:
+                errors.append("Age must be between 1 and 120")
+        except:
+            errors.append("Age must be a number (Integer type, e.g., 35)")
+    
+    # Gender - Required String from list
+    p_gender = st.session_state.get(f"p_gender_{fv}", "Select")
+    if p_gender == "Select":
+        errors.append("Gender is required (Select from list)")
+    
+    # Phone - Required Numeric String, 11 digits
+    p_phone = st.session_state.get(f"p_phone_{fv}", "").strip()
+    if not p_phone:
+        errors.append("Phone is required (Numeric String type)")
+    else:
+        # Remove dashes and spaces
+        phone_clean = re.sub(r'[^0-9]', '', p_phone)
+        if len(phone_clean) < 10 or len(phone_clean) > 12:
+            errors.append("Phone must be 10-12 digits (Numeric String, e.g., 03001234567)")
+    
+    return errors
+
+
 def render_patient_form(is_revisit=False):
     # V209 Fix 6: Ensure Added Diseases empty by default for each patient
     if not is_revisit and "patient_diseases" not in st.session_state:
@@ -1231,8 +1181,8 @@ def render_patient_form(is_revisit=False):
             st.selectbox("Gender *", LISTS["gender"], key=f"p_gender_{fv}")
             st.text_input("Age *", key=f"p_age_{fv}", value=get_prefill("Age",""), placeholder="Age - Number e.g., 35")
         with c3:
-            # V209 Fix 5: Phone in first 6 fields for AI data type consistency
-            st.text_input("Phone *", key=f"p_phone_{fv}", value=get_prefill("Phone",""), placeholder="Phone - 03XX-XXXXXXX")
+            # V209.4 Task 5: Phone with required data type validation - Numbers only
+            st.text_input("Phone *", key=f"p_phone_{fv}", value=get_prefill("Phone",""), placeholder="Phone - 03XX-XXXXXXX (Numbers only)", help="Enter phone number with digits only, e.g., 03001234567 - Required data type: Numeric String")
             st.text_input("Address", key=f"p_address_{fv}", value=get_prefill("Address",""), placeholder="Address - Text")
 
         # Hidden fields - show only when Additional Information clicked
@@ -2216,6 +2166,7 @@ def clinic_herb_formula_page():
 
 
 def home_user_articles_page():
+    scroll_to_top()
     language_selector()
     clinic_heading_banner()
     top_nav_inner()
@@ -2467,7 +2418,7 @@ def clinic_admin_page():
             "Articles": False,
             "Herbs & Pharma": False,
             "Free Health Tools": False,
-            "Offer": False,
+            # Offer removed - controlled by App Admin only
             "Essential": False,
             "Inventory": False,
             "Billing Report": False,
@@ -2513,13 +2464,15 @@ def clinic_admin_page():
             new_val2 = st.checkbox("Herbs & Pharma", value=settings.get("Herbs & Pharma", True), key="clinic_admin_herbs")
             settings["Herbs & Pharma"] = new_val2
         with c3:
-            new_val = st.checkbox("Free Health Tools", value=settings.get("Free Health Tools", True), key="clinic_admin_tools")
+            new_val = st.checkbox("Free Health Tools", value=settings.get("Free Health Tools", False), key="clinic_admin_tools")
             settings["Free Health Tools"] = new_val
-            new_val2 = st.checkbox("Offer", value=settings.get("Offer", True), key="clinic_admin_offer")
-            settings["Offer"] = new_val2
+            # V209.4 Task 3: Offer control removed from Clinic Admin, only App Admin controls it
+            st.markdown("<div style='color:#999;font-size:12px;'>Offer controlled by App Admin only</div>", unsafe_allow_html=True)
         with c4:
-            new_val = st.checkbox("Essential", value=settings.get("Essential", False), key="clinic_admin_essential")
-            settings["Essential"] = new_val
+            new_val = st.checkbox("Clinic Overview", value=settings.get("Clinic Overview", False), key="clinic_admin_overview_v209_4")
+            settings["Clinic Overview"] = new_val
+            new_val2 = st.checkbox("Essential", value=settings.get("Essential", False), key="clinic_admin_essential")
+            settings["Essential"] = new_val2
     
     with st.container(border=True):
         st.markdown("<div class='heading-h4'>Clinic Management Tabs - Disabled for Now (Next Phase)</div>", unsafe_allow_html=True)
@@ -2586,31 +2539,38 @@ def dashboard_welcome_page():
         pending = 0
         total_income = 0
     
-    st.markdown("<div class='dash-section-title'>Clinic Overview</div>", unsafe_allow_html=True)
-    m1,m2,m3,m4 = st.columns(4)
-    with m1:
-        st.markdown(f"<div style='background: linear-gradient(135deg,#E8F5E9,#FFFFFF);border:2px solid #2E7D5B;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(46,125,91,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TOTAL PATIENTS</div><div style='font-size:32px;font-weight:900;color:#2E7D5B;margin-top:6px;'>{total_patients}</div></div>", unsafe_allow_html=True)
-    with m2:
-        st.markdown(f"<div style='background: linear-gradient(135deg,#FFF3E0,#FFFFFF);border:2px solid #FF9800;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(255,152,0,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TODAY</div><div style='font-size:32px;font-weight:900;color:#FF9800;margin-top:6px;'>{today_patients}</div></div>", unsafe_allow_html=True)
-    with m3:
-        st.markdown(f"<div style='background: linear-gradient(135deg,#FFEBEE,#FFFFFF);border:2px solid #F44336;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(244,67,54,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>PENDING</div><div style='font-size:32px;font-weight:900;color:#F44336;margin-top:6px;'>{pending}</div></div>", unsafe_allow_html=True)
-    with m4:
-        st.markdown(f"<div style='background: linear-gradient(135deg,#E3F2FD,#FFFFFF);border:2px solid #2196F3;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(33,150,243,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>INCOME</div><div style='font-size:28px;font-weight:900;color:#2196F3;margin-top:6px;'>Rs {total_income:.0f}</div></div>", unsafe_allow_html=True)
-    
-    try:
-        import pandas as pd
-        from datetime import timedelta
-        dates = [(datetime.date.today() - timedelta(days=i)).isoformat() for i in range(6,-1,-1)]
-        counts = []
-        for d in dates:
-            c = len([r for r in my_records if d in str(r.get("Date",""))])
-            counts.append(c)
-        chart_df = pd.DataFrame({"Date": dates, "Patients": counts})
-        chart_df = chart_df.set_index("Date")
-        st.markdown("<div style='margin-top:14px;'><b>Last 7 Days</b></div>", unsafe_allow_html=True)
-        st.bar_chart(chart_df, height=180)
-    except:
-        pass
+    # V209.4 Task 1: Clinic Overview default OFF, controllable via Clinic Admin
+    # Check if Clinic Overview is enabled in clinic_dashboard_settings
+    overview_enabled = st.session_state.get("clinic_dashboard_settings", {}).get("Clinic Overview", False)
+    if overview_enabled:
+        st.markdown("<div class='dash-section-title'>Clinic Overview</div>", unsafe_allow_html=True)
+        m1,m2,m3,m4 = st.columns(4)
+        with m1:
+            st.markdown(f"<div style='background: linear-gradient(135deg,#E8F5E9,#FFFFFF);border:2px solid #2E7D5B;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(46,125,91,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TOTAL PATIENTS</div><div style='font-size:32px;font-weight:900;color:#2E7D5B;margin-top:6px;'>{total_patients}</div></div>", unsafe_allow_html=True)
+        with m2:
+            st.markdown(f"<div style='background: linear-gradient(135deg,#FFF3E0,#FFFFFF);border:2px solid #FF9800;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(255,152,0,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TODAY</div><div style='font-size:32px;font-weight:900;color:#FF9800;margin-top:6px;'>{today_patients}</div></div>", unsafe_allow_html=True)
+        with m3:
+            st.markdown(f"<div style='background: linear-gradient(135deg,#FFEBEE,#FFFFFF);border:2px solid #F44336;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(244,67,54,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>PENDING</div><div style='font-size:32px;font-weight:900;color:#F44336;margin-top:6px;'>{pending}</div></div>", unsafe_allow_html=True)
+        with m4:
+            st.markdown(f"<div style='background: linear-gradient(135deg,#E3F2FD,#FFFFFF);border:2px solid #2196F3;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(33,150,243,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>INCOME</div><div style='font-size:28px;font-weight:900;color:#2196F3;margin-top:6px;'>Rs {total_income:.0f}</div></div>", unsafe_allow_html=True)
+        
+        try:
+            import pandas as pd
+            from datetime import timedelta
+            dates = [(datetime.date.today() - timedelta(days=i)).isoformat() for i in range(6,-1,-1)]
+            counts = []
+            for d in dates:
+                c = len([r for r in my_records if d in str(r.get("Date",""))])
+                counts.append(c)
+            chart_df = pd.DataFrame({"Date": dates, "Patients": counts})
+            chart_df = chart_df.set_index("Date")
+            st.markdown("<div style='margin-top:14px;'><b>Last 7 Days</b></div>", unsafe_allow_html=True)
+            st.bar_chart(chart_df, height=180)
+        except:
+            pass
+    else:
+        # Clinic Overview is OFF by default, user can enable from Clinic Admin
+        st.markdown("<div style='background:#F5F5F5;border:1px dashed #999;border-radius:10px;padding:10px;text-align:center;color:#666;'>Clinic Overview is OFF by default. Enable it from Clinic Admin settings if needed.</div>", unsafe_allow_html=True)
     
     st.markdown("<div class='dash-section-title'>Clinic Section</div>", unsafe_allow_html=True)
     # V209.3 Fix 1,2,3: Clinic Admin Control - Permanent, Only New Patient+Revisit ON by default, others OFF
@@ -2618,8 +2578,9 @@ def dashboard_welcome_page():
     if "clinic_dashboard_settings" not in st.session_state:
         st.session_state.clinic_dashboard_settings = {
             "New Patient": True, "Revisit": True, "Clinic Admin": True,
+            "Clinic Overview": False,
             "Auto-Diagnosis": False, "Dictionary": False, "Articles": False,
-            "Herbs & Pharma": False, "Free Health Tools": False, "Offer": False,
+            "Herbs & Pharma": False, "Free Health Tools": False,
             "Essential": False, "Inventory": False, "Billing Report": False,
             "Staff Management": False, "Patient Analytics": False, "Appointments": False, "Expenses": False
         }
@@ -2717,11 +2678,11 @@ def dashboard_welcome_page():
                 st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
     # V209 Fix - Removed duplicate Articles/Herbs/Free Tools block - keys now unique above
-    # V209 Fix 8: Offer tab controlled by both AppSettings and Clinic Admin
+    # V209.4 Task 3: Offer tab controlled ONLY by App Admin, not Clinic Admin
     r3c1,r3c2,r3c3,r3c4=st.columns(4)
-    show_offer_setting = dash_settings.get("Offer", True)
+    # Offer is controlled by App Admin via AppSettings - OfferEnabled
     show_offer = get_app_setting("OfferEnabled", get_app_setting("show_offer_tab","Yes"))
-    if str(show_offer).lower() in ["yes","on","true","1","enabled"] and show_offer_setting: 
+    if str(show_offer).lower() in ["yes","on","true","1","enabled"]: 
         with r3c1:
             st.markdown("<div class='graceful-card' style='border:3px solid #00ff88; animation: blinkGreen 1.2s infinite;'>", unsafe_allow_html=True)
             if st.button("Offer", use_container_width=True, key="dash_offer_v209"):
@@ -2730,7 +2691,7 @@ def dashboard_welcome_page():
                 st.session_state.current_page="offer_page"
                 st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
-    # V209 Fix 8: Essential tab if enabled in Clinic Admin
+    # Essential tab if enabled in Clinic Admin
     if dash_settings.get("Essential", False):
         with r3c2:
             st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
