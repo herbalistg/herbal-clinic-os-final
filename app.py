@@ -1,4 +1,4 @@
-# APP VERSION - V209.6.11 - Fix: Hardcoded Sheet ID Fallback - Ignores missing secrets ID - Fix: Login Hang + Refresh Loop + Sign-in stuck - Fix: Detects broken secrets format + auto-extract ID + needs gcp_service_account - Self Diagnosing Sheet Doctor - App tells why sheet not saving - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.6.12 - Fix: Page Load Speed + Revisit Sheet Save - Fix: Hardcoded Sheet ID Fallback - Ignores missing secrets ID - Fix: Login Hang + Refresh Loop + Sign-in stuck - Fix: Detects broken secrets format + auto-extract ID + needs gcp_service_account - Self Diagnosing Sheet Doctor - App tells why sheet not saving - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.6.11"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.6.12"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -1243,22 +1243,19 @@ def get_next_numbers(clinic_name):
     except:
         return 1, 1
 
-def get_all_records_cached(sheet_name):
-    """V209.6.5 - Simple read without cache to avoid errors"""
+@st.cache_data(show_spinner=False, ttl=60)
+def _get_all_records_cached_fast(sheet_name):
+    """V209.6.12 - Fast cached read - 60 sec cache for speed"""
     try:
         ws = get_sheet_safe(sheet_name)
         if not ws:
-            # Return local backup if sheet not available
-            backup_key = f"local_backup_{sheet_name}"
-            return st.session_state.get(backup_key, [])
+            return []
         try:
             vals = ws.get_all_values()
         except:
-            backup_key = f"local_backup_{sheet_name}"
-            return st.session_state.get(backup_key, [])
+            return []
         if not vals or len(vals) < 2:
-            backup_key = f"local_backup_{sheet_name}"
-            return st.session_state.get(backup_key, [])
+            return []
         headers = vals[0]
         records = []
         for row in vals[1:]:
@@ -1272,6 +1269,22 @@ def get_all_records_cached(sheet_name):
                     rec[h] = ""
             records.append(rec)
         return records
+    except:
+        return []
+
+def get_all_records_cached(sheet_name):
+    """V209.6.12 - Wrapper with local backup fallback + speed"""
+    try:
+        # Try fast cached version
+        cached = _get_all_records_cached_fast(sheet_name)
+        if cached:
+            return cached
+        # Fallback to local backup if sheet empty or fails
+        backup_key = f"local_backup_{sheet_name}"
+        local = st.session_state.get(backup_key, []) if 'st' in globals() else []
+        if local:
+            return local
+        return cached
     except Exception as e:
         try:
             backup_key = f"local_backup_{sheet_name}"
@@ -1309,25 +1322,20 @@ def save_patient(data_dict):
         except:
             local_ok = False
         
-        # STEP 3: Google Sheet - try but don't fail - WITH DETAILED LOGGING
+        # STEP 3: Google Sheet - FAST save - no diagnosis on every save for speed
         sheet_ok = False
         sheet_msg = "Not connected"
-        sheet_diagnosis = {}
+        sheet_diagnosis = st.session_state.get("last_sheet_diagnosis", {})
         try:
-            # Clear cache
-            try:
-                get_spreadsheet_cached.clear()
-                get_gspread_client.clear()
-            except:
-                pass
-            
-            # Get detailed diagnosis
-            try:
-                sheet_diagnosis = get_sheet_connection_status()
-                # Store in session for display
-                st.session_state["last_sheet_diagnosis"] = sheet_diagnosis
-            except Exception as e:
-                sheet_diagnosis = {"error": str(e)[:200]}
+            # V209.6.12: Don't clear cache and don't run diagnosis on every save - makes page slow
+            # Only clear cache if previous save failed
+            if st.session_state.get("last_sheet_error"):
+                try:
+                    get_spreadsheet_cached.clear()
+                    get_gspread_client.clear()
+                    _get_all_records_cached_fast.clear()
+                except:
+                    pass
             
             ws = get_sheet_safe("New_patient")
             if ws:
@@ -2236,9 +2244,56 @@ def render_patient_form(is_revisit=False):
                 "TotalNumber": int(total_num),  # Int
                 "GrandTotal": float(grand_total),  # Float
             }
+            # V209.6.12: Save to New_patient + if revisit also to Revisit sheet
             ok,msg=save_patient(data_dict)
+            
+            # If this is a revisit, also save to Revisit sheet
+            if is_revisit:
+                try:
+                    revisit_dict = {
+                        "RevisitID": f"R{str(pid)}_{str(datetime.date.today())}_{str(int(datetime.datetime.now().timestamp()))[-4:]}",
+                        "PatientID": str(pid),
+                        "Date": str(datetime.date.today()),
+                        "Name": str(p_name).strip(),
+                        "Phone": str(st.session_state.get(f"p_phone_{fv}", "")).strip(),
+                        "ClinicName": str(st.session_state.clinic_name).strip(),
+                        "Complaint": str(chief_comp).strip() + " | " + str(diseases_text).strip(),
+                        "Prescription": str(st.session_state.get(f"single_meds_{fv}", [])) + " | " + str(st.session_state.get(f"formula_meds_{fv}", [])),
+                        "Fees": float(f),
+                        "Paid": float(p),
+                        "Balance": float(balance),
+                        "CreatedBy": str(st.session_state.username).strip()
+                    }
+                    # Save to Revisit sheet
+                    try:
+                        ws_rev = get_sheet_safe("Revisit")
+                        if ws_rev:
+                            hdr_rev = ws_rev.row_values(1)
+                            if not hdr_rev or len(hdr_rev) < 5:
+                                hdr_rev = SHEET_HEADERS.get("Revisit", list(revisit_dict.keys()))
+                            row_rev = []
+                            for h in hdr_rev:
+                                v = revisit_dict.get(h, "")
+                                row_rev.append(str(v) if v is not None else "")
+                            ws_rev.append_row(row_rev, value_input_option="RAW")
+                            st.session_state["last_revisit_save"] = "Revisit sheet OK"
+                    except Exception as e_rev:
+                        st.session_state["last_revisit_save"] = f"Revisit save fail: {e_rev}"
+                    
+                    # Also save to local backup for Revisit
+                    save_to_local_csv("Revisit", revisit_dict)
+                except Exception as e:
+                    pass
+            
+            # Clear cache after successful save to show new data
+            try:
+                _get_all_records_cached_fast.clear()
+            except:
+                pass
+            
             if ok:
-                st.success(f"Saved - PatientID {pid} | Grand Total Rs {grand_total:.0f} - Form cleared for new entry")
+                msg_extra = " + Revisit sheet" if is_revisit else ""
+                st.success(f"Saved - PatientID {pid} | Grand Total Rs {grand_total:.0f}{msg_extra} - Form cleared for new entry")
                 st.balloons()
                 st.session_state.form_version+=1
                 st.session_state.prev_balance=0.0
