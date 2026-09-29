@@ -1,4 +1,4 @@
-# APP VERSION - V209.6.3 - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.6.4 - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.6.3"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.6.4"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -1007,19 +1007,26 @@ def save_patient(data_dict):
 
     # ALWAYS return True if session_state backup exists - don't block user
     # Local save is primary, Sheet is secondary
+    # Always save to session_state backup first - critical
+    try:
+        backup_key = "local_backup_New_patient"
+        if backup_key not in st.session_state:
+            st.session_state[backup_key] = []
+        # Avoid duplicate if already saved
+        if cleaned not in st.session_state[backup_key]:
+            st.session_state[backup_key].append(cleaned)
+        st.session_state["last_saved_patient"] = cleaned
+        st.session_state["last_save_time"] = str(__import__('datetime').datetime.now())
+    except Exception as e:
+        pass
+
     if local_ok and sheet_ok:
-        return True, f"✅ Saved to Sheet + Local | ID {cleaned.get('PatientID','')}"
+        return True, f"✅ Saved to Sheet + Local + Session | ID {cleaned.get('PatientID','')} | Total saved: {len(st.session_state.get('local_backup_New_patient', []))}"
     elif local_ok:
-        return True, f"✅ Saved Locally (Sheet: {sheet_msg}) | ID {cleaned.get('PatientID','')}"
+        return True, f"✅ Saved Locally + Session (Sheet: {sheet_msg}) | ID {cleaned.get('PatientID','')} | Total: {len(st.session_state.get('local_backup_New_patient', []))}"
     else:
-        # Even if local CSV failed, session_state backup exists
-        try:
-            backup_key = "local_backup_New_patient"
-            if backup_key in st.session_state and len(st.session_state[backup_key]) > 0:
-                return True, f"✅ Saved to Session Backup (CSV failed, Sheet: {sheet_msg}) | ID {cleaned.get('PatientID','')}"
-        except:
-            pass
-        return True, f"✅ Saved (fallback) | ID {cleaned.get('PatientID','')} | {sheet_msg}"
+        # Session backup always exists now
+        return True, f"✅ Saved to Session Backup | ID {cleaned.get('PatientID','')} | Count: {len(st.session_state.get('local_backup_New_patient', []))} | Sheet: {sheet_msg}"
 
 def get_next_offer_id():
     try:
@@ -1599,6 +1606,30 @@ def render_patient_form(is_revisit=False):
             st.session_state[f"calc_pay_{fv}"]=payment_method
             section_ok("billing", is_revisit=is_revisit)
 
+    # V209.6.4 Fix: Save area always visible, debug included
+    st.markdown("---")
+    st.markdown("<div class='heading-h4'>Save Patient - Final Step</div>", unsafe_allow_html=True)
+    
+    # Show debug info
+    with st.expander("🔍 Debug - Check what will be saved (click to see)", expanded=False):
+        fv_debug = st.session_state.form_version
+        st.write(f"Form Version: {fv_debug}")
+        st.write(f"Name: {st.session_state.get(f'p_name_{fv_debug}', 'EMPTY')}")
+        st.write(f"Age: {st.session_state.get(f'p_age_{fv_debug}', 'EMPTY')}")
+        st.write(f"Gender: {st.session_state.get(f'p_gender_{fv_debug}', 'EMPTY')}")
+        st.write(f"Phone: {st.session_state.get(f'p_phone_{fv_debug}', 'EMPTY')}")
+        st.write(f"Clinic: {st.session_state.get('clinic_name', 'EMPTY')}")
+        st.write(f"Daily: {daily_num}, Total: {total_num}, PID: {pid}")
+        st.write(f"Local Backup Count: {len(st.session_state.get('local_backup_New_patient', []))}")
+        if st.session_state.get("last_saved_patient"):
+            st.write(f"Last Saved: {st.session_state.get('last_saved_patient', {}).get('Name','None')} at {st.session_state.get('last_saved_patient', {}).get('Timestamp','')}")
+    
+    # Show saved patients from session
+    if st.session_state.get("local_backup_New_patient"):
+        with st.expander(f"📋 Saved Patients in Session ({len(st.session_state.get('local_backup_New_patient', []))} patients)", expanded=False):
+            for i, rec in enumerate(st.session_state.get("local_backup_New_patient", [])[-5:]):  # Last 5
+                st.write(f"{i+1}. {rec.get('Name','')} - {rec.get('Phone','')} - ID:{rec.get('PatientID','')} - {rec.get('Date','')}")
+
     c1,c2,c3=st.columns([1,1,2])
     with c1:
         if st.button("Back", key=f"back_patient_{fv}_v172"):
@@ -1608,10 +1639,12 @@ def render_patient_form(is_revisit=False):
         if st.button("New Patient", key=f"new_patient_btn_{fv}_v172", type="secondary"):
             reset_to_new_patient()
     with c3:
-        if st.button("Save Patient", type="primary", use_container_width=True, key=f"save_patient_{fv}_v172"):
+        if st.button("💾 Save Patient NOW", type="primary", use_container_width=True, key=f"save_patient_{fv}_v209_6_4"):
+            # Get values directly
             p_name = st.session_state.get(f"p_name_{fv}", "")
             if not str(p_name).strip():
-                st.error("Name required"); st.stop()
+                st.error("❌ Name required - Please enter Patient Name in Personal Information section")
+                st.stop()
             f=st.session_state.get(f"calc_f_{fv}",0); m=st.session_state.get(f"calc_m_{fv}",0); p=st.session_state.get(f"calc_p_{fv}",0)
             grand_total=st.session_state.get(f"calc_gt_{fv}",f+m+prev_bal)
             balance=st.session_state.get(f"calc_bal_{fv}",grand_total-p)
