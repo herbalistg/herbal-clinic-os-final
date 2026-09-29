@@ -1,4 +1,4 @@
-# APP VERSION - V209.6.6 - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.6.7 - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.6.6"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.6.7"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -730,15 +730,74 @@ def get_gspread_client():
         if "private_key" in creds_dict:
             try:
                 pk = creds_dict["private_key"]
-                pk = pk.replace("\\n", "\n")
-                pk = pk.replace("\n", chr(10))
+                # Fix: replace escaped \n with real newline
+                # Use chr(92)=\, chr(110)=n, chr(10)=newline
+                bs = chr(92)
+                n_char = chr(110)
+                nl = chr(10)
+                # Replace \\n -> \n
+                pk = pk.replace(bs+bs+n_char, bs+n_char)
+                # Replace \n -> real newline
+                pk = pk.replace(bs+n_char, nl)
                 creds_dict["private_key"] = pk
             except:
                 pass
         creds=Credentials.from_service_account_info(creds_dict, scopes=scopes)
-        return gspread.authorize(creds)
+        client = gspread.authorize(creds)
+        return client
     except:
         return None
+
+def get_sheet_connection_status():
+    status = {}
+    try:
+        status["GSPREAD_AVAILABLE"] = GSPREAD_AVAILABLE
+        try:
+            has_gcp = "gcp_service_account" in st.secrets
+            status["has_gcp_service_account"] = has_gcp
+            if has_gcp:
+                sa = st.secrets["gcp_service_account"]
+                status["gcp_keys"] = list(sa.keys())[:5]
+                status["has_private_key"] = "private_key" in sa
+                status["has_client_email"] = "client_email" in sa
+                status["client_email"] = sa.get("client_email","")[:40]
+        except Exception as e:
+            status["gcp_error"] = str(e)[:100]
+        try:
+            has_conn = "connections" in st.secrets and "gsheets" in st.secrets["connections"]
+            status["has_connections_gsheets"] = has_conn
+            if has_conn:
+                gs = st.secrets["connections"]["gsheets"]
+                if isinstance(gs, dict):
+                    status["connections_gsheets_keys"] = list(gs.keys())[:10]
+                    status["connections_spreadsheet"] = str(gs.get("spreadsheet",""))[:20]
+                else:
+                    status["connections_gsheets_str"] = str(gs)[:30]
+        except Exception as e:
+            status["connections_error"] = str(e)[:100]
+        try:
+            has_gsheets = "gsheets" in st.secrets
+            status["has_gsheets"] = has_gsheets
+        except:
+            status["has_gsheets"] = False
+        client = get_gspread_client()
+        status["client_created"] = client is not None
+        if client:
+            sh = get_spreadsheet_cached()
+            status["spreadsheet_opened"] = sh is not None
+            if sh:
+                status["spreadsheet_title"] = sh.title
+                try:
+                    ws = sh.worksheet("New_patient")
+                    status["New_patient_sheet_found"] = True
+                    vals = ws.get_all_values()
+                    status["New_patient_rows"] = len(vals)
+                except Exception as e:
+                    status["New_patient_error"] = str(e)[:100]
+        return status
+    except Exception as e:
+        return {"error": str(e)[:200]}
+
 
 @st.cache_resource(show_spinner=False, ttl=300)
 def get_spreadsheet_cached():
@@ -978,6 +1037,13 @@ def save_patient(data_dict):
         sheet_ok = False
         sheet_msg = "Not connected"
         try:
+            # Clear cache to ensure fresh connection
+            try:
+                get_spreadsheet_cached.clear()
+                get_gspread_client.clear()
+            except:
+                pass
+            
             ws = get_sheet_safe("New_patient")
             if ws:
                 try:
@@ -990,19 +1056,43 @@ def save_patient(data_dict):
                         if isinstance(v, (int, float)):
                             row.append(str(v))
                         else:
-                            row.append(str(v) if v is not None else "")
-                    # Ensure row length
+                            # Sanitize for sheet - remove newlines
+                            sv = str(v) if v is not None else ""
+                            sv = sv.replace("\n", " ").replace("\r", " ")
+                            row.append(sv)
+                    # Ensure row length matches header
                     if len(row) < len(hdr):
                         row += [""] * (len(hdr) - len(row))
+                    elif len(row) > len(hdr):
+                        row = row[:len(hdr)]
+                    
                     ws.append_row(row, value_input_option="RAW")
                     sheet_ok = True
-                    sheet_msg = "Sheet OK"
+                    sheet_msg = f"Sheet OK - Row {len(ws.get_all_values())}"
                 except Exception as e:
-                    sheet_msg = f"Sheet append fail: {str(e)[:80]}"
+                    import traceback
+                    sheet_msg = f"Sheet append fail: {str(e)[:120]}"
+                    # Try alternative method
+                    try:
+                        ws.append_row([str(cleaned.get(h,"")) for h in SHEET_HEADERS.get("New_patient", [])[:10]], value_input_option="USER_ENTERED")
+                        sheet_ok = True
+                        sheet_msg = "Sheet OK (fallback method)"
+                    except Exception as e2:
+                        sheet_msg = f"Both methods failed: {str(e)[:60]} | {str(e2)[:60]}"
             else:
-                sheet_msg = "Sheet WS None - check secrets"
+                # Detailed debug
+                client = get_gspread_client()
+                if not client:
+                    sheet_msg = "Client None - secrets.toml invalid or private_key broken"
+                else:
+                    sh = get_spreadsheet_cached()
+                    if not sh:
+                        sheet_msg = "Spreadsheet None - ID wrong or not shared with service account"
+                    else:
+                        sheet_msg = "WS None - New_patient sheet not found"
         except Exception as e:
-            sheet_msg = f"Sheet error: {str(e)[:80]}"
+            import traceback
+            sheet_msg = f"Sheet error: {str(e)[:150]}"
         
         # Try to sync previous unsynced local backups to sheet if sheet is now available
         if sheet_ok:
@@ -2766,6 +2856,64 @@ def clinic_admin_page():
             st.checkbox("Reports", value=False, disabled=True, key="clinic_admin_rep_disabled")
             st.checkbox("Settings", value=False, disabled=True, key="clinic_admin_set_disabled")
         st.info("These management tabs will be activated in the next phase.")
+    
+    # V209.6.7 - Sheet Connection Debug Panel
+    st.markdown("---")
+    with st.container(border=True):
+        st.markdown("<div class='heading-h4'>🔧 Google Sheet Connection Debug (V209.6.7)</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='background:#FFF3E0;padding:10px;border-radius:8px;margin-bottom:10px;'><b>Your Sheet ID:</b> 1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA<br><b>Expected Service Account must be shared as Editor</b></div>", unsafe_allow_html=True)
+        
+        if st.button("Check Sheet Connection Status", key="check_sheet_conn_v209_6_7"):
+            with st.spinner("Checking..."):
+                try:
+                    status = get_sheet_connection_status()
+                    st.json(status)
+                    
+                    # Show recommendations
+                    if not status.get("GSPREAD_AVAILABLE"):
+                        st.error("gspread not installed - check requirements.txt")
+                    elif not status.get("has_gcp_service_account") and not status.get("has_connections_gsheets"):
+                        st.error("No service account found in secrets.toml - Need [gcp_service_account]")
+                        st.code('[gcp_service_account]\ntype = "service_account"\nproject_id = "..."', language="toml")
+                    elif not status.get("client_created"):
+                        st.error("Client creation failed - private_key format wrong")
+                        st.info("private_key must have \\n replaced with real newlines. Use TOML with triple quotes or \n")
+                    elif not status.get("spreadsheet_opened"):
+                        st.error("Spreadsheet not opened - Check: 1) ID correct 2) Shared with service account email as Editor")
+                        st.write(f"Your Sheet: https://docs.google.com/spreadsheets/d/1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA/edit")
+                        if status.get("client_email"):
+                            st.write(f"Share with: {status.get('client_email')}")
+                    elif not status.get("New_patient_sheet_found"):
+                        st.error("New_patient sheet not found - Will auto-create on next save")
+                    else:
+                        st.success(f"✅ Sheet Connected! Rows: {status.get('New_patient_rows',0)}")
+                        
+                        # Show unsynced count
+                        unsynced = len(st.session_state.get("local_backup_New_patient_unsynced", []))
+                        if unsynced > 0:
+                            st.warning(f"{unsynced} patients waiting to sync to sheet")
+                            if st.button(f"Sync {unsynced} Now", key="sync_now_v209_6_7"):
+                                # Sync logic
+                                try:
+                                    ws = get_sheet_safe("New_patient")
+                                    if ws:
+                                        count=0
+                                        for rec in st.session_state.get("local_backup_New_patient_unsynced", [])[:20]:
+                                            try:
+                                                hdr = SHEET_HEADERS.get("New_patient", list(rec.keys()))
+                                                row = [str(rec.get(h,"")) for h in hdr]
+                                                ws.append_row(row, value_input_option="RAW")
+                                                count+=1
+                                            except:
+                                                break
+                                        st.success(f"Synced {count} records!")
+                                        st.session_state["local_backup_New_patient_unsynced"] = []
+                                except Exception as e:
+                                    st.error(f"Sync failed: {e}")
+                except Exception as e:
+                    st.error(f"Debug failed: {e}")
+                    import traceback
+                    st.code(traceback.format_exc()[:1000])
     
     st.session_state.clinic_dashboard_settings = settings
     
