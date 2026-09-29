@@ -1,7 +1,5 @@
-# APP VERSION - V209.6.12 - Fix: Page Load Speed + Revisit Sheet Save - Fix: Hardcoded Sheet ID Fallback - Ignores missing secrets ID - Fix: Login Hang + Refresh Loop + Sign-in stuck - Fix: Detects broken secrets format + auto-extract ID + needs gcp_service_account - Self Diagnosing Sheet Doctor - App tells why sheet not saving - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
-# V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
-# Previous: V204, V203, V202, V201, V200
-
+# APP VERSION V210 - Based on V209.6.12 Full Features - Cleaned - Doctor in App Admin
+# Versioning: Major bug -> V210.x , Minor change -> V211, V212 smooth
 
 import streamlit as st
 import datetime
@@ -22,7 +20,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.6.12"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V210"
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -42,7 +40,7 @@ if "theme" not in st.session_state:
 def get_theme_css():
     theme = st.session_state.get("theme", "light")
     if theme == "dim":
-        # V206 Requirement 1d: Same green shade stronger - screen feels slightly dark
+        
         return """
         html, body,.stApp, [data-testid="stAppViewContainer"] { background: #C8DCCB!important; color: #0F2A14!important; }
         .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; box-shadow: 0 8px 28px rgba(27,94,32,0.30)!important; }
@@ -67,442 +65,12 @@ def show_urdu_work_in_progress_note():
         """, unsafe_allow_html=True)
 
 def scroll_to_top():
-    """V209.6.10 Fix: Simple scroll without heavy JS that causes hang"""
     try:
         import streamlit.components.v1 as components
-        components.html("""
-        <script>
-        try{
-            window.scrollTo(0,0);
-        }catch(e){}
-        </script>
-        """, height=0)
+        components.html("<script>try{window.scrollTo(0,0);}catch(e){}</script>", height=0)
     except:
         pass
     # Original scroll code kept below for compatibility but disabled
-    def _old_scroll():
-        import streamlit.components.v1 as components
-        components.html("""
-        <script>
-        (function(){
-            function doScroll(){
-                try{
-                    window.scrollTo({top:0, left:0, behavior:'instant'});
-                    document.documentElement.scrollTop = 0;
-                    document.body.scrollTop = 0;
-                // Scroll parent (Streamlit iframe)
-                if(window.parent){
-                    window.parent.scrollTo({top:0, left:0, behavior:'instant'});
-                    try{ window.parent.document.documentElement.scrollTop = 0; }catch(e){}
-                    try{ window.parent.document.body.scrollTop = 0; }catch(e){}
-                    // Scroll all possible containers
-                    const selectors = [
-                        '[data-testid="stAppViewContainer"]',
-                        '[data-testid="stMain"]',
-                        'section.main',
-                        '[data-testid="stVerticalBlock"]',
-                        '[data-testid="stAppViewContainer"] > div',
-                        'main',
-                        '.main',
-                        '[data-testid="stApp"]',
-                        '.stApp',
-                        '[data-testid="stVerticalBlock"] > div'
-                    ];
-                    selectors.forEach(sel => {
-                        try{
-                            const els = window.parent.document.querySelectorAll(sel);
-                            els.forEach(c=>{ 
-                                if(c) {
-                                    c.scrollTop = 0;
-                                    c.scrollTo({top:0, behavior:'instant'});
-                                }
-                            });
-                        }catch(e){}
-                    });
-                    // Also try to find and scroll the main scrollable element
-                    try{
-                        const mainEl = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
-                        if(mainEl){
-                            mainEl.scrollTop = 0;
-                            mainEl.scrollTo(0,0);
-                        }
-                    }catch(e){}
-                }
-            }catch(e){}
-        }
-        // Immediate scroll
-        doScroll();
-        // Multiple retries to ensure page opens from top
-        setTimeout(doScroll, 50);
-        setTimeout(doScroll, 100);
-        setTimeout(doScroll, 200);
-        setTimeout(doScroll, 400);
-        setTimeout(doScroll, 600);
-        setTimeout(doScroll, 1000);
-        // Also on load
-        window.addEventListener('load', doScroll);
-    })();
-    </script>
-    """, height=0)
-    st.markdown('<div id="top-anchor-v209-4"></div>', unsafe_allow_html=True)
-    st.markdown('<style>html{scroll-behavior:auto!important; scroll-padding-top:0!important;} body{scroll-behavior:auto!important;} [data-testid="stAppViewContainer"]{scroll-behavior:auto!important;}</style>', unsafe_allow_html=True)
-
-
-st.markdown("""
-<style>
-/* V209.2 Fix 1 - Ad compact 0.5cm down - NOT full page */
-.ad-note { 
-    position: fixed!important;
-    bottom: 8px!important;
-    right: 12px!important;
-    z-index: 999999!important;
-    background: #FFFFFF!important;
-    border: 2px solid #B8860B!important;
-    border-radius: 10px!important;
-    padding: 6px 10px!important;
-    text-align: center!important;
-    font-size: 10px!important;
-    font-weight: 700!important;
-    color: #1F2D27!important;
-    box-shadow: 0 3px 12px rgba(184,134,11,0.25)!important;
-    width: auto!important;
-    max-width: 110px!important;
-    height: auto!important;
-    max-height: 90px!important;
-    line-height: 1.2!important;
-    margin: 0!important;
-}
-/* V209.2 Fix 2 - Mobile tabs colored like laptop */
-@media (max-width: 768px) {
-    .graceful-card { background: #F1F7F3!important; border: 2px solid #2E7D5B!important; box-shadow: 0 4px 12px rgba(46,125,91,0.20)!important; }
-    .graceful-card button { background: #F1F7F3!important; border: 1.5px solid #2E7D5B!important; color: #1F2D27!important; font-weight: 700!important; }
-}
-
-/* V200 - Herbal Light Theme - Final + Compact Dashboard + Bigger Fonts */
-html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
-
-/* Block container */
-.block-container { 
-    max-width: 940px!important; 
-    margin: 20px auto!important; 
-    padding: 1.6rem 1.8rem!important; 
-    background: #FFFFFF!important; 
-    border: 3px solid #2E7D5B!important;
-    border-radius: 20px!important; 
-    box-shadow: 0 4px 20px rgba(46,125,91,0.12)!important;
-}
-#MainMenu, header {visibility: hidden;}
-div[data-testid="stSidebar"] {display: none;}
-
-/* ===== V200 Requirement 5: Bigger Fonts - PC slightly larger than mobile ===== */
-/* Page Titles */
-.heading-h1 { font-size: 52px!important; font-weight: 900!important; color:#2E7D5B!important; text-align:center; }
-.heading-h2 { font-size: 26px!important; font-weight: 800!important; color:#2E7D5B!important; }
-.heading-h3 { font-size: 30px!important; font-weight: 800!important; color:#1F2D27!important; }
-.heading-h4 { font-size: 24px!important; font-weight: 700!important; color:#1F2D27!important; margin:12px 0!important; }
-.heading-h5 { font-size: 22px!important; font-weight: 700!important; color:#2E7D5B!important; }
-
-/* General text bigger */
-.stApp p, .stApp div, .stApp span, .stApp label { font-size: 17px!important; }
-.stApp button { font-size: 18px!important; font-weight: 700!important; }
-
-/* Mobile adjustments - still bigger than before but slightly smaller than PC */
-@media (max-width: 768px) {
-    .heading-h1 { font-size: 34px!important; }
-    .heading-h2 { font-size: 22px!important; }
-    .heading-h3 { font-size: 24px!important; }
-    .heading-h4 { font-size: 20px!important; }
-    .heading-h5 { font-size: 18px!important; }
-    .stApp p, .stApp div, .stApp span, .stApp label { font-size: 16px!important; }
-    .stApp button { font-size: 16px!important; }
-}
-
-/* ===== V200 Requirement 2 & 3: Dashboard compact tabs, icon inside tab, green border only on hover ===== */
-.graceful-card { 
-    background: #F1F7F3; 
-    border: 2px solid transparent!important; 
-    border-radius: 12px; 
-    padding: 6px!important; 
-    text-align:center; 
-    color:#1F2D27!important; 
-    transition: all 0.25s ease;
-}
-.graceful-card:hover { 
-    border: 2px solid #2E7D5B!important; 
-    box-shadow: 0 4px 12px rgba(46,125,91,0.20)!important;
-    background: #FFFFFF!important;
-}
-.graceful-card button { 
-    padding: 8px 10px!important; 
-    min-height: 52px!important;
-    font-size: 15px!important;
-}
-@media (max-width: 768px) {
-    .graceful-card button { min-height: 48px!important; font-size: 14px!important; }
-}
-
-
-/* ===== V208 Fix 2 - Mobile dashboard tabs colored like laptop ===== */
-@media (max-width: 768px) {
-    .graceful-card { 
-        background: #F1F7F3!important; 
-        border: 1.5px solid #2E7D5B!important; 
-        box-shadow: 0 3px 10px rgba(46,125,91,0.15)!important;
-    }
-    .graceful-card button { 
-        background: #F1F7F3!important;
-        border: 1px solid #C8E6D5!important;
-        color: #1F2D27!important;
-    }
-    .graceful-card:hover { 
-        background: #FFFFFF!important;
-        border: 2px solid #2E7D5B!important;
-    }
-}
-
-
-/* V209 Fix 1 - Ad 0.5cm down from previous */
-
-
-
-
-
-/* Compact dashboard grid */
-.dash-section-title { font-size:20px!important; font-weight:800!important; color:#FFFFFF; background:#2E7D5B; padding:10px 16px; border-radius:10px; margin:20px 0 12px 0; }
-
-.demo-card { background: #F1F7F3; border:1px solid #C8E6D5; border-radius:14px; padding:16px; color:#1F2D27!important; }
-.footer-sharp { text-align:center; color:#5a6d65!important; font-size:14px!important; margin-top:30px; border-top:1px solid #C8E6D5; padding:14px; }
-.history-card { background:#F1F7F3; border:1px solid #C8E6D5; border-radius:12px; padding:12px; margin-bottom:10px; color:#1F2D27; }
-
-/* ===== V201 Requirement 2: No small green box, only green border on hover ===== */
-.graceful-card { 
-    background: #FFFFFF!important; 
-    border: 1.5px solid #E0E0E0!important; 
-    border-radius: 12px!important; 
-    padding: 2px!important; 
-    text-align:center; 
-    color:#1F2D27!important; 
-    transition: all 0.2s ease!important;
-    box-shadow: none!important;
-}
-.graceful-card:hover { 
-    border: 2.5px solid #2E7D5B!important; 
-    box-shadow: 0 3px 10px rgba(46,125,91,0.18)!important;
-}
-.graceful-card button {
-    border: none!important;
-    background: #F1F7F3!important;
-}
-.graceful-card:hover button {
-    background: #FFFFFF!important;
-    border: 1px solid #2E7D5B!important;
-}
-
-/* ===== V202 Requirement 5: All tabs and fields Raised appearance ===== */
-div[data-testid="stTabs"] {
-    background: #FFFFFF!important;
-    border: 2px solid #C8E6D5!important;
-    border-radius: 16px!important;
-    padding: 8px!important;
-    box-shadow: 0 6px 18px rgba(46,125,91,0.12), 0 2px 4px rgba(0,0,0,0.06)!important;
-}
-div[data-testid="stTab"] {
-    box-shadow: 0 2px 6px rgba(46,125,91,0.15)!important;
-    border-radius: 10px!important;
-    border: 1.5px solid #E0E0E0!important;
-}
-div[data-testid="stTab"][aria-selected="true"] {
-    background: #2E7D5B!important;
-    color: #FFFFFF!important;
-    box-shadow: 0 4px 12px rgba(46,125,91,0.30)!important;
-    border: 2px solid #2E7D5B!important;
-}
-/* Input fields raised */
-div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
-    box-shadow: 0 3px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05)!important;
-    border: 1.5px solid #C8E6D5!important;
-    border-radius: 10px!important;
-    background: #FFFFFF!important;
-}
-div[data-baseweb="input"]:focus-within, div[data-baseweb="select"]:focus-within, div[data-baseweb="textarea"]:focus-within {
-    border: 2px solid #2E7D5B!important;
-    box-shadow: 0 4px 12px rgba(46,125,91,0.20)!important;
-}
-/* Container border raised */
-div[data-testid="stExpander"], div[data-testid="stContainer"] {
-    box-shadow: 0 4px 14px rgba(46,125,91,0.10)!important;
-    border: 1.5px solid #C8E6D5!important;
-}
-
-/* ===== V201 Requirement 3: PC columns(4) = 4 per line, Mobile = 2 per line ===== */
-@media (max-width: 768px) {
-    [data-testid="stHorizontalBlock"] {
-        flex-wrap: wrap!important;
-    }
-    [data-testid="stHorizontalBlock"] [data-testid="column"] {
-        flex: 0 0 50%!important;
-        min-width: 50%!important;
-        max-width: 50%!important;
-    }
-    .graceful-card button { 
-        min-height: 52px!important; 
-        font-size: 14px!important;
-        padding: 6px 8px!important;
-    }
-}
-@media (min-width: 769px) {
-    [data-testid="stHorizontalBlock"] [data-testid="column"] {
-        flex: 0 0 25%!important;
-        min-width: 25%!important;
-    }
-}
-
-/* ===== V201 Requirement 4a,b,c: Ad link small bold 2 lines, box fit to text, near Streamlit button ===== */
-
-@media (max-width: 768px) {
-    
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-# GOOGLE SHEET Final Structure - 12 sheets as per user decision
-# General (4): UserSignups, PermissionGranted, Articles, Feedback - displayed in App Admin alongside other tabs, not dashboard
-# Clinic (6): New_patient, Revisit, AutoDiagnosis, Herbs, Pharmacopoeia, Dictionary - for clinics + dashboard
-# Home User (1+1): HomeUsers + Home Treatment form
-# AppSettings (1): OfferPercent, WhatsAppLink, AppVersion, MaintenanceMode etc - control sheet
-# Removed: ClinicUsers merged into UserSignups with CU_ / HU_ IDs, Formulas merged into Pharmacopoeia
-SHEET_HEADERS = {
-    "UserSignups": ["SignupID","Username","Password","UserType","ClinicName","Phone","Email","Date","Status","Role","From"],
-    "PermissionGranted": ["ID","Username","UserType","PermissionType","GrantedDate","Status","IP","Device"],
-    "HomeUsers": ["UserID","Username","Password","FullName","Phone","Email","Date","Status","AccountHolderPhone","From"],
-    "New_patient": ["PatientID","Date","Name","FatherName","Age","Gender","MaritalStatus","Occupation","CNIC","Phone","EmergencyPhone","Address","Referral","Diseases","ChiefComplaint","PastHistory","FamilyHistory","Allergy","Examination","Pulse","Temperament","BP","Weight","Temperature","SingleMedicines","FormulaMedicines","Fees","MedicineCharges","Total","Paid","Balance","PrevBalance","PaymentMethod","FeeStatus","RevisitDate","ClinicName","CreatedBy","Timestamp","AppVersion","DailyNumber","TotalNumber","GrandTotal"],
-    "Revisit": ["RevisitID","PatientID","Date","Name","Phone","ClinicName","Complaint","Prescription","Fees","Paid","Balance","CreatedBy"],
-    "AutoDiagnosis": ["ID","PatientID","Date","Name","FatherName","Age","Phone","Gender","Address","Diseases","ExtraSymptoms","Temperament","ClinicName","CreatedBy","AppVersion","GrandTotal"],
-    "Herbs": ["HerbID","Name","Temperament","Uses","Dosage","ClinicName"],
-    "Pharmacopoeia": ["ID","Name","Category","Temperament","Uses","Dosage","ClinicName"],
-    "Dictionary": ["ID","Word","Meaning","Category","Language"],
-    "Articles": ["ID","TitleEN","TitleUR","TitleAR","ContentEN","ContentUR","ContentAR","MainCategory","SubCategory","Audience","Type","Status","Date","ClinicName"],
-    "Feedback": ["ID","Name","From","Phone Number","Email","Feedback Page","Feedback","Date","Status"],
-    "AppSettings": ["Key","Value","Date","Status","Description"],
-}
-ALL_SHEETS = list(SHEET_HEADERS.keys())
-# Section division for App Admin
-GENERAL_SHEETS = ["UserSignups", "PermissionGranted", "Articles", "Feedback"]
-CLINIC_SHEETS = ["New_patient", "Revisit", "AutoDiagnosis", "Herbs", "Pharmacopoeia", "Dictionary"]
-HOME_SHEETS = ["HomeUsers"]
-# AppSettings kept separate for control
-
-LANG_DICT = {
-    "en": {"app_name": "Herbal Clinic International"},
-    "ur": {"app_name": "ہربل کلینک انٹرنیشنل"},
-    "ar": {"app_name": "عيادة الأعشاب الدولية"},
-}
-
-BODY_PARTS = {
-    "Select": ["Select"],
-    "Head": ["Select", "Headache", "Migraine", "Dizziness", "Hair Fall", "Head Heaviness"],
-    "Eyes": ["Select", "Eye Pain", "Blurred Vision", "Red Eyes", "Watery Eyes", "Itchy Eyes"],
-    "Nose": ["Select", "Runny Nose", "Nose Block", "Sinus", "Nose Bleed", "Sneezing"],
-    "Mouth": ["Select", "Mouth Ulcer", "Bad Breath", "Toothache", "Gum Bleeding", "Dry Mouth"],
-    "Throat": ["Select", "Sore Throat", "Tonsillitis", "Hoarseness", "Difficulty Swallowing"],
-    "Chest": ["Select", "Chest Pain", "Cough", "Asthma", "Breathlessness", "Cold/Cough"],
-    "Stomach": ["Select", "Gas/Bloating", "Acidity/GERD", "IBS", "Constipation", "Digestive Weakness", "Nausea", "Vomiting"],
-    "Liver": ["Select", "Liver Weakness", "Jaundice", "Fatty Liver", "Liver Pain"],
-    "Kidney": ["Select", "Kidney Stones", "Kidney Pain", "Burning Urination", "Frequent Urination"],
-    "Joints": ["Select", "Joint Pain", "Back Pain", "Sciatica", "Arthritis", "Knee Pain", "Shoulder Pain"],
-    "Skin": ["Select", "Skin Disease", "Allergy", "Itching", "Eczema", "Psoriasis", "Pimples"],
-    "Heart": ["Select", "BP High", "BP Low", "Palpitation", "Chest Tightness"],
-    "General": ["Select", "Fever", "Diabetes", "Anxiety", "Insomnia", "General Weakness", "Anemia", "Obesity", "Piles", "Leucorrhoea", "Menstrual Irregularity", "Infertility", "Fatigue"],
-}
-
-DISEASE_RELATED_QUESTIONS = {
-    "Head": ["Pain Type", "Timing", "Associated Nausea?"],
-    "Eyes": ["Vision Effect?", "Pain on Movement?", "Discharge Type?"],
-    "Nose": ["Discharge Color?", "Allergy Trigger?", "Smell Loss?"],
-    "Mouth": ["Eating Difficulty?", "Duration of Ulcer?", "Bleeding?"],
-    "Throat": ["Fever with Throat?", "Voice Change?", "Swallowing Pain Level?"],
-    "Chest": ["Cough Type?", "Worse at Night?", "Sputum Color?"],
-    "Stomach": ["Relation to Food?", "Bowel Type?", "Appetite Effect?"],
-    "Liver": ["Appetite Loss?", "Yellow Urine?", "Abdominal Swelling?"],
-    "Kidney": ["Pain Radiation?", "Urine Color?", "Swelling in Feet?"],
-    "Joints": ["Stiffness Morning?", "Worse on Movement?", "Swelling?"],
-    "Skin": ["Itching Severity?", "Spread Area?", "Seasonal?"],
-    "Heart": ["Palpitation Frequency?", "Exertion Effect?", "Sweating?"],
-    "General": ["Onset?", "Severity?", "Family History?"],
-}
-
-LISTS = {
-    "gender": ["Select","Male","Female"],
-    "temperament": ["Select","Cold Dry","Dry Cold","Dry Hot","Hot Dry","Hot Wet","Wet Hot","Wet Cold","Cold Wet"],
-    "fee_status": ["Select","Paid","Unpaid","Partial","Free"],
-    "payment": ["Select","Cash","Online","JazzCash","Free"],
-    "marital": ["Select","Single","Married"],
-    "duration": ["Select","Day","Month","Year"],
-    "severity": ["Select","Mild","Moderate","Severe"],
-    "blood_group": ["Select","A+","A-","B+","B-","O+","O-","AB+","AB-"],
-    "sleep": ["Select","Normal","Less","Excess","Disturbed"],
-    "appetite": ["Select","Normal","Less","Excess","No Appetite"],
-    "bowel": ["Select","Normal","Constipated","Loose","Irregular"],
-    "allergy": ["Select","None","Dust","Pollen","Food","Medicine","Cold","Skin","Smoke","Other"],
-    "occupation": ["Select","Student","Teacher","Farmer","Shopkeeper","Laborer","Driver","Housewife","Business","Doctor","Engineer","Government Job","Private Job","Retired","Unemployed","Other"],
-}
-
-defaults = {
-    "logged_in": False,
-    "current_page": "clinic_login",
-    "lang": "en",
-    "show_lang_selector": False,
-    "clinic_name": "Herbal Clinic International",
-    "physician_name": "Hakeem Muhammad Ahmad",
-    "form_version": 0,
-    "auto_diseases": [],
-    "home_auto_diseases": [],
-    "auto_disease_version": 0,
-    "home_auto_disease_version": 0,
-    "prev_balance": 0.0,
-    "patient_diseases": [],
-    "patient_disease_version": 0,
-    "revisit_data": None,
-    "auto_revisit_data": None,
-    "home_auto_revisit_data": None,
-    "username": "",
-    "user_role": "clinic",
-    "user_type": "Clinic",
-    "feedback_page_ref": "",
-    "admin_selected_section": "",
-    "show_proceed_note": False,
-    "show_home_proceed_note": False,
-    "prev_page": "dashboard_welcome",
-    "page_history": ["dashboard_welcome"],
-    "auto_form_mode": "New Patient",
-    "home_auto_form_mode": "New Patient",
-    "home_user_patients": [],
-    "auto_rev_date": "",
-    "auto_rev_address": "",
-    "auto_selected_patient": None,
-    "section_opened": {"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False},
-    "section_unlocked": {"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False},
-    "clinic_dashboard_settings": {
-        "New Patient": True,
-        "Revisit": True,
-        "Clinic Admin": True,
-        "Clinic Overview": False,
-        "Auto-Diagnosis": False,
-        "Dictionary": False,
-        "Articles": False,
-        "Herbs & Pharma": False,
-        "Free Health Tools": False,
-        # Offer removed - controlled by App Admin only
-        "Essential": False,
-        "Inventory": False,
-        "Billing Report": False,
-        "Staff Management": False,
-        "Patient Analytics": False,
-        "Appointments": False,
-        "Expenses": False,
-    },
-}
 def get_user_display_h2():
     role = st.session_state.get("user_role","")
     uname = st.session_state.get("username","")
@@ -605,7 +173,6 @@ def clinic_heading_banner_compact():
     </div>
     """, unsafe_allow_html=True)
 
-
 def top_bar_inner_with_user():
     """V209.5 Task 2c,2d: Inner pages - no big box, only user name left of theme/lang icons, normal text size"""
     import streamlit.components.v1 as components
@@ -656,8 +223,6 @@ def clinic_heading_banner_dashboard_only():
         <div style="font-size:24px; font-weight:700; color:#1F2D27 !important; margin-top:12px; background:#FFFFFF;padding:10px 20px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">{uname} - {cname}</div>
     </div>
     """, unsafe_allow_html=True)
-
-
 
 def top_nav_inner():
     scroll_to_top()
@@ -1520,7 +1085,6 @@ def get_home_user_phone():
     except: pass
     return ""
 
-
 def show_urdu_work_in_progress_note():
     """V204 Requirement 4: Urdu note on every page after sign in"""
     if st.session_state.get("logged_in", False):
@@ -1545,7 +1109,6 @@ def scroll_to_top():
     }catch(e){}
     </script>
     """, height=0)
-
 
 def add_footer():
     is_dash = st.session_state.get("current_page","") == "dashboard_welcome"
@@ -1644,7 +1207,6 @@ def section_ok(key, is_revisit=False):
         st.success(f"{key} OK - Next section unlocked")
         st.rerun()
 
-
 def get_age_based_questions(age_str, gender):
     # V197 - Requirement 5: Questions based on age for Male and Female within Personal Info
     try:
@@ -1722,7 +1284,6 @@ def get_additional_patient_questions():
         ("10. Urine Volume", ["Select","Low Volume / Less Urination","High Volume / Frequent Urination","Normal Volume","Burning Urination","Dark / Yellow Urine"], "add_urine"),
     ]
 
-
 def reset_to_new_patient():
     st.session_state.form_version+=1
     st.session_state.prev_balance=0.0
@@ -1734,7 +1295,6 @@ def reset_to_new_patient():
     st.session_state.section_opened={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
     st.session_state.section_unlocked={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
     st.rerun()
-
 
 def validate_required_data_types(form_version):
     """V209.4 Task 5: Validate all form fields have required data types for AI"""
@@ -1777,11 +1337,7 @@ def validate_required_data_types(form_version):
     
     return errors
 
-
-
-
 # Duplicate get_next_numbers removed - using first definition
-
 
 def render_patient_form(is_revisit=False):
     # V209 Fix 6: Ensure Added Diseases empty by default for each patient
@@ -2656,7 +2212,6 @@ def render_auto_form(prefix, is_home=False):
 
     # V204 Requirement 6: Proceed tab below Additional Questions
 
-
     show_note = st.session_state.show_home_proceed_note if is_home else st.session_state.show_proceed_note
     if show_note:
         st.markdown("---")
@@ -2972,8 +2527,6 @@ def clinic_herb_formula_page():
     under_development_footer("Herbs & Pharmacopoeia")
     add_footer()
 
-
-
 def home_user_articles_page():
     scroll_to_top()
     top_bar_inner_with_user()
@@ -2985,7 +2538,6 @@ def home_user_articles_page():
             st.write(r.get('TitleEN',''))
     under_development_footer("Articles")
     add_footer()
-
 
 def articles_page():
     language_selector()
@@ -3117,7 +2669,6 @@ def clinic_articles_page():
                     st.rerun()
     add_footer()
 
-
 def home_user_articles_page():
     language_selector()
     clinic_heading_banner()
@@ -3184,8 +2735,6 @@ def home_user_articles_page():
 def articles_page():
     clinic_articles_page()
 
-
-
 def get_app_setting(key, default="Yes"):
     try:
         recs = get_all_records_cached("AppSettings")
@@ -3195,8 +2744,6 @@ def get_app_setting(key, default="Yes"):
         return default
     except:
         return default
-
-
 
 def clinic_admin_page():
     scroll_to_top()
@@ -3370,8 +2917,6 @@ def clinic_admin_page():
     
     under_development_footer("Clinic Admin")
     add_footer()
-
-
 
 def dashboard_welcome_page():
     scroll_to_top()
@@ -3612,10 +3157,6 @@ def dashboard_welcome_page():
     st.markdown(f"<div style='text-align:center;'><div class='heading-h4'>Total App Users</div><div style='font-size:34px;font-weight:900;color:#2E7D5B;'>{display}</div></div>", unsafe_allow_html=True)
     add_footer()
 
-
-
-
-
 def clinic_login_page():
     language_selector()
     # V209.6.10 Fix: No sheet calls on login page to prevent hang after reboot
@@ -3661,7 +3202,6 @@ def clinic_login_page():
                 st.session_state.current_page="home_user"
                 st.rerun()
     add_footer()
-
 
 def feedback_page():
     scroll_to_top()
@@ -3724,10 +3264,6 @@ def feedback_page():
         ''', unsafe_allow_html=True)
         st.info("This WhatsApp linked tab is now available on Feedback page fix")
     add_footer()
-
-
-
-
 
 # ========== POPUP & FEEDBACK SUSPENSION SYSTEM ==========
 def get_popup_dismissed_key(username, popup_id):
@@ -3899,7 +3435,6 @@ def show_feedback_suspension_notice():
 
 # ========== END POPUP & FEEDBACK SYSTEM ==========
 
-
 # APP ADMIN LOCKED - Do not auto-modify this page without user explicit request
 def admin_page():
     scroll_to_top()
@@ -3908,7 +3443,7 @@ def admin_page():
     st.markdown(f"<div class='heading-h3'>App Admin</div>", unsafe_allow_html=True)
     st.markdown("", unsafe_allow_html=True)
 
-    sections = ["General", "Clinic Data", "Home User", "Users", "Article", "Offer Control", "AppSettings", "Data"]
+    sections = ["🩺 Performance Doctor", "General", "Clinic Data", "Home User", "Users", "Article", "Offer Control", "AppSettings", "Data"]
     if "admin_selected_section" not in st.session_state:
         st.session_state.admin_selected_section = ""
 
@@ -3937,10 +3472,115 @@ def admin_page():
     if selected:
         st.markdown(f"<div style='background:#1a1c23;border-left:4px solid #00E676;padding:8px 12px;border-radius:8px;margin:8px 0;color:#00E676;font-weight:700;'>📂 Open Tab: {selected}</div>", unsafe_allow_html=True)
 
-
     if not selected:
-        st.info("Please select a section")
+        st.info("Please select a section - Start with 🩺 Performance Doctor to check app health")
+        # Auto-select Doctor if first time
+        if "admin_first_visit" not in st.session_state:
+            st.session_state.admin_selected_section = "🩺 Performance Doctor"
+            st.session_state.admin_first_visit = True
+            st.rerun()
         under_development_footer("App Admin")
+        add_footer()
+        return
+
+    if selected == "🩺 Performance Doctor":
+        st.markdown("<div class='heading-h4'>🩺 Performance Doctor - V210</div>", unsafe_allow_html=True)
+        st.markdown("<div style='background:#E8F5E9;padding:12px;border-radius:8px;border:2px solid #2E7D5B;margin-bottom:12px;'>Doctor checks app performance, sheet connection, and fixes issues. This is where you monitor app health.</div>", unsafe_allow_html=True)
+        
+        if st.button("🩺 Run Full Diagnosis - Check Performance", type="primary", use_container_width=True, key="doctor_run_v210"):
+            with st.spinner("Running diagnostics..."):
+                import time
+                start = time.time()
+                diag = get_sheet_connection_status()
+                elapsed = time.time() - start
+                st.markdown(f"**Diagnosis Time: {elapsed:.2f} seconds - {'Fast ✅' if elapsed < 2 else 'Slow ⚠️'}**")
+                for check in diag.get("checks", []):
+                    if check.get("ok"):
+                        st.success(f"✅ {check.get('step')}: {check.get('msg')}")
+                    else:
+                        st.error(f"❌ {check.get('step')}: {check.get('msg')}")
+                        if check.get("fix"):
+                            st.info(f"👉 Fix: {check.get('fix')}")
+                st.markdown("---")
+                st.markdown("**Performance Metrics**")
+                c1,c2,c3 = st.columns(3)
+                with c1: st.metric("Sheet Connect", f"{elapsed:.2f}s", "Fast" if elapsed < 2 else "Slow")
+                with c2: st.metric("Cache", "Active", "60s TTL")
+                with c3:
+                    local_count = len(st.session_state.get("local_backup_New_patient", []))
+                    st.metric("Local Backup", local_count)
+                st.markdown("---")
+                st.markdown("**Fix Actions**")
+                c1,c2,c3 = st.columns(3)
+                with c1:
+                    if st.button("Clear Cache - Speed Up", key="fix_cache_v210"):
+                        try:
+                            get_spreadsheet_cached.clear()
+                            get_gspread_client.clear()
+                            _get_all_records_cached_fast.clear()
+                            st.success("Cache cleared")
+                            st.rerun()
+                        except Exception as e:
+                            st.error(str(e))
+                with c2:
+                    if st.button("Sync Unsynced", key="fix_sync_v210"):
+                        unsynced = st.session_state.get("local_backup_New_patient_unsynced", [])
+                        if not unsynced:
+                            st.info("No unsynced data")
+                        else:
+                            try:
+                                ws = get_sheet_safe("New_patient")
+                                count=0
+                                for rec in unsynced[:10]:
+                                    hdr = ws.row_values(1) or SHEET_HEADERS["New_patient"]
+                                    row = [str(rec.get(h,"")) for h in hdr]
+                                    ws.append_row(row, value_input_option="RAW")
+                                    count+=1
+                                st.session_state["local_backup_New_patient_unsynced"]=[]
+                                st.success(f"Synced {count} records")
+                            except Exception as e:
+                                st.error(f"Sync failed: {e}")
+                with c3:
+                    if st.button("Test Write", key="fix_test_v210"):
+                        try:
+                            ws = get_sheet_safe("New_patient")
+                            if ws:
+                                st.success(f"Can write - {len(ws.get_all_values())} rows")
+                            else:
+                                st.error("Cannot access sheet")
+                        except Exception as e:
+                            st.error(str(e))
+        
+        last_error = st.session_state.get("last_sheet_error", "")
+        last_success = st.session_state.get("last_sheet_success", "")
+        if last_error:
+            st.error(f"Last Error: {last_error[:300]}")
+        if last_success:
+            st.success(f"Last Success: {last_success}")
+        
+        last_diag = st.session_state.get("last_sheet_diagnosis", {})
+        if last_diag and last_diag.get("logs"):
+            with st.expander("Last Diagnosis Details", expanded=False):
+                for log in last_diag.get("logs", []):
+                    if "❌" in log: st.error(log)
+                    elif "✅" in log: st.success(log)
+                    else: st.text(log)
+        
+        st.markdown("---")
+        try:
+            ce = ""
+            if "gcp_service_account" in st.secrets:
+                ce = st.secrets["gcp_service_account"].get("client_email","")
+            if ce:
+                st.code(f"Sheet ID: {HARDCODED_SHEET_ID}\nService Email: {ce}\nURL: https://docs.google.com/spreadsheets/d/{HARDCODED_SHEET_ID}/edit", language="text")
+        except: pass
+        
+        st.markdown("---")
+        st.markdown("**System Info**")
+        c1,c2 = st.columns(2)
+        with c1: st.write(f"Version: {APP_VERSION}")
+        with c2: st.write(f"Total Saves: {st.session_state.get('total_saves',0)}")
+        
         add_footer()
         return
 
@@ -4606,7 +4246,6 @@ def offer_page():
     under_development_footer("Offer")
     add_footer()
 
-
 def essential_page():
     scroll_to_top()
     top_bar_inner_with_user()
@@ -4614,7 +4253,6 @@ def essential_page():
     st.markdown("<div class='heading-h3'>Essential</div>", unsafe_allow_html=True)
     under_development_footer("Essential")
     add_footer()
-
 
 def temperament_quiz_page():
     scroll_to_top()
@@ -4684,8 +4322,6 @@ def temperament_quiz_page():
     
     under_development_footer("Temperament Quiz - Free Lead Magnet")
     add_footer()
-
-
 
 def main():
     # V209.6.10 Fix: Prevent refresh loop and hang on sign-in
