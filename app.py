@@ -70,7 +70,7 @@ def scroll_to_top():
         components.html("<script>try{window.scrollTo(0,0);}catch(e){}</script>", height=0)
     except:
         pass
-    # Original scroll code kept below for compatibility but disabled
+
 def get_user_display_h2():
     role = st.session_state.get("user_role","")
     uname = st.session_state.get("username","")
@@ -82,9 +82,6 @@ def get_user_display_h2():
     else:
         return f"Clinic - {uname} - {cname}"
 
-for k,v in defaults.items():
-    if k not in st.session_state:
-        st.session_state[k]=v
 
 def navigate_to(page):
     if "page_history" not in st.session_state:
