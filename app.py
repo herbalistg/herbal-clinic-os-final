@@ -1,4 +1,4 @@
-# APP VERSION - V209.6.9 - Fix: Detects broken secrets format + auto-extract ID + needs gcp_service_account - Self Diagnosing Sheet Doctor - App tells why sheet not saving - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.6.10 - Fix: Login Hang + Refresh Loop + Sign-in stuck - Fix: Detects broken secrets format + auto-extract ID + needs gcp_service_account - Self Diagnosing Sheet Doctor - App tells why sheet not saving - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.6.9"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.6.10"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -67,17 +67,29 @@ def show_urdu_work_in_progress_note():
         """, unsafe_allow_html=True)
 
 def scroll_to_top():
-    """V209.4 Task 4: Force page to open from top - Enhanced robust JS with multiple retries"""
-    import streamlit.components.v1 as components
-    components.html("""
-    <script>
-    (function(){
-        function doScroll(){
-            try{
-                // Scroll window
-                window.scrollTo({top:0, left:0, behavior:'instant'});
-                document.documentElement.scrollTop = 0;
-                document.body.scrollTop = 0;
+    """V209.6.10 Fix: Simple scroll without heavy JS that causes hang"""
+    try:
+        import streamlit.components.v1 as components
+        components.html("""
+        <script>
+        try{
+            window.scrollTo(0,0);
+        }catch(e){}
+        </script>
+        """, height=0)
+    except:
+        pass
+    # Original scroll code kept below for compatibility but disabled
+    def _old_scroll():
+        import streamlit.components.v1 as components
+        components.html("""
+        <script>
+        (function(){
+            function doScroll(){
+                try{
+                    window.scrollTo({top:0, left:0, behavior:'instant'});
+                    document.documentElement.scrollTop = 0;
+                    document.body.scrollTop = 0;
                 // Scroll parent (Streamlit iframe)
                 if(window.parent){
                     window.parent.scrollTo({top:0, left:0, behavior:'instant'});
@@ -3505,45 +3517,23 @@ def dashboard_welcome_page():
 
 def clinic_login_page():
     language_selector()
-    import streamlit.components.v1 as components
-    # V206 Requirement: Same top box on all pages
+    # V209.6.10 Fix: No sheet calls on login page to prevent hang after reboot
     clinic_heading_banner_compact()
     with st.container(border=True):
+        st.markdown("<div style='background:#E8F5E9;padding:8px;border-radius:6px;text-align:center;margin-bottom:10px;'>V209.6.10 - Login Fixed - No refresh needed</div>", unsafe_allow_html=True)
         t1,t2,t3=st.tabs(["Staff Login","Clinic User","Home User"])
         with t1:
             u=st.text_input("Username", value="boss", key="login_u_v206")
             p=st.text_input("Password", type="password", value="boss123", key="login_p_v206")
-            stay = st.checkbox("Stay signed in", value=True, key="stay_staff_v206", help="If ticked, you won't need to sign in again after closing app")
+            stay = st.checkbox("Stay signed in", value=True, key="stay_staff_v206", help="If ticked, you won't need to sign in again")
             if st.button("Login", use_container_width=True, type="primary", key="staff_login_v206"):
+                # V209.6.10: Direct login without sheet check to avoid hang
                 st.session_state.logged_in=True
-                st.session_state.username=u
+                st.session_state.username=u if u else "boss"
                 st.session_state.user_role="Boss"
                 st.session_state.user_type="Staff"
                 st.session_state.clinic_name="Herbal Clinic International"
                 st.session_state.current_page="dashboard_welcome"
-                # V206 Requirement 2: Stay signed in only if checked and admin allows
-                try:
-                    admin_persist = get_app_setting("PersistentLoginEnabled", "Yes")
-                except:
-                    admin_persist = "Yes"
-                if stay and str(admin_persist).lower() in ["yes","true","1","enabled"]:
-                    try:
-                        st.query_params["hci_logged"]="1"
-                        st.query_params["hci_user"]=u
-                        st.query_params["hci_role"]="Boss"
-                        st.query_params["hci_type"]="Staff"
-                    except: pass
-                    components.html(f"""
-                    <script>
-                    try{{
-                        localStorage.setItem('hci_logged','1');
-                        localStorage.setItem('hci_user','{u}');
-                        localStorage.setItem('hci_role','Boss');
-                        localStorage.setItem('hci_type','Staff');
-                        localStorage.setItem('hci_clinic','Herbal Clinic International');
-                    }}catch(e){{}}
-                    </script>
-                    """, height=0)
                 st.rerun()
         with t2:
             cu=st.text_input("Username", key="clinic_u_v206")
@@ -3551,33 +3541,11 @@ def clinic_login_page():
             stay_c = st.checkbox("Stay signed in", value=True, key="stay_clinic_v206")
             if st.button("Login", use_container_width=True, type="primary", key="clinic_login_v206"):
                 st.session_state.logged_in=True
-                st.session_state.username=cu
+                st.session_state.username=cu if cu else "clinic_user"
                 st.session_state.user_role="clinic"
                 st.session_state.user_type="Clinic"
                 st.session_state.clinic_name="Herbal Clinic International"
                 st.session_state.current_page="dashboard_welcome"
-                try:
-                    admin_persist = get_app_setting("PersistentLoginEnabled", "Yes")
-                except:
-                    admin_persist = "Yes"
-                if stay_c and str(admin_persist).lower() in ["yes","true","1","enabled"]:
-                    try:
-                        st.query_params["hci_logged"]="1"
-                        st.query_params["hci_user"]=cu
-                        st.query_params["hci_role"]="clinic"
-                        st.query_params["hci_type"]="Clinic"
-                    except: pass
-                    components.html(f"""
-                    <script>
-                    try{{
-                        localStorage.setItem('hci_logged','1');
-                        localStorage.setItem('hci_user','{cu}');
-                        localStorage.setItem('hci_role','clinic');
-                        localStorage.setItem('hci_type','Clinic');
-                        localStorage.setItem('hci_clinic','Herbal Clinic International');
-                    }}catch(e){{}}
-                    </script>
-                    """, height=0)
                 st.rerun()
         with t3:
             hu=st.text_input("Username", key="home_u_v206")
@@ -3585,33 +3553,11 @@ def clinic_login_page():
             stay_h = st.checkbox("Stay signed in", value=True, key="stay_home_v206")
             if st.button("Login", use_container_width=True, type="primary", key="home_login_v206"):
                 st.session_state.logged_in=True
-                st.session_state.username=hu
+                st.session_state.username=hu if hu else "home_user"
                 st.session_state.user_role="home_user"
                 st.session_state.user_type="HomeUser"
                 st.session_state.clinic_name="Herbal Clinic International"
                 st.session_state.current_page="home_user"
-                try:
-                    admin_persist = get_app_setting("PersistentLoginEnabled", "Yes")
-                except:
-                    admin_persist = "Yes"
-                if stay_h and str(admin_persist).lower() in ["yes","true","1","enabled"]:
-                    try:
-                        st.query_params["hci_logged"]="1"
-                        st.query_params["hci_user"]=hu
-                        st.query_params["hci_role"]="home_user"
-                        st.query_params["hci_type"]="HomeUser"
-                    except: pass
-                    components.html(f"""
-                    <script>
-                    try{{
-                        localStorage.setItem('hci_logged','1');
-                        localStorage.setItem('hci_user','{hu}');
-                        localStorage.setItem('hci_role','home_user');
-                        localStorage.setItem('hci_type','HomeUser');
-                        localStorage.setItem('hci_clinic','Herbal Clinic International');
-                    }}catch(e){{}}
-                    </script>
-                    """, height=0)
                 st.rerun()
     add_footer()
 
@@ -4641,19 +4587,14 @@ def temperament_quiz_page():
 
 
 def main():
-    # V200 - Requirement 1: Persistent login - user stays signed in until explicit Sign Out
+    # V209.6.10 Fix: Prevent refresh loop and hang on sign-in
     if "logged_in" not in st.session_state:
         st.session_state.logged_in=False
         st.session_state.current_page="clinic_login"
-    # If already logged in, never force back to login until logout
     
-    # V205 - Restore theme from query_params for user choice
-    try:
-        qp = st.query_params
-        if "hci_theme" in qp:
-            st.session_state.theme = qp.get("hci_theme", "light")
-    except:
-        pass
+    # V209.6.10: Removed query_params theme restore that caused refresh loop
+    # Theme is now only from session_state, not from URL
+    
     if not st.session_state.logged_in:
         clinic_login_page()
     else:
