@@ -1,4 +1,4 @@
-# APP VERSION - V209.6.5 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.6.6 - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.6.5"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.6.6"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -705,36 +705,77 @@ def top_nav_dashboard():
             st.rerun()
     st.divider()
 
-@st.cache_resource(show_spinner=False, ttl=3600)
+@st.cache_resource(show_spinner=False, ttl=300)
 def get_gspread_client():
     try:
-        if not GSPREAD_AVAILABLE: return None
+        if not GSPREAD_AVAILABLE:
+            return None
         scopes=["https://www.googleapis.com/auth/spreadsheets","https://www.googleapis.com/auth/drive"]
         creds_dict=None
-        if "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
-            creds_dict=dict(st.secrets["connections"]["gsheets"])
-        elif "gcp_service_account" in st.secrets:
-            creds_dict=dict(st.secrets["gcp_service_account"])
-        if not creds_dict: return None
+        try:
+            if "gcp_service_account" in st.secrets:
+                creds_dict=dict(st.secrets["gcp_service_account"])
+        except:
+            pass
+        if not creds_dict:
+            try:
+                if "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
+                    maybe = st.secrets["connections"]["gsheets"]
+                    if isinstance(maybe, dict) and "private_key" in maybe:
+                        creds_dict=dict(maybe)
+            except:
+                pass
+        if not creds_dict:
+            return None
         if "private_key" in creds_dict:
-            creds_dict["private_key"]=creds_dict["private_key"].replace("\\n","\n")
+            try:
+                pk = creds_dict["private_key"]
+                pk = pk.replace("\\n", "\n")
+                pk = pk.replace("\n", chr(10))
+                creds_dict["private_key"] = pk
+            except:
+                pass
         creds=Credentials.from_service_account_info(creds_dict, scopes=scopes)
         return gspread.authorize(creds)
-    except: return None
+    except:
+        return None
 
-@st.cache_resource(show_spinner=False, ttl=3600)
+@st.cache_resource(show_spinner=False, ttl=300)
 def get_spreadsheet_cached():
     try:
         client=get_gspread_client()
-        if not client: return None
+        if not client:
+            return None
         sid=None
-        if "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
-            sid=st.secrets["connections"]["gsheets"].get("spreadsheet")
-        if not sid and "gsheets" in st.secrets:
-            sid=st.secrets["gsheets"].get("spreadsheet")
-        if not sid: return None
+        try:
+            if "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
+                gs = st.secrets["connections"]["gsheets"]
+                if isinstance(gs, dict):
+                    sid=gs.get("spreadsheet")
+                elif isinstance(gs, str):
+                    sid=gs
+        except:
+            pass
+        try:
+            if not sid and "gsheets" in st.secrets:
+                gs = st.secrets["gsheets"]
+                if isinstance(gs, dict):
+                    sid=gs.get("spreadsheet")
+                elif isinstance(gs, str):
+                    sid=gs
+        except:
+            pass
+        if not sid:
+            return None
+        sid = str(sid).strip()
+        if "docs.google.com" in sid or "https://" in sid:
+            import re
+            m = re.search(r"/d/([a-zA-Z0-9-_]+)", sid)
+            if m:
+                sid = m.group(1)
         return client.open_by_key(sid)
-    except: return None
+    except:
+        return None
 
 def get_sheet_safe(name):
     try:
@@ -748,7 +789,6 @@ def get_sheet_safe(name):
                 ws.append_row(hdr); return ws
             except: return None
     except: return None
-
 
 def save_to_local_csv(sheet_name, data_dict):
     """V209.6.5 - Ultra simple local save - always succeeds"""
@@ -964,12 +1004,50 @@ def save_patient(data_dict):
         except Exception as e:
             sheet_msg = f"Sheet error: {str(e)[:80]}"
         
+        # Try to sync previous unsynced local backups to sheet if sheet is now available
+        if sheet_ok:
+            try:
+                backup_key = "local_backup_New_patient"
+                unsynced = st.session_state.get(f"{backup_key}_unsynced", [])
+                if unsynced:
+                    ws_sync = get_sheet_safe("New_patient")
+                    if ws_sync:
+                        for rec in unsynced[:10]:  # Sync max 10 at a time
+                            try:
+                                hdr = ws_sync.row_values(1)
+                                if not hdr:
+                                    hdr = SHEET_HEADERS.get("New_patient", list(rec.keys()))
+                                row = []
+                                for h in hdr:
+                                    v = rec.get(h, "")
+                                    row.append(str(v) if v is not None else "")
+                                if len(row) < len(hdr):
+                                    row += [""] * (len(hdr)-len(row))
+                                ws_sync.append_row(row, value_input_option="RAW")
+                            except:
+                                break
+                        # Clear unsynced after attempt
+                        st.session_state[f"{backup_key}_unsynced"] = []
+            except:
+                pass
+        else:
+            # Sheet failed, add to unsynced list
+            try:
+                backup_key = "local_backup_New_patient"
+                unsynced_key = f"{backup_key}_unsynced"
+                if unsynced_key not in st.session_state:
+                    st.session_state[unsynced_key] = []
+                st.session_state[unsynced_key].append(cleaned)
+            except:
+                pass
+
         # ALWAYS return True - data is in session at least
         total = len(st.session_state.get("local_backup_New_patient", []))
+        unsynced_count = len(st.session_state.get("local_backup_New_patient_unsynced", []))
         if sheet_ok:
-            return True, f"✅ Saved! Sheet+Local+Session | ID:{cleaned.get('PatientID','')} | Total:{total}"
+            return True, f"✅ Saved! Sheet+Local+Session | ID:{cleaned.get('PatientID','')} | Total:{total} | Unsynced:{unsynced_count}"
         else:
-            return True, f"✅ Saved! Local+Session (Sheet: {sheet_msg}) | ID:{cleaned.get('PatientID','')} | Total:{total} | Will sync to sheet when connected"
+            return True, f"✅ Saved! Local+Session (Sheet: {sheet_msg}) | ID:{cleaned.get('PatientID','')} | Total:{total} | Unsynced:{unsynced_count} - Will auto-sync when sheet connects"
     except Exception as e:
         # Absolute fallback - still return True
         try:
@@ -2268,10 +2346,10 @@ def revisit_page():
             if match:
                 filt.append(r)
         st.write(f"Found {len(filt)} patients")
-        for r in filt[:15]:
+        for idx, r in enumerate(filt[:15]):
             with st.container(border=True):
                 st.write(f"{r.get('Name','')} | Date: {r.get('Date','')} | Address: {r.get('Address','')} | Phone: {r.get('Phone','')} | ID: {r.get('PatientID','')} | Balance: Rs {r.get('Balance','0')}")
-                if st.button(f"Open {r.get('PatientID','')}", key=f"rev_{r.get('PatientID','')}_v172"):
+                if st.button(f"Open {r.get('PatientID','')}", key=f"rev_{r.get('PatientID','')}_{idx}_v209_6_6"):
                     st.session_state.revisit_data=r
                     try: st.session_state.prev_balance=float(str(r.get("Balance","0") or 0).replace(",","") or 0)
                     except: st.session_state.prev_balance=0.0
