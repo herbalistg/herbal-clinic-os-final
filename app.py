@@ -514,10 +514,6 @@ def get_user_display_h2():
     else:
         return f"Clinic - {uname} - {cname}"
 
-for k,v in defaults.items():
-    if k not in st.session_state:
-        st.session_state[k]=v
-
 def navigate_to(page):
     if "page_history" not in st.session_state:
         st.session_state.page_history = ["dashboard_welcome"]
