@@ -1,4 +1,4 @@
-# APP VERSION - V209.5 - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.6 - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.5"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.6"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -62,7 +62,7 @@ def show_urdu_work_in_progress_note():
     if st.session_state.get("logged_in", False):
         st.markdown("""
         <div style="background:#FFF9C4;border:2px solid #FBC02D;border-radius:12px;padding:12px;margin-top:20px;text-align:center;">
-            <span style="font-size:16px;font-weight:700;color:#1F2D27;">یہ حتمی نہیں ہے۔ ابھی اس پر کام ہو رہا ہے۔ کام مکمل ہوجانے پر آپ کو مطلع کردیا جائے گا۔</span>
+            <span style="font-size:16px;font-weight:700;color:#1F2D27;">This is not final; work on it is currently in progress. You will be informed once the work is completed.</span>
         </div>
         """, unsafe_allow_html=True)
 
@@ -525,35 +525,33 @@ def language_selector():
     # Apply theme CSS first
     st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
     
-    # 1 line: [spacer, theme single toggle, language]
-    c_spacer, c_theme, c_lang = st.columns([7,1,1])
+    # V209.6 Task 1: Current language next to language icon, not theme icon
+    c_spacer, c_theme, c_lang, c_lang_text = st.columns([6,1,1,1])
     with c_theme:
         curr_theme = st.session_state.get("theme", "light")
-        # V207 Requirement 1b: Single tab toggles both themes
         if curr_theme == "light":
-            # Show Dim option - clicking switches to dim
             if st.button("🌿", key="theme_toggle_dim_v209", help="Dim Theme"):
                 st.session_state.theme = "dim"
                 components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
                 st.rerun()
         else:
-            # Show Light option - clicking switches to light
             if st.button("☀️", key="theme_toggle_light_v209", help="Light Theme"):
                 st.session_state.theme = "light"
                 components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
                 st.rerun()
     with c_lang:
-        # Language selector - restored: en/ur/ar cycle
-        if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v209_5", help="Change Language"):
+        if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v209_6", help="Change Language"):
             curr = st.session_state.get("app_language", "en")
             nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
             st.session_state.app_language = nxt
             st.session_state.lang = nxt
             st.rerun()
-    with c_spacer:
-        # Show current lang
+    with c_lang_text:
+        # Current language next to language icon
         lang = st.session_state.get("app_language","en")
-        st.markdown(f"<div style='text-align:right;font-size:11px;color:#5a6d65;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+    with c_spacer:
+        st.markdown("")
     
     # Restore theme from localStorage
     if "theme_restored" not in st.session_state:
@@ -604,44 +602,46 @@ def top_bar_inner_with_user():
     # Get user name only (not full display)
     uname = st.session_state.get("username","User")
     
-    # Top bar: user name (left, normal text) + theme + lang icons (right)
-    c_user, c_spacer, c_theme, c_lang = st.columns([3,3,1,1])
+    # V209.6 Task 1: User name left, theme + lang icon + current lang next to lang icon
+    c_user, c_spacer, c_theme, c_lang, c_lang_text = st.columns([3,2,1,1,1])
     with c_user:
-        # Only user name, normal text size
         st.markdown(f"<div style='font-size:16px;font-weight:600;color:#1F2D27;margin-top:8px;'>{uname}</div>", unsafe_allow_html=True)
     with c_theme:
         curr_theme = st.session_state.get("theme", "light")
         if curr_theme == "light":
-            if st.button("🌿", key=f"theme_inner_dim_{st.session_state.get('current_page','inner')}_v209_5", help="Dim Theme"):
+            if st.button("🌿", key=f"theme_inner_dim_{st.session_state.get('current_page','inner')}_v209_6", help="Dim Theme"):
                 st.session_state.theme = "dim"
                 components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
                 st.rerun()
         else:
-            if st.button("☀️", key=f"theme_inner_light_{st.session_state.get('current_page','inner')}_v209_5", help="Light Theme"):
+            if st.button("☀️", key=f"theme_inner_light_{st.session_state.get('current_page','inner')}_v209_6", help="Light Theme"):
                 st.session_state.theme = "light"
                 components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
                 st.rerun()
     with c_lang:
-        if st.button("🌐", key=f"lang_inner_{st.session_state.get('current_page','inner')}_v209_5", help="Change Language"):
+        if st.button("🌐", key=f"lang_inner_{st.session_state.get('current_page','inner')}_v209_6", help="Change Language"):
             curr = st.session_state.get("app_language", "en")
             nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
             st.session_state.app_language = nxt
             st.session_state.lang = nxt
             st.rerun()
-    with c_spacer:
+    with c_lang_text:
         lang = st.session_state.get("app_language","en")
-        st.markdown(f"<div style='text-align:right;font-size:11px;color:#5a6d65;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+    with c_spacer:
+        st.markdown("")
 
 def clinic_heading_banner_dashboard_only():
-    """V209.5 Task 2b: Dashboard only - big box with 3 lines"""
-    user_h2 = get_user_display_h2()
-    is_logged = st.session_state.get("logged_in", False)
-    user_display = user_h2 if is_logged else "Welcome to Herbal Clinic International"
+    """V209.6 Task 2: Dashboard box - 2 lines, 3rd line Welcome big heading, 4th line user name"""
+    uname = st.session_state.get("username","User")
+    cname = st.session_state.get("clinic_name","Herbal Clinic International")
+    # Line1: Herbal Clinic International, Line2: Based on human temperament, Line3: Welcome big heading, Line4: user name
     st.markdown(f"""
     <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:34px 26px;text-align:center;margin-bottom:18px;box-shadow: 0 8px 28px rgba(46,125,91,0.18), inset 0 1px 0 rgba(255,255,255,0.8);">
         <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: linear-gradient(135deg, #F1F7F3 0%, #FFFFFF 100%);padding:16px 26px;border-radius:16px;display:inline-block;border:2.5px solid #2E7D5B;font-size:56px; line-height:1.1; box-shadow: 0 4px 14px rgba(46,125,91,0.12);">Herbal Clinic International</div>
         <div style="color:#5a6d65 !important; font-size:21px; font-weight:600; margin-top:18px; font-style:italic !important; letter-spacing:0.5px;">Based on human temperament</div>
-        <div style="font-size:26px; font-weight:800; color:#1F2D27 !important; margin-top:18px; background:#FFFFFF;padding:10px 20px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">{user_display}</div>
+        <div style="font-size:42px; font-weight:900; color:#1B5E20 !important; margin-top:22px; letter-spacing:1px;">Welcome</div>
+        <div style="font-size:24px; font-weight:700; color:#1F2D27 !important; margin-top:12px; background:#FFFFFF;padding:10px 20px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">{uname} - {cname}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -929,7 +929,7 @@ def show_urdu_work_in_progress_note():
     if st.session_state.get("logged_in", False):
         st.markdown("""
         <div style="background:#FFF9C4;border:2px solid #FBC02D;border-radius:12px;padding:12px;margin-top:20px;text-align:center;">
-            <span style="font-size:16px;font-weight:700;color:#1F2D27;">یہ حتمی نہیں ہے۔ ابھی اس پر کام ہو رہا ہے۔ کام مکمل ہوجانے پر آپ کو مطلع کردیا جائے گا۔</span>
+            <span style="font-size:16px;font-weight:700;color:#1F2D27;">This is not final; work on it is currently in progress. You will be informed once the work is completed.</span>
         </div>
         """, unsafe_allow_html=True)
 
@@ -2444,9 +2444,9 @@ def clinic_admin_page():
     st.markdown("""
     <div style="background: linear-gradient(135deg,#E8F5E9,#FFFFFF);border:2px solid #2E7D5B;border-radius:16px;padding:16px;margin-bottom:14px;">
         <b>Clinic Admin Control Panel:</b><br>
-        Yahan se aap Clinic Dashboard par konse tabs dikhne hain wo control kar sakte hain.<br>
-        <b>Default ON:</b> New Patient, Revisit, Clinic Admin (hamesha ON rahega)<br>
-        <b>Note:</b> Filhal sirf Clinic Section ke tabs active hain, baqi Clinic Management tabs next phase me active honge.
+        From here, you can control which tabs appear on the clinic dashboard.<br>
+        <b>Default settings:</b> New Patient, Follow-up, Clinic Admin (this will always remain active).<br>
+        <b>Note:</b> Currently, only the tabs in the 'Clinic' section are active; the remaining clinic management tabs will be activated in the next phase.
     </div>
     """, unsafe_allow_html=True)
     
@@ -2484,17 +2484,14 @@ def clinic_admin_page():
         c1,c2,c3 = st.columns(3)
         with c1:
             st.checkbox("New Patient - Default ON", value=True, disabled=True, key="clinic_admin_new_fixed")
-            st.caption("Always visible - Cannot hide")
         with c2:
             st.checkbox("Revisit - Default ON", value=True, disabled=True, key="clinic_admin_revisit_fixed")
-            st.caption("Always visible - Cannot hide")
         with c3:
             st.checkbox("Clinic Admin - Permanent ON", value=True, disabled=True, key="clinic_admin_admin_fixed")
-            st.caption("Always ON - Controls all tabs")
     
     with st.container(border=True):
         st.markdown("<div class='heading-h4'>Clinic Section Tabs - Active (Tick to Show/Hide)</div>", unsafe_allow_html=True)
-        st.markdown("<div style='color:#2E7D5B;font-weight:600;margin-bottom:10px;'>In tabs ko aap dashboard par show/hide kar sakte hain:</div>", unsafe_allow_html=True)
+        st.markdown("<div style='color:#2E7D5B;font-weight:600;margin-bottom:10px;'>You can show/hide these tabs on the dashboard:</div>", unsafe_allow_html=True)
         c1,c2,c3,c4 = st.columns(4)
         with c1:
             new_val = st.checkbox("Auto-Diagnosis", value=settings.get("Auto-Diagnosis", True), key="clinic_admin_auto")
@@ -2509,8 +2506,7 @@ def clinic_admin_page():
         with c3:
             new_val = st.checkbox("Free Health Tools", value=settings.get("Free Health Tools", False), key="clinic_admin_tools")
             settings["Free Health Tools"] = new_val
-            # V209.4 Task 3: Offer control removed from Clinic Admin, only App Admin controls it
-            st.markdown("<div style='color:#999;font-size:12px;'>Offer controlled by App Admin only</div>", unsafe_allow_html=True)
+            # Offer removed - controlled by App Admin only
         with c4:
             new_val = st.checkbox("Clinic Overview", value=settings.get("Clinic Overview", False), key="clinic_admin_overview_v209_4")
             settings["Clinic Overview"] = new_val
@@ -2519,7 +2515,6 @@ def clinic_admin_page():
     
     with st.container(border=True):
         st.markdown("<div class='heading-h4'>Clinic Management Tabs - Disabled for Now (Next Phase)</div>", unsafe_allow_html=True)
-        st.markdown("<div style='color:#FF9800;font-weight:600;margin-bottom:10px;'>Ye tabs agle phase me active honge, filhal disabled hain:</div>", unsafe_allow_html=True)
         c1,c2,c3,c4 = st.columns(4)
         with c1:
             st.checkbox("Inventory Management", value=False, disabled=True, key="clinic_admin_inv_disabled")
@@ -2533,7 +2528,7 @@ def clinic_admin_page():
         with c4:
             st.checkbox("Reports", value=False, disabled=True, key="clinic_admin_rep_disabled")
             st.checkbox("Settings", value=False, disabled=True, key="clinic_admin_set_disabled")
-        st.info("In management tabs ko agle phase me active kiya jayega jab ye facilities develop hongi. Filhal inko tick nahi kiya ja sakta.")
+        st.info("These management tabs will be activated in the next phase.")
     
     st.session_state.clinic_dashboard_settings = settings
     
@@ -2613,8 +2608,8 @@ def dashboard_welcome_page():
         except:
             pass
     else:
-        # Clinic Overview is OFF by default, user can enable from Clinic Admin
-        st.markdown("<div style='background:#F5F5F5;border:1px dashed #999;border-radius:10px;padding:10px;text-align:center;color:#666;'>Clinic Overview is OFF by default. Enable it from Clinic Admin settings if needed.</div>", unsafe_allow_html=True)
+        # V209.6 Task 3: Additional tabs message
+        st.markdown("<div style='background:#F5F5F5;border:1px dashed #999;border-radius:10px;padding:10px;text-align:center;color:#666;'>Additional tabs can be added to the dashboard by the clinic admin.</div>", unsafe_allow_html=True)
     
     st.markdown("<div class='dash-section-title'>Clinic Section</div>", unsafe_allow_html=True)
     # V209.3 Fix 1,2,3: Clinic Admin Control - Permanent, Only New Patient+Revisit ON by default, others OFF
