@@ -1,4 +1,4 @@
-# APP VERSION - V209.6 - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.6.2 - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.6"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.6.2"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -855,20 +855,170 @@ def save_to_local_csv(sheet_name, data_dict):
             return True
         except:
             return False
+
+def delete_category_sheet(cat_type, cat_name):
+    try:
+        ws=get_sheet_safe("Categories")
+        if not ws:
+            return False
         vals = ws.get_all_values()
-        # cat_type is MainCategory or SubCategory
         target_key = f"{cat_type}_{cat_name}"
         for i,row in enumerate(vals[1:], start=2):
             if row and row[0]==target_key:
                 ws.delete_rows(i)
                 return True
-            # Also check Value match for old entries without prefix
             if row and len(row)>1 and row[1]==cat_name and cat_type.lower() in str(row[0]).lower():
                 ws.delete_rows(i)
                 return True
         return False
     except Exception as e:
         return False
+
+def get_next_numbers(clinic_name):
+    """Generate next Daily and Total numbers"""
+    try:
+        import datetime
+        today_str = str(datetime.date.today())
+        try:
+            records = get_all_records_cached("New_patient")
+            clinic_records = [r for r in records if str(r.get("ClinicName","")).lower() == str(clinic_name).lower()]
+            max_total = 0
+            for r in clinic_records:
+                try:
+                    tn = int(str(r.get("TotalNumber","0") or 0).replace(",","") or 0)
+                    if tn > max_total:
+                        max_total = tn
+                except:
+                    pass
+            total_num = max_total + 1 if max_total > 0 else len(clinic_records) + 1
+            today_count = 0
+            for r in clinic_records:
+                if today_str in str(r.get("Date","")):
+                    today_count += 1
+            daily_num = today_count + 1
+            return daily_num, total_num
+        except:
+            try:
+                backup_key = "local_backup_New_patient"
+                local_records = st.session_state.get(backup_key, [])
+                clinic_records = [r for r in local_records if str(r.get("ClinicName","")).lower() == str(clinic_name).lower()]
+                total_num = len(clinic_records) + 1
+                today_count = 0
+                for r in clinic_records:
+                    if today_str in str(r.get("Date","")):
+                        today_count += 1
+                daily_num = today_count + 1
+                return daily_num, total_num
+            except:
+                return 1, 1
+    except:
+        return 1, 1
+
+def get_all_records_cached(sheet_name):
+    """Cached read of sheet records"""
+    try:
+        import streamlit as st
+        # Try to get from cache
+        ws = get_sheet_safe(sheet_name)
+        if not ws:
+            return []
+        vals = ws.get_all_values()
+        if not vals or len(vals) < 2:
+            return []
+        headers = vals[0]
+        records = []
+        for row in vals[1:]:
+            if not any(row):
+                continue
+            rec = {}
+            for i,h in enumerate(headers):
+                if i < len(row):
+                    rec[h] = row[i]
+                else:
+                    rec[h] = ""
+            records.append(rec)
+        return records
+    except Exception as e:
+        return []
+
+def save_patient(data_dict):
+    """Save patient to sheet and local backup"""
+    try:
+        cleaned = {}
+        for k,v in data_dict.items():
+            if isinstance(v, str):
+                cleaned[k] = v.strip()
+            else:
+                cleaned[k] = v
+    except:
+        cleaned = data_dict
+
+    local_ok = False
+    try:
+        local_ok = save_to_local_csv("New_patient", cleaned)
+        if not local_ok:
+            backup_key = "local_backup_New_patient"
+            if backup_key not in st.session_state:
+                st.session_state[backup_key] = []
+            st.session_state[backup_key].append(cleaned)
+            local_ok = True
+    except:
+        try:
+            backup_key = "local_backup_New_patient"
+            if backup_key not in st.session_state:
+                st.session_state[backup_key] = []
+            st.session_state[backup_key].append(cleaned)
+            local_ok = True
+        except:
+            local_ok = False
+
+    sheet_ok = False
+    sheet_msg = ""
+    try:
+        ws=get_sheet_safe("New_patient")
+        if ws:
+            hdr=ws.row_values(1)
+            if not hdr:
+                from __main__ import SHEET_HEADERS
+                hdr = SHEET_HEADERS.get("New_patient", list(cleaned.keys()))
+            row=[]
+            for h in hdr:
+                val = cleaned.get(h,"")
+                if isinstance(val, (int, float)):
+                    row.append(str(val))
+                else:
+                    row.append(str(val) if val is not None else "")
+            if len(row) < len(hdr):
+                row += [""]*(len(hdr)-len(row))
+            ws.append_row(row, value_input_option="RAW")
+            try:
+                st.cache_data.clear()
+            except:
+                pass
+            sheet_ok = True
+            sheet_msg = "Sheet saved"
+        else:
+            sheet_msg = "Sheet not connected - saved locally"
+    except Exception as e:
+        sheet_msg = f"Sheet error: {str(e)[:150]}"
+        sheet_ok = False
+
+    if local_ok:
+        if sheet_ok:
+            return True, f"Saved to Sheet + Local | PatientID {cleaned.get('PatientID','')}"
+        else:
+            return True, f"Saved Locally ({sheet_msg}) | PatientID {cleaned.get('PatientID','')}"
+    elif sheet_ok:
+        return True, f"Saved to Sheet ({sheet_msg})"
+    else:
+        try:
+            backup_key = "local_backup_New_patient"
+            if backup_key not in st.session_state:
+                st.session_state[backup_key] = []
+            st.session_state[backup_key].append(cleaned)
+            return True, f"Saved to session backup | PatientID {cleaned.get('PatientID','')}"
+        except:
+            return False, f"Failed - {sheet_msg}"
 
 def get_next_offer_id():
     try:
