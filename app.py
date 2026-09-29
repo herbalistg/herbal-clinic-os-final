@@ -1,4 +1,4 @@
-# APP VERSION - V209.6.8 - Self Diagnosing Sheet Doctor - App tells why sheet not saving - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# APP VERSION - V209.6.9 - Fix: Detects broken secrets format + auto-extract ID + needs gcp_service_account - Self Diagnosing Sheet Doctor - App tells why sheet not saving - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
 # V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
 # Previous: V204, V203, V202, V201, V200
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V209.6.8"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V209.6.9"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -984,34 +984,74 @@ def get_spreadsheet_cached():
         if not client:
             return None
         sid=None
+        # Try to get ID from multiple places, including broken stringified dict
+        def extract_id_from_any(val):
+            if not val:
+                return None
+            s = str(val).strip()
+            # If it's a dict-like string "{'spreadsheet': '1D4...'}", extract ID
+            if s.startswith("{") and "spreadsheet" in s:
+                import re
+                # Look for ID pattern 1D4... (Google Sheet IDs are ~44 chars)
+                m = re.search(r'1[a-zA-Z0-9-_]{20,}', s)
+                if m:
+                    return m.group(0)
+                # Fallback: extract from quotes
+                m2 = re.search(r"['\"]spreadsheet['\"]\s*:\s*['\"]([^'\"]+)['\"]", s)
+                if m2:
+                    return m2.group(1)
+            # If it's a URL, extract ID
+            if "docs.google.com" in s or "https://" in s:
+                import re
+                m = re.search(r"/d/([a-zA-Z0-9-_]+)", s)
+                if m:
+                    return m.group(1)
+            # If it's already just ID, return as is (clean quotes)
+            s = s.strip('"').strip("'").strip()
+            if len(s) > 20 and " " not in s:
+                return s
+            return None
+
         try:
             if "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
                 gs = st.secrets["connections"]["gsheets"]
                 if isinstance(gs, dict):
-                    sid=gs.get("spreadsheet")
+                    sid = gs.get("spreadsheet")
+                    if not sid:
+                        # Try to extract from dict string representation
+                        sid = extract_id_from_any(str(gs))
                 elif isinstance(gs, str):
-                    sid=gs
-        except:
+                    sid = extract_id_from_any(gs)
+                else:
+                    sid = extract_id_from_any(str(gs))
+        except Exception as e:
             pass
+        
         try:
             if not sid and "gsheets" in st.secrets:
                 gs = st.secrets["gsheets"]
                 if isinstance(gs, dict):
                     sid=gs.get("spreadsheet")
                 elif isinstance(gs, str):
-                    sid=gs
+                    sid=extract_id_from_any(gs)
         except:
             pass
+        
+        # Hardcoded fallback - your sheet ID
+        if not sid:
+            sid = "1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA"
+        
         if not sid:
             return None
+        
         sid = str(sid).strip()
-        if "docs.google.com" in sid or "https://" in sid:
-            import re
-            m = re.search(r"/d/([a-zA-Z0-9-_]+)", sid)
-            if m:
-                sid = m.group(1)
+        # Final extraction
+        extracted = extract_id_from_any(sid)
+        if extracted:
+            sid = extracted
+        
         return client.open_by_key(sid)
-    except:
+    except Exception as e:
         return None
 
 def get_sheet_safe(name):
