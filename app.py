@@ -1181,6 +1181,59 @@ def validate_required_data_types(form_version):
     return errors
 
 
+
+def get_next_numbers(clinic_name):
+    """V209.6 Fix: Generate next Daily and Total numbers - Missing function restored"""
+    try:
+        import datetime
+        today_str = str(datetime.date.today())
+        # Try to get from sheet
+        try:
+            records = get_all_records_cached("New_patient")
+            # Filter by clinic
+            clinic_records = [r for r in records if str(r.get("ClinicName","")).lower() == str(clinic_name).lower()]
+            
+            # Total number = max TotalNumber + 1 or len + 1
+            max_total = 0
+            for r in clinic_records:
+                try:
+                    tn = int(str(r.get("TotalNumber","0") or 0).replace(",","") or 0)
+                    if tn > max_total:
+                        max_total = tn
+                except:
+                    pass
+            total_num = max_total + 1 if max_total > 0 else len(clinic_records) + 1
+            
+            # Daily number = count of today's patients + 1
+            today_count = 0
+            for r in clinic_records:
+                if today_str in str(r.get("Date","")):
+                    today_count += 1
+            daily_num = today_count + 1
+            
+            return daily_num, total_num
+        except Exception as e:
+            # Fallback to session_state local backup
+            try:
+                backup_key = "local_backup_New_patient"
+                local_records = st.session_state.get(backup_key, [])
+                clinic_records = [r for r in local_records if str(r.get("ClinicName","")).lower() == str(clinic_name).lower()]
+                total_num = len(clinic_records) + 1
+                
+                today_count = 0
+                for r in clinic_records:
+                    if today_str in str(r.get("Date","")):
+                        today_count += 1
+                daily_num = today_count + 1
+                return daily_num, total_num
+            except:
+                # Final fallback
+                return 1, 1
+    except Exception as e:
+        return 1, 1
+
+
+
 def render_patient_form(is_revisit=False):
     # V209 Fix 6: Ensure Added Diseases empty by default for each patient
     if not is_revisit and "patient_diseases" not in st.session_state:
