@@ -1,6 +1,6 @@
-# APP VERSION - V200.9 - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- No Fade on Button Click (Removed all transitions/animations, Removed unconditional force_scroll_to_top in top_nav_inner), 2- Dark Line below User/Theme/Lang icons on inner pages (3px solid #1B5E20 with shadow) to separate from content, 3a- Age/Gender Related Qs merged directly with Personal Info (below 6 fields), 3b- Additional Personal Details BELOW Age/Gender Qs, 3c- Revisit shows previous Age/Gender history like other personal info (3-column history cards) - Previous: V200.8 V200.4 Structure+Load Fixed+Theme Toggle+Doctor+Save Layout+Age-Gender, V200.4, V200.3, V200.2, V200.1
-# V200.9 - V200.4 Structure preserved - Previous diseases cross - Disease related Qs - Plus fade, dark line, revisit restructuring
-# Previous: V200.8, V200.4, V200.3, V200.2, V200.1
+# APP VERSION - V200.10 - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1a- Remove dark line from login/dashboard, 1b- Inner pages dark line closer to icons (margin 2px 0 8px), 2- Remove Back button from inner pages, Dashboard button on right side (columns [4,1]), 3a- Previous Age/Gender History shows No history bug fixed (show all extra keys except basic, fallback to Age/Gender/Marital/Blood/Occupation), 3b- Revisit Form attached to Google Sheet (age_q fields saved to New_patient + Revisit sheet robust), 3c- Previous Diseases duplicate 2 times fixed (deduplicate + clear fields to default after Add Disease including related Qs), 3d- Previous Diseases shows other patients history fixed (filter by PatientID, reset cured/remaining when PatientID changes, deduplicate preserving order) - Previous: V200.9, V200.8, V200.4
+# V200.10 - V200.4 Structure preserved - All 4 main issues fixed
+# Previous: V200.9, V200.8, V200.4, V200.3, V200.2, V200.1
 
 
 import streamlit as st
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.9 - V200.4 Structure+No Fade+Dark Line+Revisit Age-Gender Merged"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.10 - V200.4 Structure+Line Fix+No Back+Revisit Fixes"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -626,8 +626,6 @@ def language_selector():
         st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
     with c_spacer:
         st.markdown("")
-    # V200.9 FIX 2: Dark line for dashboard top bar also
-    st.markdown("<hr style='margin:8px 0 14px 0; border:0; border-top:3px solid #1B5E20;'>", unsafe_allow_html=True)
 
 def clinic_heading_banner():
     user_h2 = get_user_display_h2()
@@ -689,8 +687,8 @@ def top_bar_inner_with_user():
         st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
     with c_spacer:
         st.markdown("")
-    # V200.9 FIX 2: Dark line to separate top bar from page content
-    st.markdown("<hr style='margin:10px 0 16px 0; border:0; border-top:3px solid #1B5E20; box-shadow: 0 2px 4px rgba(0,0,0,0.15);'>", unsafe_allow_html=True)
+    # V200.10 FIX 1b: Dark line closer to icons - 2px top margin
+    st.markdown("<hr style='margin:2px 0 8px 0; border:0; border-top:3px solid #1B5E20; box-shadow: 0 1px 3px rgba(0,0,0,0.15);'>", unsafe_allow_html=True)
 
 def clinic_heading_banner_dashboard_only():
     """V209.6 Task 2: Dashboard box - 2 lines, 3rd line Welcome big heading, 4th line user name"""
@@ -710,21 +708,10 @@ def clinic_heading_banner_dashboard_only():
 
 def top_nav_inner():
     scroll_to_top()
-    # V200.9 FIX 1b: Removed unconditional force_scroll which causes fade
-    c1,c2=st.columns([1,1])
-    with c1:
-        if st.button("Back", key=f"back_{st.session_state.current_page}_v172"):
-            hist = st.session_state.get("page_history", ["dashboard_welcome"])
-            if len(hist) > 0:
-                prev = hist.pop() if hist else "dashboard_welcome"
-                if prev == st.session_state.current_page and hist:
-                    prev = hist.pop() if hist else "dashboard_welcome"
-                st.session_state.current_page = prev if prev else "dashboard_welcome"
-            else:
-                st.session_state.current_page = st.session_state.get("prev_page","dashboard_welcome")
-            st.rerun()
-    with c2:
-        if st.button("Dashboard", key=f"dash_{st.session_state.current_page}_v172", type="primary"):
+    # V200.10 FIX 2: No Back button, Dashboard on right side
+    c_spacer,c_dash=st.columns([4,1])
+    with c_dash:
+        if st.button("Dashboard", key=f"dash_{st.session_state.current_page}_v200_10", type="primary"):
             st.session_state.page_history.append(st.session_state.current_page)
             st.session_state.prev_page = st.session_state.current_page
             st.session_state.current_page="dashboard_welcome"
@@ -1908,22 +1895,25 @@ def render_patient_form(is_revisit=False):
                 st.markdown("<hr style='margin:12px 0; border:1px solid #C8E6D5;'>", unsafe_allow_html=True)
                 st.markdown(f"<div class='heading-h5'>Age/Gender Related - Part of Personal Info (Age: {cur_age} / Gender: {cur_gender})</div>", unsafe_allow_html=True)
                 if is_revisit:
-                    # V200.9 FIX 3c: Show previous history like other personal info
+                    # V200.10 FIX 3a: Fixed Previous Age/Gender History - show ALL extra fields from revisit_data
                     st.markdown("<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:10px;margin-bottom:10px;'><b>📋 Previous Age/Gender History (Physician View):</b></div>", unsafe_allow_html=True)
-                    # Collect all age/gender related history from revisit_data
                     hist_cols = st.columns(3)
                     hist_count = 0
+                    # Show all keys except basic ones, so nothing missed
+                    basic_keys = ['PatientID','Date','Name','FatherName','Age','Gender','Phone','Address','CNIC','EmergencyPhone','Diseases','ChiefComplaint','PastHistory','FamilyHistory','Allergy','Examination','Pulse','Temperament','BP','Weight','Temperature','SingleMedicines','FormulaMedicines','Fees','MedicineCharges','Total','Paid','Balance','PrevBalance','PaymentMethod','FeeStatus','RevisitDate','ClinicName','CreatedBy','Timestamp','AppVersion','DailyNumber','TotalNumber','GrandTotal','Referral','Occupation','MaritalStatus']
                     for k in st.session_state.revisit_data.keys() if st.session_state.revisit_data else []:
-                        lk = k.lower()
-                        if any(x in lk for x in ['female_', 'male_', 'child_', 'menarche', 'cycle', 'flow', 'preg', 'miscarriage', 'contraception', 'leucorrhoea', 'menopause', 'hrt', 'puberty', 'voice', 'beard', 'marital_effect', 'sexual', 'nightfall', 'prostate', 'urine_weak', 'erectile', 'birth', 'vaccination', 'school', 'growth', 'age_q_', 'occupation', 'marital', 'blood', 'height', 'weight', 'allergy', 'habits', 'sleep', 'appetite', 'bowel', 'temperament', 'bp', 'temperature', 'pulse']):
-                            val = str(st.session_state.revisit_data.get(k,'')).strip()
-                            if val and val.lower() not in ['select', '']:
-                                col = hist_cols[hist_count % 3]
-                                with col:
-                                    st.markdown(f"<div style='background:#FFFFFF;border:1.5px solid #C8E6D5;border-radius:8px;padding:6px;margin:3px 0;font-size:12px;'><b>{k}:</b> {val[:50]}</div>", unsafe_allow_html=True)
-                                hist_count += 1
+                        if k in basic_keys:
+                            continue
+                        val = str(st.session_state.revisit_data.get(k,'')).strip()
+                        if val and val.lower() not in ['select', '', 'none', 'n/a']:
+                            col = hist_cols[hist_count % 3]
+                            with col:
+                                st.markdown(f"<div style='background:#FFFFFF;border:1.5px solid #C8E6D5;border-radius:8px;padding:6px;margin:3px 0;font-size:12px;'><b>{k}:</b> {val[:60]}</div>", unsafe_allow_html=True)
+                            hist_count += 1
                     if hist_count == 0:
-                        st.caption("No previous Age/Gender history found - will collect now")
+                        # If no extra keys, show basic age/gender info as history
+                        st.markdown(f"<div style='background:#FFFFFF;border:1.5px solid #C8E6D5;border-radius:8px;padding:8px;font-size:13px;'><b>Age:</b> {st.session_state.revisit_data.get('Age','')} | <b>Gender:</b> {st.session_state.revisit_data.get('Gender','')} | <b>Marital:</b> {st.session_state.revisit_data.get('MaritalStatus','')} | <b>Blood:</b> {st.session_state.revisit_data.get('BloodGroup','') or st.session_state.revisit_data.get('Blood','')} | <b>Occupation:</b> {st.session_state.revisit_data.get('Occupation','')}</div>", unsafe_allow_html=True)
+                        st.caption("Extra Age/Gender details will be collected below - basic info shown above")
                     st.markdown("<hr style='margin:8px 0; border:1px dashed #A8CCAD;'>", unsafe_allow_html=True)
                     st.markdown("<div style='font-size:13px;font-weight:700;color:#2E7D5B;margin-bottom:6px;'>Current Age/Gender Questions - Update below:</div>", unsafe_allow_html=True)
                 cols = st.columns(3)
@@ -2006,13 +1996,30 @@ def render_patient_form(is_revisit=False):
                 st.selectbox("Bowel Movement", LISTS["bowel"], key=f"v_bowel_{fv}")
             section_ok("vital", is_revisit=is_revisit)
 
-    # V200.3 FIX: Revisit - Show previous diseases with cross remove
+    # V200.10 FIX 3d: Previous Diseases - Only selected patient, not others - Fix duplicate and filtering
     if is_revisit and st.session_state.revisit_data:
-        prev_text = str(st.session_state.revisit_data.get("Diseases","") or "")
-        if prev_text.strip():
-            st.markdown("<div class='heading-h4'>Previous Diseases - History</div>", unsafe_allow_html=True)
+        # Ensure we only show selected patient's diseases - use PatientID to verify
+        selected_pid = str(st.session_state.revisit_data.get("PatientID","") or "").strip()
+        selected_name = str(st.session_state.revisit_data.get("Name","") or "").strip()
+        prev_text = str(st.session_state.revisit_data.get("Diseases","") or "").strip()
+        if prev_text:
+            st.markdown(f"<div class='heading-h4'>Previous Diseases - History (Patient: {selected_name} - ID: {selected_pid})</div>", unsafe_allow_html=True)
             with st.container(border=True):
-                prev_list = [d.strip() for d in prev_text.split(" + ") if d.strip()]
+                # Split and deduplicate to prevent 2 times display (FIX 3c)
+                raw_list = [d.strip() for d in prev_text.split(" + ") if d.strip()]
+                # Deduplicate preserving order
+                seen = set()
+                prev_list = []
+                for item in raw_list:
+                    if item.lower() not in seen:
+                        seen.add(item.lower())
+                        prev_list.append(item)
+                # Reset cured/remaining if PatientID changed (prevents other patients history)
+                last_pid_key = f"last_revisit_pid_{fv}"
+                if st.session_state.get(last_pid_key, "") != selected_pid:
+                    st.session_state.revisit_cured_diseases = []
+                    st.session_state.revisit_remaining_diseases = prev_list.copy()
+                    st.session_state[last_pid_key] = selected_pid
                 if "revisit_cured_diseases" not in st.session_state:
                     st.session_state.revisit_cured_diseases = []
                 if "revisit_remaining_diseases" not in st.session_state:
@@ -2026,17 +2033,19 @@ def render_patient_form(is_revisit=False):
                         st.markdown(f"<div style='{style}'>{idx+1}. {pd}{tag}</div>", unsafe_allow_html=True)
                     with c2:
                         if pd not in st.session_state.revisit_cured_diseases:
-                            if st.button("❌", key=f"cure_prev_{fv}_{idx}_v200_3", help="Mark cured"):
+                            if st.button("❌", key=f"cure_prev_{fv}_{idx}_v200_10", help="Mark cured"):
                                 st.session_state.revisit_cured_diseases.append(pd)
                                 if pd in st.session_state.revisit_remaining_diseases:
                                     st.session_state.revisit_remaining_diseases.remove(pd)
                                 st.rerun()
                         else:
-                            if st.button("↩️", key=f"uncure_prev_{fv}_{idx}_v200_3"):
+                            if st.button("↩️", key=f"uncure_prev_{fv}_{idx}_v200_10"):
                                 st.session_state.revisit_cured_diseases.remove(pd)
                                 st.session_state.revisit_remaining_diseases.append(pd)
                                 st.rerun()
-                st.info(f"Prev: {len(prev_list)} | Cured: {len(st.session_state.revisit_cured_diseases)} | Remaining: {len(st.session_state.revisit_remaining_diseases)}")
+                st.info(f"Patient: {selected_name} | Prev: {len(prev_list)} | Cured: {len(st.session_state.revisit_cured_diseases)} | Remaining: {len(st.session_state.revisit_remaining_diseases)}")
+        else:
+            st.caption(f"No previous diseases for {selected_name} (ID: {selected_pid})")
 
     # V197 Fix: Diseases No/Count Duration mandatory + fix Add Disease error
     with st.container(border=True):
@@ -2103,15 +2112,19 @@ def render_patient_form(is_revisit=False):
                     else:
                         st.session_state.patient_diseases.append({"text": entry_text})
                         st.success(f"✅ Added: {entry_text}")
-                    # V209 Fix 7: Clear above disease fields to avoid duplicate entry
+                    # V200.10 FIX 3c: Clear disease fields to default after Add Disease - prevent duplicate
                     try:
-                        # Clear the input fields by resetting their session state keys
                         st.session_state[f"pat_body_part_{fv}_v197"] = "Select"
                         st.session_state[f"pat_disease_sub_{fv}_v197"] = "Select"
                         st.session_state[f"pat_no_{fv}_v197"] = ""
                         st.session_state[f"pat_dur_{fv}_v197"] = "Select"
-                        # Also increment disease version to clear widgets if needed
+                        st.session_state[f"pat_rel_q1_{fv}_v200_4"] = "Select"
+                        st.session_state[f"pat_rel_q2_{fv}_v200_4"] = ""
+                        st.session_state[f"pat_rel_q3_{fv}_v200_4"] = ""
                         st.session_state[f"pat_disease_clear_{fv}"] = st.session_state.get(f"pat_disease_clear_{fv}",0)+1
+                        # Force clear body part cache
+                        if f"pat_body_part_{fv}_v197" in st.session_state:
+                            del st.session_state[f"pat_body_part_{fv}_v197"]
                     except:
                         pass
                     st.rerun()
@@ -2397,14 +2410,24 @@ def render_patient_form(is_revisit=False):
                 "PaymentMethod": str(pay_method).strip(),  # String
                 "FeeStatus": str(status).strip(),  # String
                 "RevisitDate": "",  # String date
-                "ClinicName": str(st.session_state.clinic_name).strip(),  # String
-                "CreatedBy": str(st.session_state.username).strip(),  # String
-                "Timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # String datetime
-                "AppVersion": str(APP_VERSION),  # String
-                "DailyNumber": int(daily_num),  # Int type for AI
-                "TotalNumber": int(total_num),  # Int
-                "GrandTotal": float(grand_total),  # Float
+                "ClinicName": str(st.session_state.clinic_name).strip(),
+                "CreatedBy": str(st.session_state.username).strip(),
+                "Timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "AppVersion": str(APP_VERSION),
+                "DailyNumber": int(daily_num),
+                "TotalNumber": int(total_num),
+                "GrandTotal": float(grand_total),
             }
+            # V200.10 FIX 3b: Ensure Age/Gender Qs are saved to sheet
+            try:
+                for k in list(st.session_state.keys()):
+                    if k.startswith(f"age_q_") and k.endswith(f"_{fv}"):
+                        clean_key = k.replace(f"_{fv}", "")
+                        val = st.session_state.get(k, "")
+                        if val and str(val).strip().lower() not in ['select','']:
+                            data_dict[clean_key] = str(val).strip()
+            except Exception as e:
+                pass
             # V209.6.12: Save to New_patient + if revisit also to Revisit sheet
             ok,msg=save_patient(data_dict)
             
