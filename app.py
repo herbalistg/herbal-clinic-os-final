@@ -1,6 +1,6 @@
-# APP VERSION - V200 - Base from V209.6.12 Full Original - Fix: Page Load Speed + Revisit Sheet Save - Fix: Hardcoded Sheet ID Fallback - Ignores missing secrets ID - Fix: Login Hang + Refresh Loop + Sign-in stuck - Fix: Detects broken secrets format + auto-extract ID + needs gcp_service_account - Self Diagnosing Sheet Doctor - App tells why sheet not saving - Fix: Sheet Not Saving - private_key fix + debug panel + sync - Fix: DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 - Fix: Complete save rebuild - session primary - Fix: Save Always Visible + Debug + Session Backup - Fix: Save always succeeds + session backup + sheet optional - Fix: save_patient missing + get_next_numbers restored - Fix: Lang Next to Icon + Box 4 Lines + Overview Msg + Panel English + Admin Clean + Footer English All Pages - Fix: Language Back + Top Box Up + Inner Pages No Box + User Name Left + No Instruction Text - Fix: Overview OFF + English Only + Offer AppAdmin + Scroll Top + Data Types + Local Save - Fix: Clinic Admin Permanent + Only New Patient/Revisit ON + Reboot Fix - Fixed: Ad Compact 0.5cm Down + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + Clinic Admin - V209 - 8 Fixes: Ad 0.7cm Down + Mobile Tabs Colored + Save Bug + Scroll Top + Data Types + Phone in First 6 + Diseases Empty + Clear Fields + Clinic Admin - Patient Save Fix + Ad 0.5cm Down + Mobile Tabs Colored like Laptop - Single Theme Toggle, 1 Line Top Bar, Scroll Top Fix, V205 Fixes Applied - Modern + User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools in Sections + Scroll Top + Int Fields + Phone Visible + Sheet Fix - 2026-09-28 - Modern + User Theme Toggle (Light/Dark/Dim) + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
-# V205 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled
-# Previous: V204, V203, V202, V201, V200
+# APP VERSION - V200.4 - 2026-09-29 - V200 Base from V209.6.12 - Fixes: V200.1 Reboot Processing Fixed + V200.2 Page Load Speed Fixed (No iframe, Cached AppSettings, Cached Theme CSS) + V200.3 5 Fixes (Speed+Doctor+Raised+Scroll+Revisit: Local-first load, Enhanced Doctor CHECK 9-12, Raised UI for Tabs/Fields/Buttons/Containers, Force Scroll on Navigation & New Patient, Previous Diseases with Cross Remove & Sheet History) + V200.4 Fixes: Version Comment Updated + Extra Load Speed (Lazy Sheet, No Divider, Cached Dashboard), Strong Raised Fields (Deeper Shadows, 3D Transform), Revisit Info Section Shows Age+Gender Related Questions/History, Remove Past Diseases Info Sentence, Add Disease Related Questions into Diseases Info Section - Previous Fixes Chain: V209.6.12 Full Original + V209 Fix: Page Load Speed + Revisit Sheet Save + Hardcoded Sheet ID Fallback + Login Hang + Refresh Loop + Sign-in stuck + Detects broken secrets + Self Diagnosing Sheet Doctor + Sheet Not Saving + private_key fix + DuplicateKey + Sheet Reconnect + Auto-sync since 2026-09-23 + Complete save rebuild + Save Always Visible + save_patient missing + Lang Next to Icon + Box 4 Lines + Overview + Admin Clean + Language Back + Top Box Up + Overview OFF + Clinic Admin Permanent + Ad Compact + Mobile Colored + Save + ScrollTop + DataTypes + Phone First6 + Diseases Empty + Clear Fields + V205 User Theme Toggle Light/Dim Only + Stay Signed In + Ad Compact + Free Tools + 2026-09-28 Modern + User Theme Toggle Light/Dark/Dim + Persistent Login Admin-Controlled + Free Quiz + Compact Ad
+# V200.4 - 2026-09-29 - User can change theme for comfort, Login persistence controlled by App Admin > AppSettings > PersistentLoginEnabled - Raised UI for all tabs/fields - Force Scroll on Nav - Revisit shows Age/Gender history + Previous diseases with cross + Disease related Qs in Diseases section
+# Previous: V200.3, V200.2, V200.1, V200, V209.6.12, V205, V204, V203, V202, V201
 
 
 import streamlit as st
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.3 - 5 Fixes: Speed+Doctor+Raised+Scroll+Revisit"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.4 - Version Comment+Raised+Speed+Revisit Info+Related Qs"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -42,54 +42,97 @@ if "theme" not in st.session_state:
 @st.cache_data(show_spinner=False, ttl=600)
 def get_theme_css_cached(theme):
     raised = """
-        div[data-baseweb="tab-list"] { gap: 8px; }
+        /* V200.4 STRONG RAISED - 3D Effect for all Tabs and Fields */
+        div[data-baseweb="tab-list"] { gap: 10px; padding: 6px; }
         div[data-baseweb="tab"] {
-            background: linear-gradient(145deg, #FFFFFF, #F1F7F3)!important;
-            border: 2px solid #C8E6D5!important;
-            border-radius: 12px!important;
-            box-shadow: 0 4px 12px rgba(46,125,91,0.15), 0 1px 3px rgba(0,0,0,0.08)!important;
-            transform: translateY(-1px);
-            font-weight: 700!important;
-            padding: 8px 16px!important;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F1F7F3 100%)!important;
+            border: 2.5px solid #A8CCAD!important;
+            border-radius: 14px!important;
+            box-shadow: 0 6px 16px rgba(46,125,91,0.18), 0 2px 4px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.9)!important;
+            transform: translateY(-2px) translateZ(0);
+            font-weight: 800!important;
+            padding: 10px 18px!important;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         div[data-baseweb="tab"]:hover {
-            box-shadow: 0 8px 20px rgba(46,125,91,0.25)!important;
-            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(46,125,91,0.30), 0 4px 8px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,1)!important;
+            transform: translateY(-4px) scale(1.02);
             border-color: #2E7D5B!important;
+            background: linear-gradient(145deg, #FFFFFF, #E8F5E9)!important;
         }
         div[data-baseweb="tab"][aria-selected="true"] {
-            background: linear-gradient(145deg, #2E7D5B, #4CAF50)!important;
+            background: linear-gradient(145deg, #2E7D5B 0%, #4CAF50 100%)!important;
             color: white!important;
             border-color: #1B5E20!important;
-            box-shadow: 0 6px 16px rgba(46,125,91,0.35)!important;
-        }
-        div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
-            background: #FFFFFF!important;
-            border: 2px solid #C8E6D5!important;
-            border-radius: 12px!important;
-            box-shadow: 0 3px 10px rgba(46,125,91,0.10)!important;
-            transform: translateY(-1px);
-        }
-        .stButton > button {
-            background: linear-gradient(145deg, #FFFFFF, #F8FAF8)!important;
-            border: 2px solid #C8E6D5!important;
-            border-radius: 12px!important;
-            box-shadow: 0 4px 12px rgba(46,125,91,0.15)!important;
-            transform: translateY(-1px);
-            font-weight: 700!important;
-        }
-        .stButton > button:hover {
-            box-shadow: 0 8px 20px rgba(46,125,91,0.25)!important;
+            border-width: 3px!important;
+            box-shadow: 0 8px 20px rgba(46,125,91,0.40), 0 3px 6px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.3)!important;
             transform: translateY(-3px);
         }
-        .stButton > button[kind="primary"] {
-            background: linear-gradient(145deg, #2E7D5B, #4CAF50)!important;
+        /* STRONG RAISED FIELDS - Inputs, Selects, Textareas, Number Inputs */
+        div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"], div[data-baseweb="base-input"], div[data-baseweb="input"] > div {
+            background: linear-gradient(145deg, #FFFFFF, #FAFFFE)!important;
+            border: 2.5px solid #A8CCAD!important;
+            border-radius: 14px!important;
+            box-shadow: 0 5px 14px rgba(46,125,91,0.12), 0 2px 4px rgba(0,0,0,0.08), inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -1px 1px rgba(0,0,0,0.04)!important;
+            transform: translateY(-2px);
+            transition: all 0.25s ease;
+        }
+        div[data-baseweb="input"]:hover, div[data-baseweb="select"]:hover, div[data-baseweb="textarea"]:hover {
+            border-color: #2E7D5B!important;
+            box-shadow: 0 8px 20px rgba(46,125,91,0.20), 0 3px 6px rgba(0,0,0,0.10), inset 0 1px 2px rgba(255,255,255,1)!important;
+            transform: translateY(-3px);
+        }
+        div[data-baseweb="input"]:focus-within, div[data-baseweb="select"]:focus-within, div[data-baseweb="textarea"]:focus-within {
+            border-color: #1B5E20!important;
+            border-width: 3px!important;
+            box-shadow: 0 10px 24px rgba(46,125,91,0.28), 0 4px 8px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,1)!important;
+            transform: translateY(-3px) scale(1.01);
+        }
+        /* STRONG RAISED BUTTONS */
+        .stButton > button {
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAF8 100%)!important;
+            border: 2.5px solid #A8CCAD!important;
+            border-radius: 14px!important;
+            box-shadow: 0 6px 16px rgba(46,125,91,0.18), 0 2px 4px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,1)!important;
+            transform: translateY(-2px);
+            font-weight: 800!important;
+            font-size: 15px!important;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 8px 16px!important;
+        }
+        .stButton > button:hover {
+            box-shadow: 0 10px 28px rgba(46,125,91,0.32), 0 4px 8px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,1)!important;
+            transform: translateY(-5px) scale(1.02);
+            border-color: #2E7D5B!important;
+            background: linear-gradient(145deg, #FFFFFF, #E8F5E9)!important;
+        }
+        .stButton > button:active {
+            transform: translateY(-1px) scale(0.98);
+            box-shadow: 0 3px 8px rgba(46,125,91,0.20)!important;
+        }
+        .stButton > button[kind="primary"], .stButton > button[data-testid="baseButton-primary"] {
+            background: linear-gradient(145deg, #2E7D5B 0%, #4CAF50 100%)!important;
             color: white!important;
             border-color: #1B5E20!important;
+            border-width: 3px!important;
+            box-shadow: 0 8px 20px rgba(46,125,91,0.35), 0 3px 6px rgba(0,0,0,0.18)!important;
         }
-        div[data-testid="stVerticalBlockBorderWrapper"] {
-            border-radius: 16px!important;
-            box-shadow: 0 6px 18px rgba(46,125,91,0.12)!important;
+        /* STRONG RAISED CONTAINERS */
+        div[data-testid="stVerticalBlockBorderWrapper"], div[data-testid="stExpander"], div[data-testid="stContainer"] {
+            background: linear-gradient(145deg, #FFFFFF, #FDFFFE)!important;
+            border: 2.5px solid #C8E6D5!important;
+            border-radius: 18px!important;
+            box-shadow: 0 8px 22px rgba(46,125,91,0.14), 0 3px 6px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,1)!important;
+            transform: translateY(-2px);
+            transition: all 0.25s ease;
+        }
+        div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+            box-shadow: 0 12px 32px rgba(46,125,91,0.20), 0 4px 8px rgba(0,0,0,0.10)!important;
+            transform: translateY(-4px);
+        }
+        /* Heading raised */
+        .heading-h3, .heading-h4, .heading-h5 {
+            text-shadow: 0 1px 2px rgba(0,0,0,0.08);
         }
         """
     if theme == "dim":
@@ -705,7 +748,7 @@ def top_nav_inner():
             st.session_state.prev_page = st.session_state.current_page
             st.session_state.current_page="dashboard_welcome"
             st.rerun()
-    st.divider()
+    st.markdown("<hr style='margin:8px 0; border:1px solid #E8F5E9;'>", unsafe_allow_html=True)
 
 def top_nav_dashboard():
     scroll_to_top()
@@ -720,7 +763,7 @@ def top_nav_dashboard():
                 st.query_params.clear()
             except: pass
             st.rerun()
-    st.divider()
+    st.markdown("<hr style='margin:8px 0; border:1px solid #E8F5E9;'>", unsafe_allow_html=True)
 
 @st.cache_resource(show_spinner=False, ttl=600, max_entries=1)
 def get_gspread_client():
@@ -1267,8 +1310,8 @@ def _get_all_records_cached_fast(sheet_name):
         if not vals or len(vals) < 2:
             return []
         headers = vals[0]
-        # V200 FIX: For performance, limit to 2000 rows max for dashboard stats
-        max_rows = 2000 if sheet_name == "New_patient" else 1000
+        # V200.4: Extra speed - limit rows more aggressively
+        max_rows = 1500 if sheet_name == "New_patient" else 500
         records = []
         for row in vals[1:max_rows+1]:
             if not any(row):
@@ -1827,12 +1870,38 @@ def render_patient_form(is_revisit=False):
             return st.session_state.revisit_data.get(k,d)
         return d
 
-    # V172: If revisit, show past history and personal info before entry form
+    # V200.4 FIX 4a: If revisit, show past history + age/gender related info in Info section
     if is_revisit and st.session_state.revisit_data:
         r=st.session_state.revisit_data
-        st.markdown("<div class='heading-h4'>Selected Patient - Past History & Personal Info</div>", unsafe_allow_html=True)
+        st.markdown("<div class='heading-h4'>Selected Patient - Past History & Personal Info + Age/Gender Info</div>", unsafe_allow_html=True)
         with st.container(border=True):
+            # Basic info
             st.markdown(f"<div class='history-card'><b>Name:</b> {r.get('Name','')} | <b>Age:</b> {r.get('Age','')} | <b>Gender:</b> {r.get('Gender','')} | <b>Phone:</b> {r.get('Phone','')}<br><b>Address:</b> {r.get('Address','')} | <b>CNIC:</b> {r.get('CNIC','')} | <b>Last Date:</b> {r.get('Date','')}<br><b>Chief Complaint:</b> {r.get('ChiefComplaint','')} | <b>Past History:</b> {r.get('PastHistory','')} | <b>Balance:</b> Rs {r.get('Balance','0')}</div>", unsafe_allow_html=True)
+            # V200.4: Show age and gender related info that was collected
+            try:
+                age_str = str(r.get('Age','')).strip()
+                gender_str = str(r.get('Gender','')).strip()
+                # Collect all age/gender related keys from the record
+                related_keys = []
+                for k in r.keys():
+                    lk = k.lower()
+                    if any(x in lk for x in ['female_', 'male_', 'child_', 'menarche', 'cycle', 'flow', 'preg', 'miscarriage', 'contraception', 'leucorrhoea', 'menopause', 'hrt', 'puberty', 'voice', 'beard', 'marital_effect', 'sexual', 'nightfall', 'prostate', 'urine_weak', 'erectile', 'birth', 'vaccination', 'school', 'growth', 'age_q_', 'occupation', 'marital', 'blood', 'height', 'weight', 'allergy', 'habits', 'sleep', 'appetite', 'bowel', 'temperament', 'bp', 'temperature', 'pulse']):
+                        if str(r.get(k,'')).strip() and str(r.get(k,'')).strip().lower() not in ['select', '']:
+                            related_keys.append(k)
+                if related_keys:
+                    st.markdown("<div style='margin-top:10px;'><b>Age/Gender Related History (from previous form):</b></div>", unsafe_allow_html=True)
+                    # Show in 3 columns
+                    cols = st.columns(3)
+                    for idx, key in enumerate(related_keys[:12]):  # Show max 12
+                        col = cols[idx % 3]
+                        with col:
+                            st.markdown(f"<div style='background:#F1F7F3;border:1px solid #C8E6D5;border-radius:8px;padding:6px;margin:2px 0;font-size:12px;'><b>{key}:</b> {str(r.get(key,''))[:60]}</div>", unsafe_allow_html=True)
+                    if len(related_keys) > 12:
+                        st.caption(f"+ {len(related_keys)-12} more fields in full record")
+                else:
+                    st.caption("No extra age/gender info found in previous record - will be collected in Personal/Vital sections below")
+            except Exception as e:
+                st.caption(f"Age/Gender history: Age {r.get('Age','')} / Gender {r.get('Gender','')} - Extra details in sections below")
 
     with st.container(border=True):
         st.markdown("<div class='heading-h4'>Personal Information</div>", unsafe_allow_html=True)
@@ -1923,7 +1992,6 @@ def render_patient_form(is_revisit=False):
         if prev_text.strip():
             st.markdown("<div class='heading-h4'>Previous Diseases - History</div>", unsafe_allow_html=True)
             with st.container(border=True):
-                st.markdown("<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:12px;padding:10px;margin-bottom:8px;'>Past diseases - Physician can see remaining vs new. Cross to remove cured.</div>", unsafe_allow_html=True)
                 prev_list = [d.strip() for d in prev_text.split(" + ") if d.strip()]
                 if "revisit_cured_diseases" not in st.session_state:
                     st.session_state.revisit_cured_diseases = []
@@ -1965,7 +2033,23 @@ def render_patient_form(is_revisit=False):
                 d_no = st.text_input("No/Count *", key=f"pat_no_{fv}_v197", placeholder="e.g., 2 - Mandatory")
             with c4:
                 d_duration = st.selectbox("Duration *", LISTS["duration"], key=f"pat_dur_{fv}_v197")
-            if st.button("Add Disease +", key=f"pat_add_{fv}_v197", type="secondary", use_container_width=True):
+            # V200.4 FIX 4d: Disease related questions - nature/stage etc as part of Diseases info
+            st.markdown("<div class='heading-h5'>Disease Related Questions - Nature/Stage etc</div>", unsafe_allow_html=True)
+            st.markdown("<div style='background:#F1F7F3;border:1.5px solid #C8E6D5;border-radius:10px;padding:8px;margin-bottom:8px;font-size:13px;'>مزید سوالات - مرض کی نوعیت/سٹیج - فزیشن کے مدنظر رہے</div>", unsafe_allow_html=True)
+            rq1_col, rq2_col, rq3_col = st.columns(3)
+            with rq1_col:
+                # Get related questions based on body part
+                related_qs = DISEASE_RELATED_QUESTIONS.get(st.session_state.get(f"pat_body_part_{fv}_v197","Select"), DISEASE_RELATED_QUESTIONS.get("General", ["Severity","Trigger","Associated Symptom"]))
+                q1_label = related_qs[0] if len(related_qs)>0 else "Severity/Stage"
+                st.selectbox(q1_label, LISTS["severity"], key=f"pat_rel_q1_{fv}_v200_4")
+            with rq2_col:
+                q2_label = related_qs[1] if len(related_qs)>1 else "Nature/Trigger"
+                st.text_input(q2_label, key=f"pat_rel_q2_{fv}_v200_4", placeholder="e.g., After eating, Continuous")
+            with rq3_col:
+                q3_label = related_qs[2] if len(related_qs)>2 else "Associated Symptom"
+                st.text_input(q3_label, key=f"pat_rel_q3_{fv}_v200_4", placeholder="e.g., Nausea, Burning")
+
+            if st.button("Add Disease +", key=f"pat_add_{fv}_v200_4", type="secondary", use_container_width=True):
                 bp = st.session_state.get(f"pat_body_part_{fv}_v197", "Select")
                 dis = st.session_state.get(f"pat_disease_sub_{fv}_v197", "Select")
                 no_val = st.session_state.get(f"pat_no_{fv}_v197", "").strip()
@@ -1979,7 +2063,17 @@ def render_patient_form(is_revisit=False):
                 elif dur_val=="Select":
                     st.error("Please complete: Duration * is mandatory")
                 else:
+                    # V200.4: Include related Qs in disease text
+                    rel_q1 = st.session_state.get(f"pat_rel_q1_{fv}_v200_4", "Select")
+                    rel_q2 = st.session_state.get(f"pat_rel_q2_{fv}_v200_4", "").strip()
+                    rel_q3 = st.session_state.get(f"pat_rel_q3_{fv}_v200_4", "").strip()
                     entry_text = f"{bp} + {dis} + {no_val} {dur_val}"
+                    if rel_q1 and rel_q1 != "Select":
+                        entry_text += f" + {rel_q1}"
+                    if rel_q2:
+                        entry_text += f" + {rel_q2}"
+                    if rel_q3:
+                        entry_text += f" + {rel_q3}"
                     if "patient_diseases" not in st.session_state:
                         st.session_state.patient_diseases = []
                     # V209 Fix 7: Check duplicate before adding
