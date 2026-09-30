@@ -1,6 +1,6 @@
-# APP VERSION - V200.7 - 2026-09-29 - LOAD FIX: Removed duplicate get_theme_css (1236 chars), Light global CSS (7149 chars saved), CSS inject only when theme changes (not every page), Local-first sheet cache (no sheet hit if local recent), Theme toggle clears cache and re-injects CSS - Previous: V200.6 Critical Load Fix, V200.5, V200.4, V200.3, V200.2, V200.1, V200 Base
-# V200.7 - Theme icon now works - clears css_injected flag and cache on toggle - App Doctor shows real load causes
-# Previous: V200.6, V200.5, V200.4, V200.3, V200.2, V200.1
+# APP VERSION - V200.6 - 2026-09-29 - CRITICAL LOAD FIX: Ultra Light CSS (No shadows/gradients/transforms, TTL 3600), No CSS inject every page (once per session), Light Banners (No gradient, 28px font, no shadow), Removed heavy bar_chart, Reduced sheet rows to 300/100, Fixed App Doctor with REAL Page Load Checks (CHECK 9-14: CSS Injection, Session Size blind cause, Cache, Doctor Speed, components.html, Sheet Read Speed) - Previous: V200.5 Load Bug Fixed (Removed unconditional force_scroll), V200.4 Version Comment+Raised+Speed+Revisit Info+Related Qs, V200.3 5 Fixes, V200.2 Page Load Speed, V200.1 Reboot Fix, V200 Base from V209.6.12 + Full chain: Sheet Save, Hardcoded ID, Login Hang, Refresh Loop, Self Diagnosing Doctor, private_key fix, DuplicateKey, Sheet Reconnect, Auto-sync since 2026-09-23, Complete save rebuild, Save Always Visible, save_patient missing, Lang Next to Icon, Box 4 Lines, Overview, Admin Clean, Language Back, Top Box Up, Overview OFF, Clinic Admin Permanent, Ad Compact, Mobile Colored, Save+ScrollTop+DataTypes+Phone First6+Diseases Empty+Clear Fields+V205 Theme Toggle Light/Dim+Stay Signed In+Ad Compact+Free Tools
+# V200.6 - 2026-09-29 - App Doctor now checks REAL load causes: Session Size (blind screen), CSS injection, components.html, Sheet speed - Not just Sheet OK
+# Previous: V200.5, V200.4, V200.3, V200.2, V200.1, V200, V209.6.12
 
 
 import streamlit as st
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.7 - Load Fixed+Theme Toggle Fixed+Ultra Light"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.6 - CRITICAL LOAD FIX: Ultra Light CSS+No Blind Screen+Real Doctor"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -70,6 +70,29 @@ def get_theme_css():
     except:
         return "html, body { background: #FFFFFF!important; }"
 
+def get_theme_css():
+    theme = st.session_state.get("theme", "light")
+    # V200.2: Use cached CSS
+    try:
+        return get_theme_css_cached(theme)
+    except:
+        pass
+    if theme == "dim":
+        # V206 Requirement 1d: Same green shade stronger - screen feels slightly dark
+        return """
+        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #C8DCCB!important; color: #0F2A14!important; }
+        .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; box-shadow: 0 8px 28px rgba(27,94,32,0.30)!important; }
+        .heading-h1 { color: #1B5E20!important; }
+        .graceful-card { background: #A8CCAD!important; border: 2px solid #1B5E20!important; }
+        .dash-section-title { background: #1B5E20!important; }
+        div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] { background: #E0F0E2!important; border: 2px solid #2E7D32!important; }
+        
+        """
+    else:
+        return """
+        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
+        .block-container { background: #FFFFFF!important; border: 3px solid #2E7D5B!important; }
+        """
 
 def show_urdu_work_in_progress_note():
     if st.session_state.get("logged_in", False):
@@ -152,13 +175,218 @@ def scroll_to_top():
 
 st.markdown("""
 <style>
-/* V200.7 ULTRA LIGHT - Minimal styles only */
-.ad-note { position: fixed!important; bottom: 8px!important; right: 12px!important; z-index: 999999!important; background: #FFFFFF!important; border: 1px solid #B8860B!important; border-radius: 8px!important; padding: 4px 8px!important; font-size: 10px!important; max-width: 100px!important; }
-@media (max-width: 768px) {
-    [data-testid="stHorizontalBlock"] { flex-wrap: wrap!important; }
-    [data-testid="stHorizontalBlock"] [data-testid="column"] { flex: 0 0 50%!important; min-width: 50%!important; }
+/* V209.2 Fix 1 - Ad compact 0.5cm down - NOT full page */
+.ad-note { 
+    position: fixed!important;
+    bottom: 8px!important;
+    right: 12px!important;
+    z-index: 999999!important;
+    background: #FFFFFF!important;
+    border: 2px solid #B8860B!important;
+    border-radius: 10px!important;
+    padding: 6px 10px!important;
+    text-align: center!important;
+    font-size: 10px!important;
+    font-weight: 700!important;
+    color: #1F2D27!important;
+    box-shadow: 0 3px 12px rgba(184,134,11,0.25)!important;
+    width: auto!important;
+    max-width: 110px!important;
+    height: auto!important;
+    max-height: 90px!important;
+    line-height: 1.2!important;
+    margin: 0!important;
 }
-.block-container { max-width: 940px!important; margin: 10px auto!important; padding: 1rem!important; }
+/* V209.2 Fix 2 - Mobile tabs colored like laptop */
+@media (max-width: 768px) {
+    .graceful-card { background: #F1F7F3!important; border: 2px solid #2E7D5B!important; box-shadow: 0 4px 12px rgba(46,125,91,0.20)!important; }
+    .graceful-card button { background: #F1F7F3!important; border: 1.5px solid #2E7D5B!important; color: #1F2D27!important; font-weight: 700!important; }
+}
+
+/* V200.6 LIGHT */
+html, body,.stApp { background: #FFFFFF!important; color: #1F2D27!important; }
+
+/* Block container */
+.block-container { 
+    max-width: 940px!important; 
+    margin: 20px auto!important; 
+    padding: 1.6rem 1.8rem!important; 
+    background: #FFFFFF!important; 
+    border: 3px solid #2E7D5B!important;
+    border-radius: 20px!important; 
+    box-shadow: 0 4px 20px rgba(46,125,91,0.12)!important;
+}
+#MainMenu, header {visibility: hidden;}
+div[data-testid="stSidebar"] {display: none;}
+
+/* ===== V200 Requirement 5: Bigger Fonts - PC slightly larger than mobile ===== */
+/* Page Titles */
+.heading-h1 { font-size: 52px!important; font-weight: 900!important; color:#2E7D5B!important; text-align:center; }
+.heading-h2 { font-size: 26px!important; font-weight: 800!important; color:#2E7D5B!important; }
+.heading-h3 { font-size: 30px!important; font-weight: 800!important; color:#1F2D27!important; }
+.heading-h4 { font-size: 24px!important; font-weight: 700!important; color:#1F2D27!important; margin:12px 0!important; }
+.heading-h5 { font-size: 22px!important; font-weight: 700!important; color:#2E7D5B!important; }
+
+/* General text bigger */
+.stApp p, .stApp div, .stApp span, .stApp label { font-size: 17px!important; }
+.stApp button { font-size: 18px!important; font-weight: 700!important; }
+
+/* Mobile adjustments - still bigger than before but slightly smaller than PC */
+@media (max-width: 768px) {
+    .heading-h1 { font-size: 34px!important; }
+    .heading-h2 { font-size: 22px!important; }
+    .heading-h3 { font-size: 24px!important; }
+    .heading-h4 { font-size: 20px!important; }
+    .heading-h5 { font-size: 18px!important; }
+    .stApp p, .stApp div, .stApp span, .stApp label { font-size: 16px!important; }
+    .stApp button { font-size: 16px!important; }
+}
+
+/* ===== V200 Requirement 2 & 3: Dashboard compact tabs, icon inside tab, green border only on hover ===== */
+.graceful-card { 
+    background: #F1F7F3; 
+    border: 2px solid transparent!important; 
+    border-radius: 12px; 
+    padding: 6px!important; 
+    text-align:center; 
+    color:#1F2D27!important; 
+    transition: all 0.25s ease;
+}
+.graceful-card:hover { 
+    border: 2px solid #2E7D5B!important; 
+    box-shadow: 0 4px 12px rgba(46,125,91,0.20)!important;
+    background: #FFFFFF!important;
+}
+.graceful-card button { 
+    padding: 8px 10px!important; 
+    min-height: 52px!important;
+    font-size: 15px!important;
+}
+@media (max-width: 768px) {
+    .graceful-card button { min-height: 48px!important; font-size: 14px!important; }
+}
+
+
+/* ===== V208 Fix 2 - Mobile dashboard tabs colored like laptop ===== */
+@media (max-width: 768px) {
+    .graceful-card { 
+        background: #F1F7F3!important; 
+        border: 1.5px solid #2E7D5B!important; 
+        box-shadow: 0 3px 10px rgba(46,125,91,0.15)!important;
+    }
+    .graceful-card button { 
+        background: #F1F7F3!important;
+        border: 1px solid #C8E6D5!important;
+        color: #1F2D27!important;
+    }
+    .graceful-card:hover { 
+        background: #FFFFFF!important;
+        border: 2px solid #2E7D5B!important;
+    }
+}
+
+
+/* V209 Fix 1 - Ad 0.5cm down from previous */
+
+
+
+
+
+/* Compact dashboard grid */
+.dash-section-title { font-size:20px!important; font-weight:800!important; color:#FFFFFF; background:#2E7D5B; padding:10px 16px; border-radius:10px; margin:20px 0 12px 0; }
+
+.demo-card { background: #F1F7F3; border:1px solid #C8E6D5; border-radius:14px; padding:16px; color:#1F2D27!important; }
+.footer-sharp { text-align:center; color:#5a6d65!important; font-size:14px!important; margin-top:30px; border-top:1px solid #C8E6D5; padding:14px; }
+.history-card { background:#F1F7F3; border:1px solid #C8E6D5; border-radius:12px; padding:12px; margin-bottom:10px; color:#1F2D27; }
+
+/* ===== V201 Requirement 2: No small green box, only green border on hover ===== */
+.graceful-card { 
+    background: #FFFFFF!important; 
+    border: 1.5px solid #E0E0E0!important; 
+    border-radius: 12px!important; 
+    padding: 2px!important; 
+    text-align:center; 
+    color:#1F2D27!important; 
+    transition: all 0.2s ease!important;
+    box-shadow: none!important;
+}
+.graceful-card:hover { 
+    border: 2.5px solid #2E7D5B!important; 
+    box-shadow: 0 3px 10px rgba(46,125,91,0.18)!important;
+}
+.graceful-card button {
+    border: none!important;
+    background: #F1F7F3!important;
+}
+.graceful-card:hover button {
+    background: #FFFFFF!important;
+    border: 1px solid #2E7D5B!important;
+}
+
+/* ===== V202 Requirement 5: All tabs and fields Raised appearance ===== */
+div[data-testid="stTabs"] {
+    background: #FFFFFF!important;
+    border: 2px solid #C8E6D5!important;
+    border-radius: 16px!important;
+    padding: 8px!important;
+    box-shadow: 0 6px 18px rgba(46,125,91,0.12), 0 2px 4px rgba(0,0,0,0.06)!important;
+}
+div[data-testid="stTab"] {
+    box-shadow: 0 2px 6px rgba(46,125,91,0.15)!important;
+    border-radius: 10px!important;
+    border: 1.5px solid #E0E0E0!important;
+}
+div[data-testid="stTab"][aria-selected="true"] {
+    background: #2E7D5B!important;
+    color: #FFFFFF!important;
+    box-shadow: 0 4px 12px rgba(46,125,91,0.30)!important;
+    border: 2px solid #2E7D5B!important;
+}
+/* Input fields raised */
+div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05)!important;
+    border: 1.5px solid #C8E6D5!important;
+    border-radius: 10px!important;
+    background: #FFFFFF!important;
+}
+div[data-baseweb="input"]:focus-within, div[data-baseweb="select"]:focus-within, div[data-baseweb="textarea"]:focus-within {
+    border: 2px solid #2E7D5B!important;
+    box-shadow: 0 4px 12px rgba(46,125,91,0.20)!important;
+}
+/* Container border raised */
+div[data-testid="stExpander"], div[data-testid="stContainer"] {
+    box-shadow: 0 4px 14px rgba(46,125,91,0.10)!important;
+    border: 1.5px solid #C8E6D5!important;
+}
+
+/* ===== V201 Requirement 3: PC columns(4) = 4 per line, Mobile = 2 per line ===== */
+@media (max-width: 768px) {
+    [data-testid="stHorizontalBlock"] {
+        flex-wrap: wrap!important;
+    }
+    [data-testid="stHorizontalBlock"] [data-testid="column"] {
+        flex: 0 0 50%!important;
+        min-width: 50%!important;
+        max-width: 50%!important;
+    }
+    .graceful-card button { 
+        min-height: 52px!important; 
+        font-size: 14px!important;
+        padding: 6px 8px!important;
+    }
+}
+@media (min-width: 769px) {
+    [data-testid="stHorizontalBlock"] [data-testid="column"] {
+        flex: 0 0 25%!important;
+        min-width: 25%!important;
+    }
+}
+
+/* ===== V201 Requirement 4a,b,c: Ad link small bold 2 lines, box fit to text, near Streamlit button ===== */
+
+@media (max-width: 768px) {
+    
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -328,32 +556,20 @@ def navigate_to(page):
     st.rerun()
 
 def language_selector():
-    # V200.7 FIX: Theme toggle - re-inject CSS when theme changes
-    curr_theme = st.session_state.get("theme", "light")
-    last_theme = st.session_state.get("last_injected_theme", "")
-    need_inject = not st.session_state.get("css_injected_v200_7", False) or last_theme != curr_theme
-    if need_inject:
+    # V200.6: Inject CSS only once per session to prevent flicker/load
+    if not st.session_state.get("css_injected_v200_6", False):
         st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
-        st.session_state.css_injected_v200_7 = True
-        st.session_state.last_injected_theme = curr_theme
+        st.session_state.css_injected_v200_6 = True
     c_spacer, c_theme, c_lang, c_lang_text = st.columns([6,1,1,1])
     with c_theme:
         curr_theme = st.session_state.get("theme", "light")
         if curr_theme == "light":
-            if st.button("🌿", key="theme_toggle_dim_v200_7", help="Dim Theme"):
+            if st.button("🌿", key="theme_toggle_dim_v200_2", help="Dim Theme"):
                 st.session_state.theme = "dim"
-                st.session_state.css_injected_v200_7 = False
-                try:
-                    get_theme_css_cached.clear()
-                except: pass
                 st.rerun()
         else:
-            if st.button("☀️", key="theme_toggle_light_v200_7", help="Light Theme"):
+            if st.button("☀️", key="theme_toggle_light_v200_2", help="Light Theme"):
                 st.session_state.theme = "light"
-                st.session_state.css_injected_v200_7 = False
-                try:
-                    get_theme_css_cached.clear()
-                except: pass
                 st.rerun()
     with c_lang:
         if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v200_2", help="Change Language"):
@@ -392,14 +608,10 @@ def clinic_heading_banner_compact():
 
 
 def top_bar_inner_with_user():
-    """V200.7: Re-inject when theme changes for toggle to work"""
-    curr_theme = st.session_state.get("theme", "light")
-    last_theme = st.session_state.get("last_injected_theme", "")
-    need_inject = not st.session_state.get("css_injected_v200_7", False) or last_theme != curr_theme
-    if need_inject:
+    """V200.6: No CSS inject every page - only once"""
+    if not st.session_state.get("css_injected_v200_6", False):
         st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
-        st.session_state.css_injected_v200_7 = True
-        st.session_state.last_injected_theme = curr_theme
+        st.session_state.css_injected_v200_6 = True
     uname = st.session_state.get("username","User")
     c_user, c_spacer, c_theme, c_lang, c_lang_text = st.columns([3,2,1,1,1])
     with c_user:
@@ -407,20 +619,12 @@ def top_bar_inner_with_user():
     with c_theme:
         curr_theme = st.session_state.get("theme", "light")
         if curr_theme == "light":
-            if st.button("🌿", key=f"theme_inner_dim_{st.session_state.get('current_page','inner')}_v200_7", help="Dim Theme"):
+            if st.button("🌿", key=f"theme_inner_dim_{st.session_state.get('current_page','inner')}_v200_2", help="Dim Theme"):
                 st.session_state.theme = "dim"
-                st.session_state.css_injected_v200_7 = False
-                try:
-                    get_theme_css_cached.clear()
-                except: pass
                 st.rerun()
         else:
-            if st.button("☀️", key=f"theme_inner_light_{st.session_state.get('current_page','inner')}_v200_7", help="Light Theme"):
+            if st.button("☀️", key=f"theme_inner_light_{st.session_state.get('current_page','inner')}_v200_2", help="Light Theme"):
                 st.session_state.theme = "light"
-                st.session_state.css_injected_v200_7 = False
-                try:
-                    get_theme_css_cached.clear()
-                except: pass
                 st.rerun()
     with c_lang:
         if st.button("🌐", key=f"lang_inner_{st.session_state.get('current_page','inner')}_v200_2", help="Change Language"):
@@ -1013,18 +1217,8 @@ def get_next_numbers(clinic_name):
     except:
         return 1, 1
 
-@st.cache_data(show_spinner=False, ttl=600)
+@st.cache_data(show_spinner=False, ttl=300)
 def _get_all_records_cached_fast(sheet_name):
-    # V200.7: If local backup exists and recent, don't hit sheet at all for speed
-    try:
-        import time
-        backup_key = f"local_backup_{sheet_name}"
-        last = st.session_state.get(f"last_sheet_load_{sheet_name}", 0)
-        local = st.session_state.get(backup_key, [])
-        if local and isinstance(local, list) and len(local)>0 and (time.time() - last < 600):
-            return local
-    except:
-        pass
     """V200 FIX: Reboot Processing Fix - Longer cache 300s, early exit, limit rows for dashboard"""
     try:
         # Early exit if no gspread client - prevents hang after reboot when secrets missing
