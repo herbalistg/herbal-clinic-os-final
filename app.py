@@ -1,4 +1,4 @@
-# APP VERSION - V200.13 - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# APP VERSION - V200.14 - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.13 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.14 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -1506,6 +1506,24 @@ def get_next_offer_id():
     return f"Offer_{max_n+1}"
   except: return "Offer_1"
 
+def get_next_feedback_id():
+  try:
+    recs = get_all_records_cached("Feedback")
+    max_n=0
+    for r in recs:
+      fid=str(r.get("ID","") or r.get("FeedbackID",""))
+      if fid:
+        try:
+          num=int(''.join(filter(str.isdigit, fid)))
+          if num>max_n: max_n=num
+        except: pass
+    return f"FB_{max_n+1}"
+  except:
+    import datetime
+    return f"FB_{int(datetime.datetime.now().timestamp())%10000}"
+
+
+
 def get_appsettings_value(key, default=""):
   try:
     recs = get_all_records_cached("AppSettings")
@@ -1866,23 +1884,46 @@ def render_patient_form(is_revisit=False):
 
   with st.container(border=True):
     st.markdown("<div class='heading-h4'>Personal Information</div>", unsafe_allow_html=True)
-    # V200.9 FIX 3a: Personal Info - 6 fields + Age/Gender merged directly below (V200.4 structure)
+    # V200.14 FIX 3a: Personal Info - Show previous Gender/Age in revisit
     c1,c2,c3=st.columns(3)
     with c1:
       st.text_input("Patient's Name *", key=f"p_name_{fv}", value=get_prefill("Name",""), placeholder="Patient's Name - Text only")
       st.text_input("Spouse/Father's Name", key=f"p_fname_{fv}", value=get_prefill("FatherName",""), placeholder="Spouse/Father's Name - Text")
     with c2:
-      st.selectbox("Gender *", LISTS["gender"], key=f"p_gender_{fv}")
+      # V200.14: Gender with previous data
+      gender_options = LISTS["gender"]
+      prev_gender = str(get_prefill("Gender","") or "").strip()
+      gender_idx = 0
+      if prev_gender and prev_gender in gender_options:
+        gender_idx = gender_options.index(prev_gender)
+      elif is_revisit and st.session_state.get("revisit_data"):
+        rg = str(st.session_state.revisit_data.get("Gender","") or "").strip()
+        if rg in gender_options:
+          gender_idx = gender_options.index(rg)
+      st.selectbox("Gender *", gender_options, key=f"p_gender_{fv}", index=gender_idx)
       st.text_input("Age *", key=f"p_age_{fv}", value=get_prefill("Age",""), placeholder="Age - Number e.g., 35")
     with c3:
       st.text_input("Phone *", key=f"p_phone_{fv}", value=get_prefill("Phone",""), placeholder="Phone - 03XX-XXXXXXX (Numbers only)", help="Enter phone number with digits only, e.g., 03001234567 - Required data type: Numeric String")
       st.text_input("Address", key=f"p_address_{fv}", value=get_prefill("Address",""), placeholder="Address - Text")
 
-    # V200.9 FIX 3a+3c: Age/Gender Related Questions - Directly merged with Personal Information
-    # This is part of Personal Information, shown right below the 6 fields
+    # V200.14 FIX 3a: Age/Gender Related - Show previous data in revisit
     try:
-      cur_age = st.session_state.get(f"p_age_{fv}","") or get_prefill("Age","")
-      cur_gender = st.session_state.get(f"p_gender_{fv}","") or get_prefill("Gender","")
+      # FIX: Get age/gender from session first, then revisit_data, then prefill - ensure revisit data visible
+      cur_age = str(st.session_state.get(f"p_age_{fv}","") or "").strip()
+      cur_gender = str(st.session_state.get(f"p_gender_{fv}","") or "").strip()
+      if not cur_age and is_revisit and st.session_state.get("revisit_data"):
+        cur_age = str(st.session_state.revisit_data.get("Age","") or "").strip()
+      if not cur_gender and is_revisit and st.session_state.get("revisit_data"):
+        cur_gender = str(st.session_state.revisit_data.get("Gender","") or "").strip()
+      if not cur_age:
+        cur_age = str(get_prefill("Age","") or "").strip()
+      if not cur_gender:
+        cur_gender = str(get_prefill("Gender","") or "").strip()
+      # Update session for display
+      if cur_age and f"p_age_{fv}" not in st.session_state:
+        st.session_state[f"p_age_{fv}"] = cur_age
+      if cur_gender and f"p_gender_{fv}" not in st.session_state:
+        st.session_state[f"p_gender_{fv}"] = cur_gender
       age_qs = get_age_based_questions(cur_age, cur_gender)
       if age_qs:
         st.markdown("<hr style='margin:12px 0; border:1px solid #C8E6D5;'>", unsafe_allow_html=True)
@@ -2145,10 +2186,10 @@ def render_patient_form(is_revisit=False):
 
   with st.container(border=True):
     if section_heading_clickable("prescription","Prescription"):
-      # V200.13 FIX 1b: Single and Formula from Google Sheet with searchable select
+      # V200.14 FIX 2a,2b,2c: No Add buttons, Single/Formula labels simple, Manual field bigger
       try:
-        single_options = ["Select"]
-        formula_options = ["Select"]
+        single_options = []
+        formula_options = []
         try:
           herb_recs = get_all_records_cached("Herbs")
           if herb_recs:
@@ -2169,77 +2210,38 @@ def render_patient_form(is_revisit=False):
               if name and name not in formula_options:
                 formula_options.append(name)
         except: pass
-        if len(single_options) <= 1:
-          single_options = ["Select","Ajwain","Haldi","Saunf","Zeera","Adrak","Lehsan","Kali Mirch","Long","Darcheeni","Elaichi","Other"]
-        if len(formula_options) <= 1:
-          formula_options = ["Select","Jawarish Jalinus","Majoon Dabeed","Hab Shifa","Sharbat Bazoori","Arq Mako","Roghan Babuna","Khamira Gauzaban","Other"]
+        if len(single_options) == 0:
+          single_options = ["Ajwain","Haldi","Saunf","Zeera","Adrak","Lehsan","Kali Mirch","Long","Darcheeni","Elaichi","Other"]
+        if len(formula_options) == 0:
+          formula_options = ["Jawarish Jalinus","Majoon Dabeed","Hab Shifa","Sharbat Bazoori","Arq Mako","Roghan Babuna","Khamira Gauzaban","Other"]
       except:
-        single_options = ["Select","Ajwain","Haldi","Saunf","Zeera","Adrak","Lehsan","Other"]
-        formula_options = ["Select","Jawarish","Majoon","Hab","Sharbat","Oil","Other"]
+        single_options = ["Ajwain","Haldi","Saunf","Zeera","Adrak","Lehsan","Other"]
+        formula_options = ["Jawarish","Majoon","Hab","Sharbat","Oil","Other"]
       
       c1,c2=st.columns(2)
       with c1:
-        st.markdown("<div class='heading-h5'>Single Medicines - From Google Sheet (Type to Search)</div>", unsafe_allow_html=True)
-        st.selectbox("Search Single Medicine - Type name", single_options, key=f"single_med_search_{fv}_v200_13")
-        if st.button("Add Single Medicine +", key=f"add_single_{fv}_v200_13"):
-          selected = st.session_state.get(f"single_med_search_{fv}_v200_13", "Select")
-          if selected != "Select":
-            if f"single_meds_{fv}" not in st.session_state:
-              st.session_state[f"single_meds_{fv}"] = []
-            if selected not in st.session_state[f"single_meds_{fv}"]:
-              st.session_state[f"single_meds_{fv}"].append(selected)
-              st.success(f"Added: {selected}")
-            else:
-              st.warning(f"Already added: {selected}")
-            st.rerun()
-        added_single = st.session_state.get(f"single_meds_{fv}", [])
-        if added_single:
-          st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #C8E6D5;border-radius:8px;padding:8px;'><b>Added Single ({len(added_single)}):</b> {', '.join(added_single)}</div>", unsafe_allow_html=True)
-          for idx, med in enumerate(added_single):
-            if st.button(f"Remove {med}", key=f"rem_single_{fv}_{idx}_v200_13"):
-              st.session_state[f"single_meds_{fv}"].remove(med)
-              st.rerun()
+        # V200.14 FIX 2c: Only Single Medicines
+        st.markdown("<div class='heading-h5'>Single Medicines</div>", unsafe_allow_html=True)
+        # V200.14 FIX 2a: No Add button - direct multiselect searchable
+        selected_single = st.multiselect("Single Medicines", single_options, key=f"single_meds_{fv}", help="Type to search medicine from Google Sheet")
       with c2:
-        st.markdown("<div class='heading-h5'>Formula Medicines - From Google Sheet (Type to Search)</div>", unsafe_allow_html=True)
-        st.selectbox("Search Formula Medicine - Type name", formula_options, key=f"formula_med_search_{fv}_v200_13")
-        if st.button("Add Formula Medicine +", key=f"add_formula_{fv}_v200_13"):
-          selected = st.session_state.get(f"formula_med_search_{fv}_v200_13", "Select")
-          if selected != "Select":
-            if f"formula_meds_{fv}" not in st.session_state:
-              st.session_state[f"formula_meds_{fv}"] = []
-            if selected not in st.session_state[f"formula_meds_{fv}"]:
-              st.session_state[f"formula_meds_{fv}"].append(selected)
-              st.success(f"Added: {selected}")
-            else:
-              st.warning(f"Already added: {selected}")
-            st.rerun()
-        added_formula = st.session_state.get(f"formula_meds_{fv}", [])
-        if added_formula:
-          st.markdown(f"<div style='background:#FFF3E0;border:1.5px solid #FF9800;border-radius:8px;padding:8px;'><b>Added Formula ({len(added_formula)}):</b> {', '.join(added_formula)}</div>", unsafe_allow_html=True)
-          for idx, med in enumerate(added_formula):
-            if st.button(f"Remove {med}", key=f"rem_formula_{fv}_{idx}_v200_13"):
-              st.session_state[f"formula_meds_{fv}"].remove(med)
-              st.rerun()
+        st.markdown("<div class='heading-h5'>Formula Medicines</div>", unsafe_allow_html=True)
+        selected_formula = st.multiselect("Formula Medicines", formula_options, key=f"formula_meds_{fv}", help="Type to search formula from Google Sheet")
       
-      # V200.13 FIX 1c: Physician manual medicine field
+      # V200.14 FIX 2b: Physician Manual Medicine Entry field bigger
       st.markdown("<hr style='margin:12px 0; border:1px solid #C8E6D5;'>", unsafe_allow_html=True)
-      st.markdown("<div class='heading-h5'>Physician Manual Medicine Entry</div>", unsafe_allow_html=True)
-      c_man1,c_man2=st.columns([3,1])
-      with c_man1:
-        st.text_input("Type Medicine Manually - Physician Field", key=f"physician_manual_med_{fv}_v200_13", placeholder="Enter medicine name manually e.g., Custom Arq + Dosage")
-      with c_man2:
-        if st.button("Add Manual Medicine +", key=f"add_manual_med_{fv}_v200_13"):
-          manual = st.session_state.get(f"physician_manual_med_{fv}_v200_13", "").strip()
-          if manual:
-            if f"single_meds_{fv}" not in st.session_state:
-              st.session_state[f"single_meds_{fv}"] = []
-            st.session_state[f"single_meds_{fv}"].append(f"Manual: {manual}")
-            st.session_state[f"physician_manual_med_{fv}_v200_13"] = ""
-            st.success(f"Added Manual: {manual}")
-            st.rerun()
+      st.markdown("<div class='heading-h5'>Physician Manual Medicine Entry - Larger Field</div>", unsafe_allow_html=True)
+      manual_meds = st.text_area("Physician Manual Medicine", key=f"physician_manual_med_{fv}_v200_14", placeholder="Enter medicines manually - Physician can write multiple medicines here with dosage e.g.\n1. Custom Arq Mako 10ml twice daily\n2. Special Majoon 5g at night\n3. Your own formula", height=150)
+      
       all_meds = st.session_state.get(f"single_meds_{fv}", []) + st.session_state.get(f"formula_meds_{fv}", [])
-      if all_meds:
-        st.markdown(f"<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:12px;padding:12px;margin-top:10px;'><b>Prescription Preview ({len(all_meds)} medicines):</b><br>{'<br>'.join([f'{i+1}. {m}' for i,m in enumerate(all_meds)])}</div>", unsafe_allow_html=True)
+      manual_list = [m.strip() for m in manual_meds.split("\n") if m.strip()] if manual_meds else []
+      if all_meds or manual_list:
+        preview_text = ""
+        if all_meds:
+          preview_text += f"<b>Selected ({len(all_meds)}):</b> {', '.join(all_meds)}<br>"
+        if manual_list:
+          preview_text += f"<b>Manual ({len(manual_list)}):</b><br>" + "<br>".join([f"{i+1}. {m}" for i,m in enumerate(manual_list)])
+        st.markdown(f"<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:12px;padding:12px;margin-top:10px;'>{preview_text}</div>", unsafe_allow_html=True)
       
       section_ok("prescription", is_revisit=is_revisit)
 
@@ -2369,6 +2371,7 @@ def render_patient_form(is_revisit=False):
           "Temperature": str(temp_val).strip(),
           "SingleMedicines": str(st.session_state.get(f"single_meds_{fv}", [])),
           "FormulaMedicines": str(st.session_state.get(f"formula_meds_{fv}", [])),
+          "ManualMedicines": str(st.session_state.get(f"physician_manual_med_{fv}_v200_14", "") or st.session_state.get(f"physician_manual_med_{fv}_v200_13", "") or ""),
           "Fees": float(f_val),
           "MedicineCharges": float(m_val),
           "Total": float(f_val + m_val),
