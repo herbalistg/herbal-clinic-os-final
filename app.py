@@ -1,4 +1,4 @@
-# APP VERSION - V200.11 - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# APP VERSION - V200.12 - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.11 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.12 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -2208,295 +2208,160 @@ def render_patient_form(is_revisit=False):
       st.session_state[f"calc_pay_{fv}"]=payment_method
       section_ok("billing", is_revisit=is_revisit)
 
-  # V200.8 FIX 3: Save below Billing with gap - V200.4 structure kept
-  st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)
-  st.markdown("<hr style='margin:12px 0; border:2px solid #2E7D5B;'>", unsafe_allow_html=True)
+  # V200.12 FIX: UnboundLocalError fixed + Save Patient Final Step removed + English only + Stream On fixed
   st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
-  st.markdown("<div class='heading-h4'>Save Patient</div>", unsafe_allow_html=True)
   
-  # V209.6.8 - Self Diagnosing Banner - Shows automatically if sheet fails
-  last_error = st.session_state.get("last_sheet_error", "")
-  last_diagnosis = st.session_state.get("last_sheet_diagnosis", {})
-  last_success = st.session_state.get("last_sheet_success", "")
-  
-  if last_error:
-    st.error(f"⚠️ Last Sheet Save Failed: {last_error[:300]}")
-    with st.container(border=True):
-      st.markdown("<div style='background:#FFEBEE;padding:10px;border-radius:8px;border:2px solid #F44336;'><b>🚨 Google Sheet पर Save नहीं हो रहा - कारण नीचे देखें:</b></div>", unsafe_allow_html=True)
-      if isinstance(last_diagnosis, dict) and "checks" in last_diagnosis:
-        for check in last_diagnosis.get("checks", []):
-          if not check.get("ok"):
-            st.markdown(f"❌ **{check.get('step')}**: {check.get('msg')}")
-            if check.get("fix"):
-              st.markdown(f"👉 **Fix:** {check.get('fix')}")
-              st.info(check.get('fix'))
-      if isinstance(last_diagnosis, dict) and last_diagnosis.get("logs"):
-        with st.expander("📋 Full Diagnosis Logs (Technical)", expanded=False):
-          for log in last_diagnosis.get("logs", []):
-            st.text(log)
-          if last_diagnosis.get("client_error"):
-            st.code(last_diagnosis.get("client_error")[:500])
-      # Show client email to share
-      if isinstance(last_diagnosis, dict):
-        ce = last_diagnosis.get("client_email") or ""
-        if not ce:
-          try:
-            if "gcp_service_account" in st.secrets:
-              ce = st.secrets["gcp_service_account"].get("client_email","")
-          except:
-            pass
-        if ce:
-          st.warning(f"📧 इस Email को Google Sheet में Editor के तौर पर Share करें: {ce}")
-          st.code(f"Sheet URL: https://docs.google.com/spreadsheets/d/1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA/edit\nShare with: {ce} -> Editor", language="text")
-  
-  if last_success:
-    st.success(f"✅ Last Sheet Save: {last_success}")
-
-  # Show debug info
-  with st.expander("🔍 Debug - Check what will be saved + Sheet Status", expanded=False):
-    fv_debug = st.session_state.form_version
-    st.write(f"Form Version: {fv_debug}")
-    st.write(f"Name: {st.session_state.get(f'p_name_{fv_debug}', 'EMPTY')}")
-    st.write(f"Age: {st.session_state.get(f'p_age_{fv_debug}', 'EMPTY')}")
-    st.write(f"Gender: {st.session_state.get(f'p_gender_{fv_debug}', 'EMPTY')}")
-    st.write(f"Phone: {st.session_state.get(f'p_phone_{fv_debug}', 'EMPTY')}")
-    st.write(f"Clinic: {st.session_state.get('clinic_name', 'EMPTY')}")
-    st.write(f"Daily: {daily_num}, Total: {total_num}, PID: {pid}")
-    st.write(f"Local Backup Count: {len(st.session_state.get('local_backup_New_patient', []))}")
-    if st.session_state.get("last_saved_patient"):
-      st.write(f"Last Saved: {st.session_state.get('last_saved_patient', {}).get('Name','None')} at {st.session_state.get('last_saved_patient', {}).get('Timestamp','')}")
-    
-    if st.button("🩺 Run Sheet Doctor - Diagnose Now", key=f"sheet_doctor_new_patient_{fv}"):
-      with st.spinner("Diagnosing sheet connection..."):
-        diag = get_sheet_connection_status()
-        st.json(diag.get("checks", []))
-        for log in diag.get("logs", []):
-          if "❌" in log:
-            st.error(log)
-          elif "✅" in log:
-            st.success(log)
-          else:
-            st.text(log)
-        
-        # Show fix
-        failed = [c for c in diag.get("checks", []) if not c.get("ok")]
-        if failed:
-          st.markdown("### 🔧 Fixes Needed:")
-          for f in failed:
-            st.markdown(f"**{f.get('step')}**: {f.get('msg')}")
-            if f.get("fix"):
-              st.code(f.get('fix'))
-        else:
-          st.success("All checks passed! Sheet should be saving.")
-          # Try test write
-          try:
-            ws = get_sheet_safe("New_patient")
-            if ws:
-              st.success(f"Test: Can access New_patient sheet with {len(ws.get_all_values())} rows")
-            else:
-              st.error("Test: Cannot access New_patient sheet")
-          except Exception as e:
-            st.error(f"Test failed: {e}")
-  
-  # Show saved patients from session
-  if st.session_state.get("local_backup_New_patient"):
-    with st.expander(f"Saved Patients in Session ({len(st.session_state.get('local_backup_New_patient', []))} patients)", expanded=False):
-      for i, rec in enumerate(st.session_state.get("local_backup_New_patient", [])[-5:]):
-        st.write(f"{i+1}. {rec.get('Name','')} - {rec.get('Phone','')} - ID:{rec.get('PatientID','')} - {rec.get('Date','')}")
-
-  # V200.8 FIX 4: Save left, Back/New right - V200.4 structure kept
-  c1,c2,c3=st.columns([2,1,1])
-  with c2:
-    if st.button("Back", key=f"back_patient_{fv}_v200_8"):
-      st.session_state.current_page="dashboard_welcome"
-      st.session_state.force_scroll_to_top = True
-      st.rerun()
-  with c3:
-    if st.button("New Patient", key=f"new_patient_btn_{fv}_v200_8", type="secondary"):
+  # Simplified save - no diagnosis banners, English only, no Final Step section
+  c_save, c_new = st.columns([3,1])
+  with c_new:
+    if st.button("New Patient", key=f"new_patient_btn_{fv}_v200_12", type="secondary"):
       reset_to_new_patient()
-  with c1:
-    if st.button("Save Patient NOW", type="primary", use_container_width=True, key=f"save_patient_{fv}_v200_8"):
-      # Get values directly
-      p_name = st.session_state.get(f"p_name_{fv}", "")
-      if not str(p_name).strip():
-        st.error("Name required - Please enter Patient Name in Personal Information")
-        st.warning("Please fill Name above")
+  with c_save:
+    if st.button("Save Patient", type="primary", use_container_width=True, key=f"save_patient_{fv}_v200_12"):
+      p_name = str(st.session_state.get(f"p_name_{fv}", "") or "").strip()
+      if not p_name:
+        st.error("Patient Name is required - Please enter in Personal Information")
       else:
-        f=st.session_state.get(f"calc_f_{fv}",0); m=st.session_state.get(f"calc_m_{fv}",0); p=st.session_state.get(f"calc_p_{fv}",0)
-        grand_total=st.session_state.get(f"calc_gt_{fv}",f+m+prev_bal)
-        balance=st.session_state.get(f"calc_bal_{fv}",grand_total-p)
-        if balance<0: balance=0
-        status=st.session_state.get(f"calc_status_{fv}","Select")
-        pay_method=st.session_state.get(f"calc_pay_{fv}","Select")
         try:
-          age_val = str(st.session_state.get(f"p_age_{fv}", "")).strip()
-          if age_val:
-            int(age_val.split()[0])
-        except:
-          age_val = st.session_state.get(f"p_age_{fv}", "")
+          f_val = float(str(st.session_state.get(f"calc_f_{fv}", 0) or 0))
+        except: f_val = 0.0
+        try:
+          m_val = float(str(st.session_state.get(f"calc_m_{fv}", 0) or 0))
+        except: m_val = 0.0
+        try:
+          p_val = float(str(st.session_state.get(f"calc_p_{fv}", 0) or 0))
+        except: p_val = 0.0
+        try:
+          grand_total = float(str(st.session_state.get(f"calc_gt_{fv}", f_val + m_val + prev_bal) or 0))
+        except: grand_total = f_val + m_val + prev_bal
+        try:
+          balance = float(str(st.session_state.get(f"calc_bal_{fv}", grand_total - p_val) or 0))
+        except: balance = grand_total - p_val
+        if balance < 0: balance = 0
+        status_val = str(st.session_state.get(f"calc_status_{fv}", "Select") or "Select")
+        pay_method_val = str(st.session_state.get(f"calc_pay_{fv}", "Select") or "Select")
+        try:
+          age_val = str(st.session_state.get(f"p_age_{fv}", "") or "").strip()
+        except: age_val = ""
         diseases_list = st.session_state.get("patient_diseases", [])
         diseases_text = " + ".join([d.get("text","") for d in diseases_list]) if diseases_list else ""
-        chief_comp = st.session_state.get(f"chief_complaint_{fv}", "")
-        past_hist = st.session_state.get(f"past_history_{fv}", "")
-        family_hist = st.session_state.get(f"family_hist_{fv}", "")
-        habits = st.session_state.get(f"habits_{fv}", "")
-        bp_val = st.session_state.get(f"v_bp_{fv}", "")
-        temp_val = st.session_state.get(f"v_temp_{fv}", "")
-        weight_val = st.session_state.get(f"v_weight_{fv}", "") or st.session_state.get(f"p_weight_{fv}", "")
-        # V209 Fix 3 & 4: Ensure all fields with proper data types for AI, include Diseases, Complaints
-        # Data type validation for AI readiness
-  # V209 Fix 3 & 4: Ensure all fields with proper data types for AI, include Diseases, Complaints
-      # Data type validation for AI readiness
-      try:
-        age_val = str(st.session_state.get(f"p_age_{fv}", "")).strip()
-        # Ensure age is number
-        if age_val:
-          int(age_val.split()[0]) # Validate
-      except:
-        age_val = st.session_state.get(f"p_age_{fv}", "")
-      # Get diseases accumulated
-      diseases_list = st.session_state.get("patient_diseases", [])
-      diseases_text = " + ".join([d.get("text","") for d in diseases_list]) if diseases_list else ""
-      # Get complaints
-      chief_comp = st.session_state.get(f"chief_complaint_{fv}", "")
-      past_hist = st.session_state.get(f"past_history_{fv}", "")
-      family_hist = st.session_state.get(f"family_hist_{fv}", "")
-      habits = st.session_state.get(f"habits_{fv}", "")
-      # Vitals
-      bp_val = st.session_state.get(f"v_bp_{fv}", "")
-      temp_val = st.session_state.get(f"v_temp_{fv}", "")
-      weight_val = st.session_state.get(f"v_weight_{fv}", "") or st.session_state.get(f"p_weight_{fv}", "")
-      # Ensure data types: Phone as string, Fees as float, etc.
-      data_dict={
-        "PatientID": str(pid), # String type
-        "Date": str(datetime.date.today()), # String date
-        "Name": str(p_name).strip(), # String required
-        "FatherName": str(st.session_state.get(f"p_fname_{fv}", "")).strip(), # String
-        "Age": str(age_val).strip(), # String number for AI
-        "Gender": str(st.session_state.get(f"p_gender_{fv}", "Select")).strip(), # String
-        "MaritalStatus": str(st.session_state.get(f"p_marital_{fv}", "Select")).strip(), # String
-        "Occupation": str(st.session_state.get(f"p_occupation_{fv}", "Select")).strip(), # String
-        "CNIC": str(st.session_state.get(f"p_cnic_{fv}", "")).strip(), # String number
-        "Phone": str(st.session_state.get(f"p_phone_{fv}", "")).strip(), # String number - V209 Fix 5 in first 6
-        "EmergencyPhone": str(st.session_state.get(f"p_emergency_{fv}", "")).strip(), # String
-        "Address": str(st.session_state.get(f"p_address_{fv}", "")).strip(), # String
-        "Referral": str(st.session_state.get(f"p_referral_{fv}", "")).strip(), # String
-        "Diseases": str(diseases_text).strip(), # String - V209 Fix 6 empty by default
-        "ChiefComplaint": str(chief_comp).strip(), # String
-        "PastHistory": str(past_hist).strip(), # String
-        "FamilyHistory": str(family_hist).strip(), # String
-        "Allergy": str(st.session_state.get(f"p_allergy_{fv}", "Select")).strip(), # String
-        "Examination": "", # String
-        "Pulse": str(st.session_state.get(f"v_pulse_{fv}", "Select")).strip(), # String
-        "Temperament": str(st.session_state.get(f"u_temperament_{fv}", "Select")).strip(), # String
-        "BP": str(bp_val).strip(), # String
-        "Weight": str(weight_val).strip(), # String number
-        "Temperature": str(temp_val).strip(), # String number
-        "SingleMedicines": str(st.session_state.get(f"single_meds_{fv}", [])), # String list
-        "FormulaMedicines": str(st.session_state.get(f"formula_meds_{fv}", [])), # String list
-        "Fees": float(f), # Float type for AI
-        "MedicineCharges": float(m), # Float
-        "Total": float(f+m), # Float
-        "Paid": float(p), # Float
-        "Balance": float(balance), # Float
-        "PrevBalance": float(prev_bal), # Float
-        "PaymentMethod": str(pay_method).strip(), # String
-        "FeeStatus": str(status).strip(), # String
-        "RevisitDate": "", # String date
-        "ClinicName": str(st.session_state.clinic_name).strip(),
-        "CreatedBy": str(st.session_state.username).strip(),
-        "Timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "AppVersion": str(APP_VERSION),
-        "DailyNumber": int(daily_num),
-        "TotalNumber": int(total_num),
-        "GrandTotal": float(grand_total),
-      }
-      # V200.10 FIX 3b: Ensure Age/Gender Qs are saved to sheet
-      try:
-        for k in list(st.session_state.keys()):
-          if k.startswith(f"age_q_") and k.endswith(f"_{fv}"):
-            clean_key = k.replace(f"_{fv}", "")
-            val = st.session_state.get(k, "")
-            if val and str(val).strip().lower() not in ['select','']:
-              data_dict[clean_key] = str(val).strip()
-      except Exception as e:
-        pass
-      # V209.6.12: Save to New_patient + if revisit also to Revisit sheet
-      ok,msg=save_patient(data_dict)
-      
-      # If this is a revisit, also save to Revisit sheet
-      if is_revisit:
+        chief_comp = str(st.session_state.get(f"chief_complaint_{fv}", "") or "")
+        past_hist = str(st.session_state.get(f"past_history_{fv}", "") or "")
+        family_hist = str(st.session_state.get(f"family_hist_{fv}", "") or "")
+        bp_val = str(st.session_state.get(f"v_bp_{fv}", "") or "")
+        temp_val = str(st.session_state.get(f"v_temp_{fv}", "") or "")
+        weight_val = str(st.session_state.get(f"v_weight_{fv}", "") or st.session_state.get(f"p_weight_{fv}", "") or "")
+        data_dict={
+          "PatientID": str(pid),
+          "Date": str(__import__('datetime').date.today()),
+          "Name": str(p_name).strip(),
+          "FatherName": str(st.session_state.get(f"p_fname_{fv}", "") or "").strip(),
+          "Age": str(age_val).strip(),
+          "Gender": str(st.session_state.get(f"p_gender_{fv}", "Select") or "Select").strip(),
+          "MaritalStatus": str(st.session_state.get(f"p_marital_{fv}", "Select") or "Select").strip(),
+          "Occupation": str(st.session_state.get(f"p_occupation_{fv}", "Select") or "Select").strip(),
+          "CNIC": str(st.session_state.get(f"p_cnic_{fv}", "") or "").strip(),
+          "Phone": str(st.session_state.get(f"p_phone_{fv}", "") or "").strip(),
+          "EmergencyPhone": str(st.session_state.get(f"p_emergency_{fv}", "") or "").strip(),
+          "Address": str(st.session_state.get(f"p_address_{fv}", "") or "").strip(),
+          "Referral": str(st.session_state.get(f"p_referral_{fv}", "") or "").strip(),
+          "Diseases": str(diseases_text).strip(),
+          "ChiefComplaint": str(chief_comp).strip(),
+          "PastHistory": str(past_hist).strip(),
+          "FamilyHistory": str(family_hist).strip(),
+          "Allergy": str(st.session_state.get(f"p_allergy_{fv}", "Select") or "Select").strip(),
+          "Examination": "",
+          "Pulse": str(st.session_state.get(f"v_pulse_{fv}", "Select") or "Select").strip(),
+          "Temperament": str(st.session_state.get(f"u_temperament_{fv}", "Select") or "Select").strip(),
+          "BP": str(bp_val).strip(),
+          "Weight": str(weight_val).strip(),
+          "Temperature": str(temp_val).strip(),
+          "SingleMedicines": str(st.session_state.get(f"single_meds_{fv}", [])),
+          "FormulaMedicines": str(st.session_state.get(f"formula_meds_{fv}", [])),
+          "Fees": float(f_val),
+          "MedicineCharges": float(m_val),
+          "Total": float(f_val + m_val),
+          "Paid": float(p_val),
+          "Balance": float(balance),
+          "PrevBalance": float(prev_bal),
+          "PaymentMethod": str(pay_method_val).strip(),
+          "FeeStatus": str(status_val).strip(),
+          "RevisitDate": "",
+          "ClinicName": str(st.session_state.get("clinic_name","") or "").strip(),
+          "CreatedBy": str(st.session_state.get("username","") or "").strip(),
+          "Timestamp": __import__('datetime').datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+          "AppVersion": str(APP_VERSION),
+          "DailyNumber": int(daily_num),
+          "TotalNumber": int(total_num),
+          "GrandTotal": float(grand_total),
+        }
         try:
+          for k in list(st.session_state.keys()):
+            if k.startswith(f"age_q_") and k.endswith(f"_{fv}"):
+              clean_key = k.replace(f"_{fv}", "")
+              val = st.session_state.get(k, "")
+              if val and str(val).strip().lower() not in ['select','']:
+                data_dict[clean_key] = str(val).strip()
+        except: pass
+        ok,msg=save_patient(data_dict)
+        if is_revisit:
           try:
             prev_for_sheet = str(st.session_state.revisit_data.get("Diseases","") or "") if st.session_state.revisit_data else ""
-          except:
-            prev_for_sheet = ""
-          cured_for_sheet = " + ".join(st.session_state.get("revisit_cured_diseases", []))
-          remaining_for_sheet = " + ".join(st.session_state.get("revisit_remaining_diseases", []))
-          complaint_with_history = f"Past: {prev_for_sheet} | Cured: {cured_for_sheet} | Remaining: {remaining_for_sheet} | Current: {str(diseases_text).strip()} | Chief: {str(chief_comp).strip()}"
-          revisit_dict = {
-            "RevisitID": f"R{str(pid)}_{str(datetime.date.today())}_{str(int(datetime.datetime.now().timestamp()))[-4:]}",
-            "PatientID": str(pid),
-            "Date": str(datetime.date.today()),
-            "Name": str(p_name).strip(),
-            "Phone": str(st.session_state.get(f"p_phone_{fv}", "")).strip(),
-            "ClinicName": str(st.session_state.clinic_name).strip(),
-            "Complaint": complaint_with_history[:2000],
-            "Prescription": str(st.session_state.get(f"single_meds_{fv}", [])) + " | " + str(st.session_state.get(f"formula_meds_{fv}", [])),
-            "Fees": float(f),
-            "Paid": float(p),
-            "Balance": float(balance),
-            "CreatedBy": str(st.session_state.username).strip()
-          }
-          # Save to Revisit sheet
-          try:
-            ws_rev = get_sheet_safe("Revisit")
-            if ws_rev:
-              hdr_rev = ws_rev.row_values(1)
-              if not hdr_rev or len(hdr_rev) < 5:
-                hdr_rev = SHEET_HEADERS.get("Revisit", list(revisit_dict.keys()))
-              row_rev = []
-              for h in hdr_rev:
-                v = revisit_dict.get(h, "")
-                row_rev.append(str(v) if v is not None else "")
-              ws_rev.append_row(row_rev, value_input_option="RAW")
-              st.session_state["last_revisit_save"] = "Revisit sheet OK"
-          except Exception as e_rev:
-            st.session_state["last_revisit_save"] = f"Revisit save fail: {e_rev}"
-          
-          # Also save to local backup for Revisit
-          save_to_local_csv("Revisit", revisit_dict)
-        except Exception as e:
-          pass
-      
-      # Clear cache after successful save to show new data
-      try:
-        _get_all_records_cached_fast.clear()
-      except:
-        pass
-      
-      if ok:
-        msg_extra = " + Revisit sheet" if is_revisit else ""
-        st.success(f"Saved - PatientID {pid} | Grand Total Rs {grand_total:.0f}{msg_extra} - Form cleared for new entry")
-        st.balloons()
-        st.session_state.form_version+=1
-        st.session_state.prev_balance=0.0
-        st.session_state.revisit_data=None
-        st.session_state.section_opened={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
-        st.session_state.section_unlocked={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
-        st.session_state.force_scroll_to_top = True
-        st.rerun()
-      else:
-        st.warning(f"Local Save - ID {pid} | Grand Total Rs {grand_total:.0f} - {msg}")
-        st.session_state.form_version+=1
-        st.session_state.prev_balance=0.0
-        st.session_state.revisit_data=None
-        st.session_state.section_opened={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
-        st.session_state.section_unlocked={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
-        st.session_state.force_scroll_to_top = True
-        st.rerun()
+            cured_for_sheet = " + ".join(st.session_state.get("revisit_cured_diseases", []))
+            remaining_for_sheet = " + ".join(st.session_state.get("revisit_remaining_diseases", []))
+            complaint_with_history = f"Past: {prev_for_sheet} | Cured: {cured_for_sheet} | Remaining: {remaining_for_sheet} | Current: {str(diseases_text).strip()} | Chief: {str(chief_comp).strip()}"
+            revisit_dict = {
+              "RevisitID": f"R{str(pid)}_{str(__import__('datetime').date.today())}_{str(int(__import__('datetime').datetime.now().timestamp()))[-4:]}",
+              "PatientID": str(pid),
+              "Date": str(__import__('datetime').date.today()),
+              "Name": str(p_name).strip(),
+              "Phone": str(st.session_state.get(f"p_phone_{fv}", "") or "").strip(),
+              "ClinicName": str(st.session_state.get("clinic_name","") or "").strip(),
+              "Complaint": complaint_with_history[:2000],
+              "Prescription": str(st.session_state.get(f"single_meds_{fv}", [])) + " | " + str(st.session_state.get(f"formula_meds_{fv}", [])),
+              "Fees": float(f_val),
+              "Paid": float(p_val),
+              "Balance": float(balance),
+              "CreatedBy": str(st.session_state.get("username","") or "").strip()
+            }
+            try:
+              ws_rev = get_sheet_safe("Revisit")
+              if ws_rev:
+                hdr_rev = ws_rev.row_values(1)
+                if not hdr_rev or len(hdr_rev) < 5:
+                  hdr_rev = list(revisit_dict.keys())
+                row_rev = [str(revisit_dict.get(h,"")) for h in hdr_rev]
+                ws_rev.append_row(row_rev, value_input_option="RAW")
+            except: pass
+            save_to_local_csv("Revisit", revisit_dict)
+          except: pass
+        try:
+          _get_all_records_cached_fast.clear()
+        except: pass
+        if ok:
+          msg_extra = " + Revisit sheet" if is_revisit else ""
+          st.success(f"Saved - PatientID {pid} | Grand Total Rs {grand_total:.0f}{msg_extra} - Form cleared for new entry")
+          st.balloons()
+          st.session_state.form_version+=1
+          st.session_state.prev_balance=0.0
+          st.session_state.revisit_data=None
+          st.session_state.patient_diseases=[]
+          st.session_state.section_opened={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
+          st.session_state.section_unlocked={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
+          st.rerun()
+        else:
+          st.warning(f"Local Save - ID {pid} | Grand Total Rs {grand_total:.0f} - {msg}")
+          st.session_state.form_version+=1
+          st.session_state.prev_balance=0.0
+          st.session_state.revisit_data=None
+          st.session_state.patient_diseases=[]
+          st.session_state.section_opened={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
+          st.session_state.section_unlocked={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
+          st.rerun()
 
 def render_auto_form(prefix, is_home=False):
+
+
   version_key = f"{prefix}_disease_version"
   if version_key not in st.session_state:
     st.session_state[version_key] = 0
