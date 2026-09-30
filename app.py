@@ -1,6 +1,6 @@
-# APP VERSION - V200.8 - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: Load Bug (Optimized Raised CSS no heavy transforms, Light global CSS, Local-first cache 600s, Rows 300/100), Theme Toggle Fixed (Clear cache + re-inject), App Doctor Real Checks (CHECK 9-14: Session Size blind cause, CSS Cache, Theme Toggle, Doctor Speed, Sheet Read, V200.4 Structure), Save below Billing with gap (20px+hr), Save left Back/New right, Revisit Personal Info includes Age/Gender Qs with Prev values - Previous: V200.4 (Version Comment+Raised+Speed+Revisit Info+Related Qs+Previous Diseases Cross), V200.3, V200.2, V200.1, V200 Base from V209.6.12
-# V200.8 - Keeps V200.4 full structure - Raised UI light version - Previous diseases cross - Disease related Qs - Plus 6 fixes
-# Previous: V200.4, V200.3, V200.2, V200.1, V200, V209.6.12
+# APP VERSION - V200.9 - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- No Fade on Button Click (Removed all transitions/animations, Removed unconditional force_scroll_to_top in top_nav_inner), 2- Dark Line below User/Theme/Lang icons on inner pages (3px solid #1B5E20 with shadow) to separate from content, 3a- Age/Gender Related Qs merged directly with Personal Info (below 6 fields), 3b- Additional Personal Details BELOW Age/Gender Qs, 3c- Revisit shows previous Age/Gender history like other personal info (3-column history cards) - Previous: V200.8 V200.4 Structure+Load Fixed+Theme Toggle+Doctor+Save Layout+Age-Gender, V200.4, V200.3, V200.2, V200.1
+# V200.9 - V200.4 Structure preserved - Previous diseases cross - Disease related Qs - Plus fade, dark line, revisit restructuring
+# Previous: V200.8, V200.4, V200.3, V200.2, V200.1
 
 
 import streamlit as st
@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.8 - V200.4 Structure+Load Fixed+Theme Toggle+Doctor+Save Layout+Age-Gender"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.9 - V200.4 Structure+No Fade+Dark Line+Revisit Age-Gender Merged"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -41,65 +41,60 @@ if "theme" not in st.session_state:
 
 @st.cache_data(show_spinner=False, ttl=3600)
 def get_theme_css_cached(theme):
-    # V200.4 Optimized - Raised look but LIGHT - No heavy transforms for speed, keeps V200.4 structure
+    # V200.9 - FIX 1: No fade on button click - removed all transitions, no transform
     raised = """
-        /* V200.4 Optimized RAISED - Light but still raised */
+        /* V200.9 - No Fade Fix - Zero transitions */
+        html, .stApp, [data-testid="stAppViewContainer"] { transition: none!important; animation: none!important; }
         div[data-baseweb="tab-list"] { gap: 8px; padding: 4px; }
         div[data-baseweb="tab"] {
             background: #FFFFFF!important;
             border: 2px solid #A8CCAD!important;
             border-radius: 12px!important;
-            box-shadow: 0 3px 10px rgba(46,125,91,0.15)!important;
+            box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important;
             font-weight: 700!important;
             padding: 8px 16px!important;
-        }
-        div[data-baseweb="tab"]:hover {
-            box-shadow: 0 5px 14px rgba(46,125,91,0.22)!important;
-            border-color: #2E7D5B!important;
-            background: #F1F7F3!important;
+            transition: none!important;
         }
         div[data-baseweb="tab"][aria-selected="true"] {
             background: #2E7D5B!important;
             color: white!important;
             border-color: #1B5E20!important;
-            border-width: 2.5px!important;
-            box-shadow: 0 4px 12px rgba(46,125,91,0.30)!important;
         }
         div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
             background: #FFFFFF!important;
             border: 2px solid #A8CCAD!important;
             border-radius: 10px!important;
-            box-shadow: 0 2px 8px rgba(46,125,91,0.10)!important;
-        }
-        div[data-baseweb="input"]:focus-within, div[data-baseweb="select"]:focus-within {
-            border-color: #2E7D5B!important;
-            box-shadow: 0 4px 12px rgba(46,125,91,0.18)!important;
+            box-shadow: 0 1px 4px rgba(46,125,91,0.08)!important;
+            transition: none!important;
         }
         .stButton > button {
             background: #FFFFFF!important;
             border: 2px solid #A8CCAD!important;
             border-radius: 10px!important;
-            box-shadow: 0 3px 10px rgba(46,125,91,0.14)!important;
+            box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important;
             font-weight: 700!important;
             padding: 6px 14px!important;
+            transition: none!important;
+            animation: none!important;
         }
-        .stButton > button:hover {
-            box-shadow: 0 5px 14px rgba(46,125,91,0.24)!important;
-            border-color: #2E7D5B!important;
-            background: #F1F7F3!important;
+        .stButton > button:active, .stButton > button:focus {
+            transform: none!important;
+            box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important;
         }
         .stButton > button[kind="primary"] {
             background: #2E7D5B!important;
             color: white!important;
             border-color: #1B5E20!important;
-            box-shadow: 0 4px 12px rgba(46,125,91,0.28)!important;
         }
         div[data-testid="stVerticalBlockBorderWrapper"] {
             background: #FFFFFF!important;
             border: 2px solid #C8E6D5!important;
             border-radius: 14px!important;
-            box-shadow: 0 4px 12px rgba(46,125,91,0.10)!important;
+            box-shadow: 0 2px 8px rgba(46,125,91,0.08)!important;
+            transition: none!important;
         }
+        /* Prevent Streamlit fade overlay */
+        [data-testid="stStatusWidget"], [data-testid="stSpinner"] { transition: none!important; }
         """
     if theme == "dim":
         return raised + """
@@ -631,6 +626,8 @@ def language_selector():
         st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
     with c_spacer:
         st.markdown("")
+    # V200.9 FIX 2: Dark line for dashboard top bar also
+    st.markdown("<hr style='margin:8px 0 14px 0; border:0; border-top:3px solid #1B5E20;'>", unsafe_allow_html=True)
 
 def clinic_heading_banner():
     user_h2 = get_user_display_h2()
@@ -656,7 +653,7 @@ def clinic_heading_banner_compact():
 
 
 def top_bar_inner_with_user():
-    """V200.2 SPEED FIX: Ultra-light inner top bar - No components.html"""
+    """V200.9 FIX 2: Dark line below user/theme/lang to separate from page"""
     st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
     uname = st.session_state.get("username","User")
     c_user, c_spacer, c_theme, c_lang, c_lang_text = st.columns([3,2,1,1,1])
@@ -692,6 +689,8 @@ def top_bar_inner_with_user():
         st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
     with c_spacer:
         st.markdown("")
+    # V200.9 FIX 2: Dark line to separate top bar from page content
+    st.markdown("<hr style='margin:10px 0 16px 0; border:0; border-top:3px solid #1B5E20; box-shadow: 0 2px 4px rgba(0,0,0,0.15);'>", unsafe_allow_html=True)
 
 def clinic_heading_banner_dashboard_only():
     """V209.6 Task 2: Dashboard box - 2 lines, 3rd line Welcome big heading, 4th line user name"""
@@ -711,7 +710,7 @@ def clinic_heading_banner_dashboard_only():
 
 def top_nav_inner():
     scroll_to_top()
-    st.session_state.force_scroll_to_top = True
+    # V200.9 FIX 1b: Removed unconditional force_scroll which causes fade
     c1,c2=st.columns([1,1])
     with c1:
         if st.button("Back", key=f"back_{st.session_state.current_page}_v172"):
@@ -1887,8 +1886,7 @@ def render_patient_form(is_revisit=False):
 
     with st.container(border=True):
         st.markdown("<div class='heading-h4'>Personal Information</div>", unsafe_allow_html=True)
-        # V209 Fix 5: Phone in first 6 fields, Occupation moved to Additional
-        # First 6 fields: Name, Father, Gender, Age, Phone, Address - all with data type validation
+        # V200.9 FIX 3a: Personal Info - 6 fields + Age/Gender merged directly below (V200.4 structure)
         c1,c2,c3=st.columns(3)
         with c1:
             st.text_input("Patient's Name *", key=f"p_name_{fv}", value=get_prefill("Name",""), placeholder="Patient's Name - Text only")
@@ -1897,23 +1895,82 @@ def render_patient_form(is_revisit=False):
             st.selectbox("Gender *", LISTS["gender"], key=f"p_gender_{fv}")
             st.text_input("Age *", key=f"p_age_{fv}", value=get_prefill("Age",""), placeholder="Age - Number e.g., 35")
         with c3:
-            # V209.4 Task 5: Phone with required data type validation - Numbers only
             st.text_input("Phone *", key=f"p_phone_{fv}", value=get_prefill("Phone",""), placeholder="Phone - 03XX-XXXXXXX (Numbers only)", help="Enter phone number with digits only, e.g., 03001234567 - Required data type: Numeric String")
             st.text_input("Address", key=f"p_address_{fv}", value=get_prefill("Address",""), placeholder="Address - Text")
 
-        # Hidden fields - show only when Additional Information clicked
+        # V200.9 FIX 3a+3c: Age/Gender Related Questions - Directly merged with Personal Information
+        # This is part of Personal Information, shown right below the 6 fields
+        try:
+            cur_age = st.session_state.get(f"p_age_{fv}","") or get_prefill("Age","")
+            cur_gender = st.session_state.get(f"p_gender_{fv}","") or get_prefill("Gender","")
+            age_qs = get_age_based_questions(cur_age, cur_gender)
+            if age_qs:
+                st.markdown("<hr style='margin:12px 0; border:1px solid #C8E6D5;'>", unsafe_allow_html=True)
+                st.markdown(f"<div class='heading-h5'>Age/Gender Related - Part of Personal Info (Age: {cur_age} / Gender: {cur_gender})</div>", unsafe_allow_html=True)
+                if is_revisit:
+                    # V200.9 FIX 3c: Show previous history like other personal info
+                    st.markdown("<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:10px;margin-bottom:10px;'><b>📋 Previous Age/Gender History (Physician View):</b></div>", unsafe_allow_html=True)
+                    # Collect all age/gender related history from revisit_data
+                    hist_cols = st.columns(3)
+                    hist_count = 0
+                    for k in st.session_state.revisit_data.keys() if st.session_state.revisit_data else []:
+                        lk = k.lower()
+                        if any(x in lk for x in ['female_', 'male_', 'child_', 'menarche', 'cycle', 'flow', 'preg', 'miscarriage', 'contraception', 'leucorrhoea', 'menopause', 'hrt', 'puberty', 'voice', 'beard', 'marital_effect', 'sexual', 'nightfall', 'prostate', 'urine_weak', 'erectile', 'birth', 'vaccination', 'school', 'growth', 'age_q_', 'occupation', 'marital', 'blood', 'height', 'weight', 'allergy', 'habits', 'sleep', 'appetite', 'bowel', 'temperament', 'bp', 'temperature', 'pulse']):
+                            val = str(st.session_state.revisit_data.get(k,'')).strip()
+                            if val and val.lower() not in ['select', '']:
+                                col = hist_cols[hist_count % 3]
+                                with col:
+                                    st.markdown(f"<div style='background:#FFFFFF;border:1.5px solid #C8E6D5;border-radius:8px;padding:6px;margin:3px 0;font-size:12px;'><b>{k}:</b> {val[:50]}</div>", unsafe_allow_html=True)
+                                hist_count += 1
+                    if hist_count == 0:
+                        st.caption("No previous Age/Gender history found - will collect now")
+                    st.markdown("<hr style='margin:8px 0; border:1px dashed #A8CCAD;'>", unsafe_allow_html=True)
+                    st.markdown("<div style='font-size:13px;font-weight:700;color:#2E7D5B;margin-bottom:6px;'>Current Age/Gender Questions - Update below:</div>", unsafe_allow_html=True)
+                cols = st.columns(3)
+                for idx, (q_label, q_type, q_key) in enumerate(age_qs):
+                    col = cols[idx % 3]
+                    with col:
+                        prev_val = ""
+                        if is_revisit and st.session_state.revisit_data:
+                            prev_val = str(st.session_state.revisit_data.get(q_key,"") or st.session_state.revisit_data.get(q_label,"") or "")
+                        if isinstance(q_type, list):
+                            default_idx = 0
+                            if prev_val and prev_val in q_type:
+                                default_idx = q_type.index(prev_val)
+                            st.selectbox(q_label, q_type, key=f"age_q_{q_key}_{fv}", index=default_idx)
+                        else:
+                            st.text_input(q_label, key=f"age_q_{q_key}_{fv}", value=prev_val)
+            else:
+                if is_revisit and (cur_age or cur_gender):
+                    st.markdown("<hr style='margin:12px 0; border:1px solid #C8E6D5;'>", unsafe_allow_html=True)
+                    st.caption(f"Age {cur_age} / Gender {cur_gender} - No extra Age/Gender Qs for this combination")
+                    # Still show previous history even if no current Qs
+                    if st.session_state.revisit_data:
+                        st.markdown("<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:8px;margin-top:8px;'><b>Previous Age/Gender History:</b></div>", unsafe_allow_html=True)
+                        hist_found = False
+                        for k in st.session_state.revisit_data.keys():
+                            if any(x in k.lower() for x in ['female_', 'male_', 'child_', 'menarche', 'cycle', 'age_q_']):
+                                val = str(st.session_state.revisit_data.get(k,'')).strip()
+                                if val and val.lower() not in ['select','']:
+                                    st.caption(f"{k}: {val}")
+                                    hist_found = True
+                        if not hist_found:
+                            st.caption("No previous Age/Gender history")
+        except Exception as e:
+            st.caption(f"Age/Gender Qs: {str(e)[:80]}")
+
+        # V200.9 FIX 3b: Additional Personal Details BELOW Age/Gender Related Questions
         show_extra_key = f"show_extra_personal_{fv}"
         if show_extra_key not in st.session_state:
             st.session_state[show_extra_key] = False
         
+        st.markdown("<hr style='margin:12px 0; border:1px solid #E8F5E9;'>", unsafe_allow_html=True)
         if not st.session_state[show_extra_key]:
-            if st.button("Additional Information ⬇️", key=f"add_info_btn_{fv}_v197", type="secondary"):
+            if st.button("Additional Personal Details ⬇️ (After Age/Gender Qs)", key=f"add_info_btn_{fv}_v200_9", type="secondary"):
                 st.session_state[show_extra_key] = True
                 st.rerun()
         else:
-            st.markdown("---")
-            st.markdown("<div class='heading-h5'>Additional Personal Details (Hidden by default)</div>", unsafe_allow_html=True)
-            # V209 Fix 5: Additional Personal Details - Hidden by default, not required for AI, Occupation here
+            st.markdown("<div class='heading-h5'>Additional Personal Details (Below Age/Gender Qs - Hidden by default)</div>", unsafe_allow_html=True)
             c1,c2,c3=st.columns(3)
             with c1:
                 st.selectbox("Blood Group", LISTS["blood_group"], key=f"p_blood_{fv}")
@@ -1928,43 +1985,9 @@ def render_patient_form(is_revisit=False):
                 st.text_input("Emergency Phone", key=f"p_emergency_{fv}", placeholder="Emergency Phone - Number")
                 st.text_input("Referral", key=f"p_referral_{fv}", placeholder="Referral - Text")
                 st.selectbox("Allergy", LISTS["allergy"], key=f"p_allergy_{fv}")
-            if st.button("Hide Additional Information ⬆️", key=f"hide_extra_{fv}_v197"):
+            if st.button("Hide Additional Details ⬆️", key=f"hide_extra_{fv}_v200_9"):
                 st.session_state[show_extra_key] = False
                 st.rerun()
-
-        # V200.8 FIX 2: Age/Gender related questions as part of Personal Information - For Revisit also
-        try:
-            cur_age = st.session_state.get(f"p_age_{fv}","") or get_prefill("Age","")
-            cur_gender = st.session_state.get(f"p_gender_{fv}","") or get_prefill("Gender","")
-            age_qs = get_age_based_questions(cur_age, cur_gender)
-            if age_qs:
-                st.markdown("<hr style='margin:10px 0; border:1px solid #E8F5E9;'>", unsafe_allow_html=True)
-                st.markdown(f"<div class='heading-h5'>Age/Gender Related Questions - Personal Info Part (Age: {cur_age} / Gender: {cur_gender})</div>", unsafe_allow_html=True)
-                if is_revisit:
-                    st.markdown("<div style='background:#FFF3E0;border:1.5px solid #FF9800;border-radius:8px;padding:6px;font-size:12px;margin-bottom:6px;'>Revisit - یہ سوالات Personal Information کا حصہ ہیں - پرانی معلومات نیچے دکھائی گئی ہیں</div>", unsafe_allow_html=True)
-                cols = st.columns(3)
-                for idx, (q_label, q_type, q_key) in enumerate(age_qs):
-                    col = cols[idx % 3]
-                    with col:
-                        prev_val = ""
-                        if is_revisit and st.session_state.revisit_data:
-                            prev_val = str(st.session_state.revisit_data.get(q_key,"") or st.session_state.revisit_data.get(q_label,"") or "")
-                        if isinstance(q_type, list):
-                            default_idx = 0
-                            if prev_val and prev_val in q_type:
-                                default_idx = q_type.index(prev_val)
-                            st.selectbox(q_label, q_type, key=f"age_q_{q_key}_{fv}", index=default_idx)
-                            if prev_val and is_revisit:
-                                st.caption(f"Prev: {prev_val}")
-                        else:
-                            st.text_input(q_label, key=f"age_q_{q_key}_{fv}", value=prev_val)
-                            if prev_val and is_revisit:
-                                st.caption(f"Prev: {prev_val}")
-            else:
-                if is_revisit and (cur_age or cur_gender):
-                    st.caption(f"Revisit Age {cur_age} / Gender {cur_gender} - No extra Qs for this combo, but basic info shown above")
-        except Exception as e:
-            st.caption(f"Age/Gender Qs: {str(e)[:80]}")
         section_ok("personal", is_revisit=is_revisit)
 
     with st.container(border=True):
