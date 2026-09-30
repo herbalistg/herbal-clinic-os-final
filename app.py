@@ -1,4 +1,4 @@
-# APP VERSION - V200.14 - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# APP VERSION - V200.15 - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.14 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.15 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -2485,7 +2485,8 @@ def render_auto_form(prefix, is_home=False):
         return str(sel.get(field,"") or default)
       return st.session_state.get(f"{prefix}_name_v172","") if field=="Name" else default
 
-    # V197 Requirement 2: Only 6 fields visible by default
+    # V200.15 FIX 1a: Phone, Blood Group, Marital Status NOT hidden - included in Personal Info visible
+    # V200.15 FIX 1b: Address, Height, Weight, Habits NOT required - moved to Additional Personal Details hidden
     c1,c2,c3=st.columns(3)
     with c1:
       p_name_val = ""
@@ -2493,52 +2494,51 @@ def render_auto_form(prefix, is_home=False):
         p_name_val = st.session_state.get(selected_key).get("Name","")
       p_name=st.text_input("Patient's Name *", value=p_name_val, key=f"{prefix}_name_v197")
       p_father=st.text_input("Spouse/Father's Name", key=f"{prefix}_father_v197")
+      # Phone visible per 1a
+      p_phone_default = ""
+      if st.session_state.get(selected_key) and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
+        p_phone_default = st.session_state.get(selected_key).get("Phone","")
+      p_phone=st.text_input("Phone *", value=p_phone_default, key=f"{prefix}_phone_v197", placeholder="03XX-XXXXXXX")
     with c2:
       p_gender=st.selectbox("Gender *", LISTS["gender"], key=f"{prefix}_gender_v197")
-      p_age=st.text_input("Age *", key=f"{prefix}_age_v197")
+      p_age=st.text_input("Age *", key=f"{prefix}_age_v197", placeholder="Age e.g. 35")
+      # Blood Group visible per 1a
+      p_blood=st.selectbox("Blood Group", LISTS["blood_group"], key=f"{prefix}_blood_v197")
     with c3:
       occ_list = LISTS.get("occupation", ["Select","Student","Teacher","Farmer","Shopkeeper","Laborer","Driver","Housewife","Business","Engineer","Government Job","Private Job","Retired","Unemployed","Other"])
       p_occupation=st.selectbox("Occupation", occ_list, key=f"{prefix}_occ_v197")
-      p_address=st.text_input("Address", key=f"{prefix}_addr_v197")
+      # Marital Status visible per 1a
+      p_marital=st.selectbox("Marital Status", LISTS["marital"], key=f"{prefix}_marital_v197")
 
-    # Hidden fields - Additional Information button
+    # Hidden fields - Additional Personal Details (Address, Height, Weight, Habits) per 1b
     show_extra_key = f"show_extra_auto_{prefix}"
     if show_extra_key not in st.session_state:
       st.session_state[show_extra_key] = False
     
     if not st.session_state[show_extra_key]:
-      if st.button("Additional Information ⬇️", key=f"auto_add_info_{prefix}_v197"):
+      if st.button("Additional Personal Details (Hidden by default) ⬇️", key=f"auto_add_info_{prefix}_v200_15"):
         st.session_state[show_extra_key] = True
         st.rerun()
     else:
       st.markdown("---")
-      st.markdown("<div class='heading-h5'>Additional Personal Details (Hidden by default)</div>", unsafe_allow_html=True)
+      st.markdown("<div class='heading-h5'>Additional Personal Details (Hidden by default) - Address, Height, Weight, Habits not required</div>", unsafe_allow_html=True)
       c1,c2,c3=st.columns(3)
       with c1:
-        p_blood=st.selectbox("Blood Group", LISTS["blood_group"], key=f"{prefix}_blood_v197")
-        p_height=st.text_input("Height", key=f"{prefix}_height_v197", placeholder="e.g., 5.6 ft")
+        p_address=st.text_input("Address (Optional)", key=f"{prefix}_addr_v197", placeholder="Address optional")
+        p_height=st.text_input("Height (Optional)", key=f"{prefix}_height_v197", placeholder="e.g., 5.6 ft")
       with c2:
-        p_phone_default = ""
-        if st.session_state.get(selected_key) and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
-          p_phone_default = st.session_state.get(selected_key).get("Phone","")
-        p_phone=st.text_input("Phone *", value=p_phone_default, key=f"{prefix}_phone_v197")
-        p_weight=st.text_input("Weight", key=f"{prefix}_weight_v197", placeholder="e.g., 70 kg")
+        p_weight=st.text_input("Weight (Optional)", key=f"{prefix}_weight_v197", placeholder="e.g., 70 kg")
       with c3:
-        p_marital=st.selectbox("Marital Status", LISTS["marital"], key=f"{prefix}_marital_v197")
-        p_habits=st.text_input("Habits", key=f"{prefix}_habits_v197")
-      if st.button("Close Additional Information ✕", type="secondary", key=f"auto_hide_{prefix}_v197"):
+        p_habits=st.text_input("Habits (Optional)", key=f"{prefix}_habits_v197", placeholder="e.g., Smoking, Tea")
+      if st.button("Close Additional Details ✕", type="secondary", key=f"auto_hide_{prefix}_v200_15"):
         st.session_state[show_extra_key] = False
         st.rerun()
     
-    # Ensure variables exist for OK check even if hidden
-    if show_extra_key in st.session_state and not st.session_state[show_extra_key]:
-      # Set defaults for hidden fields to avoid NameError in OK check
-      p_blood = st.session_state.get(f"{prefix}_blood_v197", "Select")
-      p_phone = st.session_state.get(f"{prefix}_phone_v197", p_phone_default if 'p_phone_default' in locals() else "")
-      p_height = st.session_state.get(f"{prefix}_height_v197", "")
-      p_weight = st.session_state.get(f"{prefix}_weight_v197", "")
-      p_marital = st.session_state.get(f"{prefix}_marital_v197", "Select")
-      p_habits = st.session_state.get(f"{prefix}_habits_v197", "")
+    # Ensure variables exist
+    p_address = st.session_state.get(f"{prefix}_addr_v197", "")
+    p_height = st.session_state.get(f"{prefix}_height_v197", "")
+    p_weight = st.session_state.get(f"{prefix}_weight_v197", "")
+    p_habits = st.session_state.get(f"{prefix}_habits_v197", "")
 
     # Age-based questions
     try:
@@ -2616,8 +2616,8 @@ def render_auto_form(prefix, is_home=False):
       with cq3:
         rq3_val = st.text_input(related_qs[2] if len(related_qs)>2 else "Associated Symptom", key=f"{prefix}_rel_q3_v197", placeholder="e.g., Nausea")
 
-    # V204 Requirement 7 Fix: Add Disease + works, accumulates to Added Diseases, clears selection fields
-    if st.button("Add Disease +", key=f"{prefix}_add_v204", type="secondary", use_container_width=True):
+    # V200.15 FIX 2: Add Disease functional for Home treatment - fixed key and logic
+    if st.button("Add Disease +", key=f"{prefix}_add_v200_15", type="secondary", use_container_width=True):
       bp = st.session_state.get(f"{prefix}_body_part_v197", "Select")
       dis = st.session_state.get(f"{prefix}_disease_sub_v197", "Select")
       no_val = st.session_state.get(f"{prefix}_no_v197", "").strip()
@@ -2748,28 +2748,103 @@ def render_auto_form(prefix, is_home=False):
     st.warning("Please complete Additional Information and click OK to enable Proceed")
     return p_name, p_father, p_age, p_phone, p_gender, p_address, diseases_list
 
-  if st.button("Proceed", type="primary", use_container_width=True, key=f"{prefix}_proceed_v172"):
-    # V172: Fix duplicate save - save only here, not on every render
+  # V200.15 FIX 1c: Additional Questions BEFORE Proceed button
+  st.markdown("---")
+  st.markdown("<div class='heading-h4'>Additional Questions</div>", unsafe_allow_html=True)
+  with st.container(border=True):
     try:
+      add_qs = get_additional_patient_questions()
+      cols = st.columns(3)
+      for idx, (q_label, q_type, q_key) in enumerate(add_qs):
+        col = cols[idx % 3]
+        with col:
+          if isinstance(q_type, list):
+            st.selectbox(q_label, q_type, key=f"auto_add_q_{q_key}_{prefix}_v200_15")
+          else:
+            st.text_input(q_label, key=f"auto_add_q_{q_key}_{prefix}_v200_15")
+    except Exception as e:
+      st.caption(f"Additional Questions: {e}")
+
+  # V200.15 FIX 1c: Proceed button below Additional Questions
+  st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
+  if st.button("Proceed - Get Temperament & Diet Advice", type="primary", use_container_width=True, key=f"{prefix}_proceed_v200_15"):
+    # V200.15 FIX 1e: Extract temperament from form fields and suggest Diet, Restrictions, Instructions - other fields locked
+    try:
+      # Extract temperament from sleep, appetite, thirst, bowel, etc
+      hot_score = 0
+      cold_score = 0
+      dry_score = 0
+      wet_score = 0
+      
+      # Sleep
+      if sleep_pat in ["Less", "Disturbed", "Less / Disturbed"]: hot_score += 1; dry_score += 1
+      if sleep_pat in ["Excess", "Deep", "Excess / Deep"]: cold_score += 1; wet_score += 1
+      # Appetite
+      if appetite_pat in ["High", "Excessive"]: hot_score += 1
+      if appetite_pat in ["Low", "Less"]: cold_score += 1
+      # Thirst
+      thirst_val = st.session_state.get(f"{prefix}_thirst_v172", "Select")
+      if thirst_val in ["Excess", "High"]: hot_score += 1; dry_score += 1
+      if thirst_val in ["Less", "Low"]: cold_score += 1
+      # Bowel
+      if bowel in ["Constipated", "Dry"]: dry_score += 1; cold_score += 1
+      if bowel in ["Loose", "Watery"]: wet_score += 1
+      # Urine
+      urine_val = st.session_state.get(f"{prefix}_urine_v172", "Select")
+      if urine_val in ["Burning", "Yellow"]: hot_score += 1
+      if urine_val in ["Frequent", "Excess"]: wet_score += 1
+      # Sweat
+      sweat_val = st.session_state.get(f"{prefix}_sweat_v172", "Select")
+      if sweat_val == "Excess": hot_score += 1; wet_score += 1
+      if sweat_val == "Less": cold_score += 1; dry_score += 1
+      # Energy
+      energy_val = st.session_state.get(f"{prefix}_energy_v172", "Select")
+      if energy_val == "High": hot_score += 1
+      if energy_val == "Low": cold_score += 1
+      
+      # Determine temperament
+      if hot_score > cold_score and dry_score >= wet_score:
+        temperament = "Hot & Dry (Garam Khushk)"
+        diet = "Cool & Moist foods: Cucumber, Yogurt, Watermelon, Milk, Cucumber raita, Fresh juices, Water intake 8-10 glasses, Avoid spicy, fried, hot foods"
+        restrictions = "Avoid: Spicy foods, Red meat excess, Fried foods, Pickles, Chilli, Garlic excess, Hot spices, Alcohol, Caffeine excess"
+        instructions = "1. Drink plenty of water\n2. Eat cooling foods\n3. Avoid heat exposure\n4. Sleep 7-8 hours\n5. Light exercise morning/evening\n6. Use rose water, sandal for cooling"
+      elif hot_score > cold_score and wet_score > dry_score:
+        temperament = "Hot & Wet (Garam Tar)"
+        diet = "Cool & Dry foods: Barley, Lentils, Pomegranate, Apple, Green leafy vegetables, Light foods, Avoid heavy, oily, sweet foods"
+        restrictions = "Avoid: Heavy oily foods, Excess sweets, Dairy excess, Red meat heavy, Fried foods"
+        instructions = "1. Light diet\n2. Regular exercise\n3. Avoid overeating\n4. Fresh air\n5. Early dinner\n6. Avoid humid environment"
+      elif cold_score >= hot_score and wet_score >= dry_score:
+        temperament = "Cold & Wet (Sard Tar)"
+        diet = "Hot & Dry foods: Honey, Ginger, Dry fruits, Dates, Chicken soup, Warm milk with honey, Garlic, Hot spices in moderation"
+        restrictions = "Avoid: Cold water, Ice cream, Cold drinks, Cucumber excess, Yogurt excess, Heavy cold foods"
+        instructions = "1. Warm foods\n2. Ginger tea\n3. Keep body warm\n4. Light exercise to generate heat\n5. Avoid cold exposure\n6. Sunlight exposure morning"
+      else:
+        temperament = "Cold & Dry (Sard Khushk)"
+        diet = "Hot & Wet foods: Soups, Milk, Ghee in moderation, Dates, Almonds, Chicken, Eggs, Warm foods, Honey, Sesame"
+        restrictions = "Avoid: Dry foods, Cold foods, Bitter foods, Excess fasting, Dry beans excess"
+        instructions = "1. Moist & warm foods\n2. Oil massage\n3. Adequate sleep\n4. Avoid dry cold air\n5. Warm milk at night\n6. Keep hydrated with warm fluids"
+      
+      # Save to session for display
+      st.session_state[f"{prefix}_temperament_result"] = temperament
+      st.session_state[f"{prefix}_diet_result"] = diet
+      st.session_state[f"{prefix}_restrictions_result"] = restrictions
+      st.session_state[f"{prefix}_instructions_result"] = instructions
+      
       new_id = get_next_auto_id()
       ws=get_sheet_safe("AutoDiagnosis")
       if ws:
         diseases_str = " + ".join([d.get("text","") for d in (st.session_state.home_auto_diseases if is_home else st.session_state.auto_diseases)])
-        # Phone matching already validated for Home User
-        ws.append_row([f"AUTO{new_id}", f"AUTO{new_id}", str(datetime.date.today()), p_name, p_father, p_age, p_phone, p_gender, p_address, diseases_str, extra_symptoms + f" | Sleep:{sleep_pat} Appetite:{appetite_pat} Bowel:{bowel}", "N/A", st.session_state.clinic_name, st.session_state.username, APP_VERSION, 0], value_input_option="RAW")
+        ws.append_row([f"AUTO{new_id}", f"AUTO{new_id}", str(__import__('datetime').date.today()), p_name, p_father, p_age, p_phone, p_gender, p_address, diseases_str, extra_symptoms + f" | Sleep:{sleep_pat} Appetite:{appetite_pat} Bowel:{bowel} Temperament:{temperament}", "N/A", st.session_state.clinic_name, st.session_state.username, APP_VERSION, 0], value_input_option="RAW")
         get_all_records_cached.clear()
-      st.success(f"Proceed completed for {p_name} - ID AUTO{new_id} - {APP_VERSION}")
+      st.success(f"Proceed completed for {p_name} - Temperament: {temperament} - ID AUTO{new_id}")
       st.balloons()
     except Exception as e:
-      st.warning(f"Proceed saved locally - {e}")
+      st.warning(f"Proceed saved locally - {e} - {str(e)[:200]}")
 
-    # V172: Reset to default state for new patient entry
     if is_home:
       st.session_state.show_home_proceed_note = True
     else:
       st.session_state.show_proceed_note = True
-
-    # Clear form for new entry after short delay - set flags to reset
     st.session_state[personal_ok_key] = False
     st.session_state[diseases_ok_key] = False
     st.session_state[additional_ok_key] = False
@@ -2778,46 +2853,45 @@ def render_auto_form(prefix, is_home=False):
       st.session_state.home_auto_diseases = []
     else:
       st.session_state.auto_diseases = []
-    # Clear text inputs by incrementing form version
     st.session_state.form_version += 1
     st.rerun()
 
-  # V204 Requirement 6: Additional Questions BEFORE Proceed tab
-  try:
-    st.markdown("---")
-    st.markdown("<div class='heading-h4'>Additional Questions</div>", unsafe_allow_html=True)
-    with st.container(border=True):
-      add_qs = get_additional_patient_questions()
-      cols = st.columns(3)
-      for idx, (q_label, q_type, q_key) in enumerate(add_qs):
-        col = cols[idx % 3]
-        with col:
-          if isinstance(q_type, list):
-            st.selectbox(q_label, q_type, key=f"auto_add_q_{q_key}_{prefix}_v204_end")
-          else:
-            st.text_input(q_label, key=f"auto_add_q_{q_key}_{prefix}_v204_end")
-  except:
-    pass
-
-  # V204 Requirement 6: Proceed tab below Additional Questions
-
-
-  show_note = st.session_state.show_home_proceed_note if is_home else st.session_state.show_proceed_note
+  # V200.15 FIX 1d: Note visible - white text on dark, not black on black
+  show_note = st.session_state.get(f"{'show_home_proceed_note' if is_home else 'show_proceed_note'}", False)
   if show_note:
     st.markdown("---")
-    st.markdown("""
-    <div style="background:#1a1c23;border-left:4px solid #ff0000;padding:14px;border-radius:10px;margin:16px 0;">
-      <b>Note!</b> These results are not final; work on them is currently in progress. You will be notified soon once the work is complete.
+    # V200.15 FIX 1d: Clear visible note - white/yellow text on dark background, not black on black
+    temperament = st.session_state.get(f"{prefix}_temperament_result", "Not calculated")
+    diet = st.session_state.get(f"{prefix}_diet_result", "")
+    restrictions = st.session_state.get(f"{prefix}_restrictions_result", "")
+    instructions = st.session_state.get(f"{prefix}_instructions_result", "")
+    
+    st.markdown(f"""
+    <div style="background: linear-gradient(135deg,#1a1c23,#2d3748);border:2px solid #FFD700;border-left:6px solid #ff0000;padding:18px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.5);">
+      <div style="color:#FFD700;font-size:18px;font-weight:900;margin-bottom:8px;">Note! These results are not final; work on them is currently in progress. You will be notified soon once the work is complete.</div>
+      <div style="color:#FFFFFF;font-size:14px;margin-top:10px;">Your temperament has been calculated from form fields. Diet suggestions are preliminary.</div>
+      <div style="color:#00E676;font-size:16px;font-weight:800;margin-top:12px;">Temperament: {temperament}</div>
     </div>
     """, unsafe_allow_html=True)
-    st.markdown("<div class='heading-h4'>Results - (Coming Soon)</div>", unsafe_allow_html=True)
+    
+    # V200.15 FIX 1e: Show Diet, Restrictions, Instructions extracted from temperament - other fields locked
+    st.markdown("<div class='heading-h4'>Results - Based on Temperament from Form Fields</div>", unsafe_allow_html=True)
     with st.container(border=True):
-      st.text_area("1. Diet", value="", disabled=True, key=f"{prefix}_diet_inactive_v172", placeholder="Inactive")
-      st.text_area("2. Dietary Restrictions", value="", disabled=True, key=f"{prefix}_diet_rest_inactive_v172", placeholder="Inactive")
-      st.text_area("3. Medications", value="", disabled=True, key=f"{prefix}_meds_inactive_v172", placeholder="Inactive")
-      st.text_area("4. Instructions", value="", disabled=True, key=f"{prefix}_instr_inactive_v172", placeholder="Inactive")
-      st.text_area("5. Follow-up Examination", value="", disabled=True, key=f"{prefix}_followup_inactive_v172", placeholder="Inactive")
-    if st.button("Start New Entry", key=f"{prefix}_new_entry_v172"):
+      # 1. Diet - from temperament
+      st.markdown("<div class='heading-h5'>1. Diet (Suggested per Temperament)</div>", unsafe_allow_html=True)
+      st.text_area("Diet", value=diet, key=f"{prefix}_diet_result_v200_15", height=120, disabled=False)
+      # 2. Dietary Restrictions
+      st.markdown("<div class='heading-h5'>2. Dietary Restrictions</div>", unsafe_allow_html=True)
+      st.text_area("Dietary Restrictions", value=restrictions, key=f"{prefix}_diet_rest_result_v200_15", height=100, disabled=False)
+      # 3. Instructions
+      st.markdown("<div class='heading-h5'>3. Instructions</div>", unsafe_allow_html=True)
+      st.text_area("Instructions", value=instructions, key=f"{prefix}_instr_result_v200_15", height=120, disabled=False)
+      # Other fields locked
+      st.markdown("<div class='heading-h5'>Other Fields - Locked (Coming Soon)</div>", unsafe_allow_html=True)
+      st.text_area("4. Medications (Locked)", value="Medications will be suggested by physician - Currently locked", disabled=True, key=f"{prefix}_meds_locked_v200_15", placeholder="Locked")
+      st.text_area("5. Follow-up (Locked)", value="Follow-up examination - Currently locked", disabled=True, key=f"{prefix}_followup_locked_v200_15", placeholder="Locked")
+    
+    if st.button("Start New Entry", key=f"{prefix}_new_entry_v200_15"):
       st.session_state.show_home_proceed_note = False
       st.session_state.show_proceed_note = False
       st.session_state[personal_ok_key] = False
@@ -2825,6 +2899,9 @@ def render_auto_form(prefix, is_home=False):
       st.session_state[additional_ok_key] = False
       st.session_state[version_key] = 0
       st.session_state.form_version += 1
+      # Clear results
+      for k in [f"{prefix}_temperament_result", f"{prefix}_diet_result", f"{prefix}_restrictions_result", f"{prefix}_instructions_result"]:
+        if k in st.session_state: del st.session_state[k]
       st.rerun()
 
   return p_name, p_father, p_age, p_phone, p_gender, p_address, diseases_list
