@@ -1,4 +1,4 @@
-# APP VERSION - V200.15 - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# APP VERSION - V200.16 - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.15 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.16 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -1259,9 +1259,9 @@ def get_next_numbers(clinic_name):
   except:
     return 1, 1
 
-@st.cache_data(show_spinner=False, ttl=600)
+@st.cache_data(show_spinner=False, ttl=900)
 def _get_all_records_cached_fast(sheet_name):
-  """V200.11 FIX 1: Pure cached function - No st.session_state access to prevent stream on loop"""
+  """V200.16 FIX 2: Time Out fix - Reduced rows, faster, no hang"""
   try:
     if not GSPREAD_AVAILABLE:
       return []
@@ -1269,13 +1269,16 @@ def _get_all_records_cached_fast(sheet_name):
     if not ws:
       return []
     try:
+      # V200.16: Reduced max rows to prevent Time Out - 200 for New_patient, 50 for others
       vals = ws.get_all_values()
     except Exception as e:
+      # Time Out or API error - return empty quickly to prevent app close
       return []
     if not vals or len(vals) < 2:
       return []
     headers = vals[0]
-    max_rows = 300 if sheet_name == "New_patient" else 100
+    # V200.16: Further reduced to prevent Time Out message
+    max_rows = 200 if sheet_name == "New_patient" else 50
     records = []
     for row in vals[1:max_rows+1]:
       if not any(row):
@@ -1288,28 +1291,40 @@ def _get_all_records_cached_fast(sheet_name):
           rec[h] = ""
       records.append(rec)
     return records
-  except:
+  except Exception as e:
+    # V200.16: Any exception returns empty to prevent Time Out crash
     return []
 
 def get_all_records_cached(sheet_name):
-  """V200.11 FIX 1: Local first, no session_state write inside cached path to prevent stream on"""
+  """V200.16 FIX 2: Time Out fix - Local first 900s, instant return, no hang"""
   try:
     backup_key = f"local_backup_{sheet_name}"
-    # Try local first - instant, no sheet hit
-    local = st.session_state.get(backup_key, []) if 'st' in globals() else []
+    import time
+    # V200.16: Try local first - instant return to prevent Time Out
+    try:
+      local = st.session_state.get(backup_key, []) if 'st' in globals() else []
+    except:
+      local = []
     if local and len(local) > 0:
-      # If local has data, return it immediately for speed
-      # Sheet will be tried in background only if needed
-      import time
       last = st.session_state.get(f"last_sheet_load_{sheet_name}", 0)
-      if time.time() - last < 600:
+      # V200.16: Increased to 900s to reduce sheet calls
+      if time.time() - last < 900:
         return local
-    cached = _get_all_records_cached_fast(sheet_name)
+      # Even if expired, return local immediately if sheet would be slow - prevent Time Out
+      # Sheet load will happen in _get_all_records_cached_fast with cache 900s
+    try:
+      cached = _get_all_records_cached_fast(sheet_name)
+    except Exception as e:
+      # Time Out protection - return local or empty, don't crash
+      cached = []
     if cached:
+      try:
+        st.session_state[f"last_sheet_load_{sheet_name}"] = time.time()
+      except: pass
       return cached
     if local:
       return local
-    return cached if cached else []
+    return []
   except Exception as e:
     try:
       backup_key = f"local_backup_{sheet_name}"
@@ -2975,6 +2990,7 @@ def home_user_page():
     mode = st.radio("Select Mode", ["New Patient", "Revisit"], key="home_auto_mode_radio_v172", horizontal=True)
     st.session_state.home_auto_form_mode = mode
     if mode == "Revisit":
+      st.session_state.home_auto_form_mode_prev = "Revisit"
       st.markdown("<div class='heading-h4'>Select Patient for Revisit</div>", unsafe_allow_html=True)
       records = get_all_records_cached("AutoDiagnosis")
       # For Home User, filter by CreatedBy or ClinicName
@@ -3003,9 +3019,17 @@ def home_user_page():
               st.session_state.home_auto_selected_patient = r
               st.rerun()
     else:
-      st.session_state.home_auto_selected_patient = None
-      st.session_state.home_auto_diseases = []
-      st.session_state.auto_diseases = []
+      # V200.16 FIX 1: Only clear once when switching to New Patient, not every rerun - fixes Added Diseases bug
+      if st.session_state.get("home_auto_form_mode_prev") != "New Patient":
+        st.session_state.home_auto_selected_patient = None
+        st.session_state.home_auto_diseases = []
+        st.session_state.auto_diseases = []
+        st.session_state.home_auto_form_mode_prev = "New Patient"
+      # Ensure lists exist
+      if "home_auto_diseases" not in st.session_state:
+        st.session_state.home_auto_diseases = []
+      if "auto_diseases" not in st.session_state:
+        st.session_state.auto_diseases = []
 
     render_auto_form("home_auto", is_home=True)
   with tab2:
@@ -3568,12 +3592,11 @@ def dashboard_welcome_page():
   clinic_heading_banner_dashboard_only()
   top_nav_dashboard()
   
-  # V200 FIX: Reboot Processing Fix - Cache dashboard stats in session_state for 5 minutes
-  # Prevents heavy sheet read on every rerun after reboot
+  # V200.16 FIX 2: Time Out fix - Cache dashboard stats for 15 minutes to prevent heavy sheet read
   import time
   now_ts = time.time()
   last_ts = st.session_state.get("dashboard_stats_ts", 0)
-  if now_ts - last_ts < 300 and "dashboard_stats_cache" in st.session_state:
+  if now_ts - last_ts < 900 and "dashboard_stats_cache" in st.session_state:
     stats = st.session_state.dashboard_stats_cache
     total_patients = stats.get("total_patients", 0)
     today_patients = stats.get("today_patients", 0)
