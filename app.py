@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.2 - Page Load Speed Fixed"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.3 - 5 Fixes: Speed+Doctor+Raised+Scroll+Revisit"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -41,15 +41,66 @@ if "theme" not in st.session_state:
 
 @st.cache_data(show_spinner=False, ttl=600)
 def get_theme_css_cached(theme):
+    raised = """
+        div[data-baseweb="tab-list"] { gap: 8px; }
+        div[data-baseweb="tab"] {
+            background: linear-gradient(145deg, #FFFFFF, #F1F7F3)!important;
+            border: 2px solid #C8E6D5!important;
+            border-radius: 12px!important;
+            box-shadow: 0 4px 12px rgba(46,125,91,0.15), 0 1px 3px rgba(0,0,0,0.08)!important;
+            transform: translateY(-1px);
+            font-weight: 700!important;
+            padding: 8px 16px!important;
+        }
+        div[data-baseweb="tab"]:hover {
+            box-shadow: 0 8px 20px rgba(46,125,91,0.25)!important;
+            transform: translateY(-3px);
+            border-color: #2E7D5B!important;
+        }
+        div[data-baseweb="tab"][aria-selected="true"] {
+            background: linear-gradient(145deg, #2E7D5B, #4CAF50)!important;
+            color: white!important;
+            border-color: #1B5E20!important;
+            box-shadow: 0 6px 16px rgba(46,125,91,0.35)!important;
+        }
+        div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
+            background: #FFFFFF!important;
+            border: 2px solid #C8E6D5!important;
+            border-radius: 12px!important;
+            box-shadow: 0 3px 10px rgba(46,125,91,0.10)!important;
+            transform: translateY(-1px);
+        }
+        .stButton > button {
+            background: linear-gradient(145deg, #FFFFFF, #F8FAF8)!important;
+            border: 2px solid #C8E6D5!important;
+            border-radius: 12px!important;
+            box-shadow: 0 4px 12px rgba(46,125,91,0.15)!important;
+            transform: translateY(-1px);
+            font-weight: 700!important;
+        }
+        .stButton > button:hover {
+            box-shadow: 0 8px 20px rgba(46,125,91,0.25)!important;
+            transform: translateY(-3px);
+        }
+        .stButton > button[kind="primary"] {
+            background: linear-gradient(145deg, #2E7D5B, #4CAF50)!important;
+            color: white!important;
+            border-color: #1B5E20!important;
+        }
+        div[data-testid="stVerticalBlockBorderWrapper"] {
+            border-radius: 16px!important;
+            box-shadow: 0 6px 18px rgba(46,125,91,0.12)!important;
+        }
+        """
     if theme == "dim":
-        return """
+        return raised + """
         html, body,.stApp, [data-testid="stAppViewContainer"] { background: #C8DCCB!important; color: #0F2A14!important; }
-        .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; }
+        .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; box-shadow: 0 12px 32px rgba(27,94,32,0.25)!important; border-radius: 18px!important; }
         """
     else:
-        return """
+        return raised + """
         html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
-        .block-container { background: #FFFFFF!important; border: 3px solid #2E7D5B!important; }
+        .block-container { background: #FFFFFF!important; border: 3px solid #2E7D5B!important; border-radius: 18px!important; box-shadow: 0 12px 32px rgba(46,125,91,0.18)!important; }
         """
 
 def get_theme_css():
@@ -534,6 +585,7 @@ def navigate_to(page):
         if len(st.session_state.page_history) > 20:
             st.session_state.page_history = st.session_state.page_history[-20:]
     st.session_state.current_page = page
+    st.session_state.force_scroll_to_top = True
     st.rerun()
 
 def language_selector():
@@ -634,6 +686,7 @@ def clinic_heading_banner_dashboard_only():
 
 def top_nav_inner():
     scroll_to_top()
+    st.session_state.force_scroll_to_top = True
     c1,c2=st.columns([1,1])
     with c1:
         if st.button("Back", key=f"back_{st.session_state.current_page}_v172"):
@@ -656,6 +709,7 @@ def top_nav_inner():
 
 def top_nav_dashboard():
     scroll_to_top()
+    st.session_state.force_scroll_to_top = True
     c1,c2=st.columns([4,1])
     with c2:
         if st.button("Logout", key=f"logout_dash_v200_2", type="secondary"):
@@ -1231,13 +1285,22 @@ def _get_all_records_cached_fast(sheet_name):
         return []
 
 def get_all_records_cached(sheet_name):
-    """V209.6.12 - Wrapper with local backup fallback + speed"""
+    """V200.3 SPEED FIX: Local first for instant load"""
     try:
-        # Try fast cached version
+        backup_key = f"local_backup_{sheet_name}"
+        if sheet_name in ["New_patient", "UserSignups", "AppSettings"]:
+            import time
+            last = st.session_state.get(f"last_sheet_load_{sheet_name}", 0)
+            local = st.session_state.get(backup_key, []) if 'st' in globals() else []
+            if local and (time.time() - last < 300):
+                return local
         cached = _get_all_records_cached_fast(sheet_name)
         if cached:
+            try:
+                import time
+                st.session_state[f"last_sheet_load_{sheet_name}"] = time.time()
+            except: pass
             return cached
-        # Fallback to local backup if sheet empty or fails
         backup_key = f"local_backup_{sheet_name}"
         local = st.session_state.get(backup_key, []) if 'st' in globals() else []
         if local:
@@ -1854,9 +1917,43 @@ def render_patient_form(is_revisit=False):
                 st.selectbox("Bowel Movement", LISTS["bowel"], key=f"v_bowel_{fv}")
             section_ok("vital", is_revisit=is_revisit)
 
+    # V200.3 FIX: Revisit - Show previous diseases with cross remove
+    if is_revisit and st.session_state.revisit_data:
+        prev_text = str(st.session_state.revisit_data.get("Diseases","") or "")
+        if prev_text.strip():
+            st.markdown("<div class='heading-h4'>Previous Diseases - History</div>", unsafe_allow_html=True)
+            with st.container(border=True):
+                st.markdown("<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:12px;padding:10px;margin-bottom:8px;'>Past diseases - Physician can see remaining vs new. Cross to remove cured.</div>", unsafe_allow_html=True)
+                prev_list = [d.strip() for d in prev_text.split(" + ") if d.strip()]
+                if "revisit_cured_diseases" not in st.session_state:
+                    st.session_state.revisit_cured_diseases = []
+                if "revisit_remaining_diseases" not in st.session_state:
+                    st.session_state.revisit_remaining_diseases = prev_list.copy()
+                for idx, pd in enumerate(prev_list):
+                    c1,c2 = st.columns([4,1])
+                    with c1:
+                        is_cured = pd in st.session_state.revisit_cured_diseases
+                        style = "text-decoration: line-through; opacity:0.5;" if is_cured else "font-weight:600;"
+                        tag = " (Cured)" if is_cured else " (Remaining)"
+                        st.markdown(f"<div style='{style}'>{idx+1}. {pd}{tag}</div>", unsafe_allow_html=True)
+                    with c2:
+                        if pd not in st.session_state.revisit_cured_diseases:
+                            if st.button("❌", key=f"cure_prev_{fv}_{idx}_v200_3", help="Mark cured"):
+                                st.session_state.revisit_cured_diseases.append(pd)
+                                if pd in st.session_state.revisit_remaining_diseases:
+                                    st.session_state.revisit_remaining_diseases.remove(pd)
+                                st.rerun()
+                        else:
+                            if st.button("↩️", key=f"uncure_prev_{fv}_{idx}_v200_3"):
+                                st.session_state.revisit_cured_diseases.remove(pd)
+                                st.session_state.revisit_remaining_diseases.append(pd)
+                                st.rerun()
+                st.info(f"Prev: {len(prev_list)} | Cured: {len(st.session_state.revisit_cured_diseases)} | Remaining: {len(st.session_state.revisit_remaining_diseases)}")
+
     # V197 Fix: Diseases No/Count Duration mandatory + fix Add Disease error
     with st.container(border=True):
-        if section_heading_clickable("diseases","Diseases"):
+        if section_heading_clickable("diseases","Diseases - Current"):
+
             st.markdown("<div class='heading-h5'>Select Body Part and Disease - Patient Form V197 Fixed Mandatory</div>", unsafe_allow_html=True)
             c1,c2,c3,c4=st.columns([3,3,2,2])
             with c1:
@@ -2196,6 +2293,13 @@ def render_patient_form(is_revisit=False):
             # If this is a revisit, also save to Revisit sheet
             if is_revisit:
                 try:
+                    try:
+                        prev_for_sheet = str(st.session_state.revisit_data.get("Diseases","") or "") if st.session_state.revisit_data else ""
+                    except:
+                        prev_for_sheet = ""
+                    cured_for_sheet = " + ".join(st.session_state.get("revisit_cured_diseases", []))
+                    remaining_for_sheet = " + ".join(st.session_state.get("revisit_remaining_diseases", []))
+                    complaint_with_history = f"Past: {prev_for_sheet} | Cured: {cured_for_sheet} | Remaining: {remaining_for_sheet} | Current: {str(diseases_text).strip()} | Chief: {str(chief_comp).strip()}"
                     revisit_dict = {
                         "RevisitID": f"R{str(pid)}_{str(datetime.date.today())}_{str(int(datetime.datetime.now().timestamp()))[-4:]}",
                         "PatientID": str(pid),
@@ -2203,7 +2307,7 @@ def render_patient_form(is_revisit=False):
                         "Name": str(p_name).strip(),
                         "Phone": str(st.session_state.get(f"p_phone_{fv}", "")).strip(),
                         "ClinicName": str(st.session_state.clinic_name).strip(),
-                        "Complaint": str(chief_comp).strip() + " | " + str(diseases_text).strip(),
+                        "Complaint": complaint_with_history[:2000],
                         "Prescription": str(st.session_state.get(f"single_meds_{fv}", [])) + " | " + str(st.session_state.get(f"formula_meds_{fv}", [])),
                         "Fees": float(f),
                         "Paid": float(p),
@@ -2246,6 +2350,7 @@ def render_patient_form(is_revisit=False):
                 st.session_state.revisit_data=None
                 st.session_state.section_opened={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
                 st.session_state.section_unlocked={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
+                st.session_state.force_scroll_to_top = True
                 st.rerun()
             else:
                 st.warning(f"Local Save - ID {pid} | Grand Total Rs {grand_total:.0f} - {msg}")
@@ -2254,6 +2359,7 @@ def render_patient_form(is_revisit=False):
                 st.session_state.revisit_data=None
                 st.session_state.section_opened={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
                 st.session_state.section_unlocked={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
+                st.session_state.force_scroll_to_top = True
                 st.rerun()
 
 def render_auto_form(prefix, is_home=False):
@@ -3442,6 +3548,7 @@ def dashboard_welcome_page():
             st.session_state.patient_diseases = []  # V209 Fix 6 - empty by default
             st.session_state.section_opened={"personal": True, "vital": False, "assessment": False, "complaint": False, "history": False, "prescription": False, "billing": False}
             st.session_state.current_page="patient"
+            st.session_state.force_scroll_to_top = True
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     with r1c2:
