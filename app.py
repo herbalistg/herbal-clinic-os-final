@@ -22,7 +22,7 @@ try:
 except ImportError:
     GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.1 - Reboot Processing Fixed"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.2 - Page Load Speed Fixed"  # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied  # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix  # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin  # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings  # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI  # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save  # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control  # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts  # V199 - Final Herbal Light Theme - Clean Deploy  # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray  # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -39,8 +39,26 @@ st.set_page_config(page_title="Herbal Clinic International", page_icon="\U0001f3
 if "theme" not in st.session_state:
     st.session_state.theme = "light"
 
+@st.cache_data(show_spinner=False, ttl=600)
+def get_theme_css_cached(theme):
+    if theme == "dim":
+        return """
+        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #C8DCCB!important; color: #0F2A14!important; }
+        .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; }
+        """
+    else:
+        return """
+        html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
+        .block-container { background: #FFFFFF!important; border: 3px solid #2E7D5B!important; }
+        """
+
 def get_theme_css():
     theme = st.session_state.get("theme", "light")
+    # V200.2: Use cached CSS
+    try:
+        return get_theme_css_cached(theme)
+    except:
+        pass
     if theme == "dim":
         # V206 Requirement 1d: Same green shade stronger - screen feels slightly dark
         return """
@@ -134,8 +152,7 @@ def scroll_to_top():
     })();
     </script>
     """, height=0)
-    st.markdown('<div id="top-anchor-v209-4"></div>', unsafe_allow_html=True)
-    st.markdown('<style>html{scroll-behavior:auto!important; scroll-padding-top:0!important;} body{scroll-behavior:auto!important;} [data-testid="stAppViewContainer"]{scroll-behavior:auto!important;}</style>', unsafe_allow_html=True)
+    # V200.2: Removed heavy scroll anchor and CSS - speed
 
 
 st.markdown("""
@@ -520,58 +537,31 @@ def navigate_to(page):
     st.rerun()
 
 def language_selector():
-    # V209.5: Language selector with en/ur/ar, no divider line on top
-    # V207 Requirement 1a,1b,1e: Theme and language tabs in 1 line, single theme tab
-    import streamlit.components.v1 as components
-    # Single line top bar - Theme toggle (single tab) + Language
-    # Apply theme CSS first
+    # V200.2 SPEED FIX: Ultra-light - No components.html, No localStorage JS, prevents page load delay
     st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
-    
-    # V209.6 Task 1: Current language next to language icon, not theme icon
     c_spacer, c_theme, c_lang, c_lang_text = st.columns([6,1,1,1])
     with c_theme:
         curr_theme = st.session_state.get("theme", "light")
         if curr_theme == "light":
-            if st.button("🌿", key="theme_toggle_dim_v209", help="Dim Theme"):
+            if st.button("🌿", key="theme_toggle_dim_v200_2", help="Dim Theme"):
                 st.session_state.theme = "dim"
-                components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
                 st.rerun()
         else:
-            if st.button("☀️", key="theme_toggle_light_v209", help="Light Theme"):
+            if st.button("☀️", key="theme_toggle_light_v200_2", help="Light Theme"):
                 st.session_state.theme = "light"
-                components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
                 st.rerun()
     with c_lang:
-        if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v209_6", help="Change Language"):
+        if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v200_2", help="Change Language"):
             curr = st.session_state.get("app_language", "en")
             nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
             st.session_state.app_language = nxt
             st.session_state.lang = nxt
             st.rerun()
     with c_lang_text:
-        # Current language next to language icon
         lang = st.session_state.get("app_language","en")
         st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
     with c_spacer:
         st.markdown("")
-    
-    # Restore theme from localStorage
-    if "theme_restored" not in st.session_state:
-        components.html("""
-        <script>
-        try{
-            const saved = localStorage.getItem('hci_theme');
-            if(saved && saved!=='light'){
-                const url = new URL(window.location.href);
-                if(!url.searchParams.get('hci_theme')){
-                    url.searchParams.set('hci_theme', saved);
-                }
-            }
-        }catch(e){}
-        </script>
-        """, height=0)
-        st.session_state.theme_restored = True
-    # No divider - Task 2a: simple line removed
 
 def clinic_heading_banner():
     user_h2 = get_user_display_h2()
@@ -597,31 +587,24 @@ def clinic_heading_banner_compact():
 
 
 def top_bar_inner_with_user():
-    """V209.5 Task 2c,2d: Inner pages - no big box, only user name left of theme/lang icons, normal text size"""
-    import streamlit.components.v1 as components
+    """V200.2 SPEED FIX: Ultra-light inner top bar - No components.html"""
     st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
-    
-    # Get user name only (not full display)
     uname = st.session_state.get("username","User")
-    
-    # V209.6 Task 1: User name left, theme + lang icon + current lang next to lang icon
     c_user, c_spacer, c_theme, c_lang, c_lang_text = st.columns([3,2,1,1,1])
     with c_user:
         st.markdown(f"<div style='font-size:16px;font-weight:600;color:#1F2D27;margin-top:8px;'>{uname}</div>", unsafe_allow_html=True)
     with c_theme:
         curr_theme = st.session_state.get("theme", "light")
         if curr_theme == "light":
-            if st.button("🌿", key=f"theme_inner_dim_{st.session_state.get('current_page','inner')}_v209_6", help="Dim Theme"):
+            if st.button("🌿", key=f"theme_inner_dim_{st.session_state.get('current_page','inner')}_v200_2", help="Dim Theme"):
                 st.session_state.theme = "dim"
-                components.html("<script>localStorage.setItem('hci_theme','dim');</script>", height=0)
                 st.rerun()
         else:
-            if st.button("☀️", key=f"theme_inner_light_{st.session_state.get('current_page','inner')}_v209_6", help="Light Theme"):
+            if st.button("☀️", key=f"theme_inner_light_{st.session_state.get('current_page','inner')}_v200_2", help="Light Theme"):
                 st.session_state.theme = "light"
-                components.html("<script>localStorage.setItem('hci_theme','light');</script>", height=0)
                 st.rerun()
     with c_lang:
-        if st.button("🌐", key=f"lang_inner_{st.session_state.get('current_page','inner')}_v209_6", help="Change Language"):
+        if st.button("🌐", key=f"lang_inner_{st.session_state.get('current_page','inner')}_v200_2", help="Change Language"):
             curr = st.session_state.get("app_language", "en")
             nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
             st.session_state.app_language = nxt
@@ -673,37 +656,15 @@ def top_nav_inner():
 
 def top_nav_dashboard():
     scroll_to_top()
-    # V207 - Ensure top anchor
-    import streamlit.components.v1 as components
     c1,c2=st.columns([4,1])
     with c2:
-        if st.button("Logout", key=f"logout_dash_v201", type="secondary"):
+        if st.button("Logout", key=f"logout_dash_v200_2", type="secondary"):
             st.session_state.logged_in=False
             st.session_state.current_page="clinic_login"
             st.session_state.page_history=["dashboard_welcome"]
-            # V201 - Clear persistent login
             try:
                 st.query_params.clear()
             except: pass
-            components.html('''
-            <script>
-            try{
-                localStorage.removeItem('hci_logged');
-                localStorage.removeItem('hci_user');
-                localStorage.removeItem('hci_role');
-                localStorage.removeItem('hci_type');
-                localStorage.removeItem('hci_clinic');
-                // Clear URL params and reload to login
-                const url = new URL(window.parent.location.href);
-                url.searchParams.delete('hci_logged');
-                url.searchParams.delete('hci_user');
-                url.searchParams.delete('hci_role');
-                url.searchParams.delete('hci_type');
-                url.searchParams.delete('hci_clinic');
-                window.parent.location = url.toString();
-            }catch(e){}
-            </script>
-            ''', height=0)
             st.rerun()
     st.divider()
 
@@ -1528,20 +1489,8 @@ def show_urdu_work_in_progress_note():
         """, unsafe_allow_html=True)
 
 def scroll_to_top_duplicate_2():
-    """V204 Requirement 5: Each page opens from start"""
-    import streamlit.components.v1 as components
-    components.html("""
-    <script>
-    try{
-        window.scrollTo(0,0);
-        if(window.parent){
-            window.parent.scrollTo(0,0);
-            const main = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
-            if(main) main.scrollTop = 0;
-        }
-    }catch(e){}
-    </script>
-    """, height=0)
+    """V200.2 SPEED FIX: Disabled"""
+    return
 
 
 def add_footer():
