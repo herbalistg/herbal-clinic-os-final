@@ -1,5 +1,183 @@
-# APP VERSION - V200.19.1 SAFE - Bubble Crash Fix using toast+balloons only, no 
-# Fixed broken line - removed
+# APP VERSION - V200.19.1 SAFE - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Address * Mandatory) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# V200.11 - V200.4 Structure preserved - All 4 tasks fixed
+# Previous: V200.10, V200.9, V200.8, V200.4
+
+
+import streamlit as st
+import datetime
+import re
+import pandas as pd
+
+# NOTE FOR EVERY APP VERSION
+# This app can be used in 3 languages: English, Urdu and Arabic.
+# Words from a different language must not be used anywhere in the app while another language is active.
+# English is default language.
+# Global icon for language selection is placed on every page.
+# Later we will create concise dictionary English/Urdu/Arabic and app will retrieve terms from dictionary when switching languages.
+
+try:
+  import gspread
+  from google.oauth2.service_account import Credentials
+  GSPREAD_AVAILABLE = True
+except ImportError:
+  GSPREAD_AVAILABLE = False
+
+APP_VERSION = "V200.19.1 SAFE - No Crash - Bubble toast+balloons" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+
+WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
+
+
+def show_success_bubble(count=1, message="Complete"):
+  """V200.19.1 SAFE - toast+balloons only"""
+  try:
+    import streamlit as st
+    if count == 1:
+      st.toast(f" {message} ", icon="✅")
+      try:
+        st.balloons()
+      except:
+        pass
+    else:
+      for i in range(min(count, 3)):
+        st.toast(f" {message} {i+1}/{count} ", icon="✅")
+      try:
+        st.balloons()
+      except:
+        pass
+  except:
+    pass
+
+def show_error_guide(missing_fields, section_name=""):
+  """V200.19 SAFE guide"""
+  try:
+    import streamlit as st
+    for field in missing_fields:
+      st.error(f"Missing: {field}")
+    st.warning(f"Guide {section_name}: Only * mandatory - {', '.join(missing_fields)}")
+  except:
+    pass
+
+
+def sanitize_for_sheet(text):
+  if not text: return ""
+  text = str(text).strip()
+  text = text.replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
+  text = re.sub(r'\s+', ' ', text)
+  return text.strip()
+
+st.set_page_config(page_title="Herbal Clinic International", page_icon="\U0001f33f", layout="centered", initial_sidebar_state="collapsed")
+
+# ===== V207 - User Theme System - Light + Dim only, single toggle, 1 line top bar =====
+if "theme" not in st.session_state:
+  st.session_state.theme = "light"
+
+@st.cache_data(show_spinner=False, ttl=3600)
+def get_theme_css_cached(theme):
+  # V200.9 - FIX 1: No fade on button click - removed all transitions, no transform
+  raised = """
+    /* V200.9 - No Fade Fix - Zero transitions */
+    html, .stApp, [data-testid="stAppViewContainer"] { transition: none!important; animation: none!important; }
+    div[data-baseweb="tab-list"] { gap: 8px; padding: 4px; }
+    div[data-baseweb="tab"] {
+      background: #FFFFFF!important;
+      border: 2px solid #A8CCAD!important;
+      border-radius: 12px!important;
+      box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important;
+      font-weight: 700!important;
+      padding: 8px 16px!important;
+      transition: none!important;
+    }
+    div[data-baseweb="tab"][aria-selected="true"] {
+      background: #2E7D5B!important;
+      color: white!important;
+      border-color: #1B5E20!important;
+    }
+    div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
+      background: #FFFFFF!important;
+      border: 2px solid #A8CCAD!important;
+      border-radius: 10px!important;
+      box-shadow: 0 1px 4px rgba(46,125,91,0.08)!important;
+      transition: none!important;
+    }
+    .stButton > button {
+      background: #FFFFFF!important;
+      border: 2px solid #A8CCAD!important;
+      border-radius: 10px!important;
+      box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important;
+      font-weight: 700!important;
+      padding: 6px 14px!important;
+      transition: none!important;
+      animation: none!important;
+    }
+    .stButton > button:active, .stButton > button:focus {
+      transform: none!important;
+      box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important;
+    }
+    .stButton > button[kind="primary"] {
+      background: #2E7D5B!important;
+      color: white!important;
+      border-color: #1B5E20!important;
+    }
+    div[data-testid="stVerticalBlockBorderWrapper"] {
+      background: #FFFFFF!important;
+      border: 2px solid #C8E6D5!important;
+      border-radius: 14px!important;
+      box-shadow: 0 2px 8px rgba(46,125,91,0.08)!important;
+      transition: none!important;
+    }
+    /* Prevent Streamlit fade overlay */
+    [data-testid="stStatusWidget"], [data-testid="stSpinner"] { transition: none!important; }
+    """
+  if theme == "dim":
+    return raised + """
+    html, body,.stApp, [data-testid="stAppViewContainer"] { background: #C8DCCB!important; color: #0F2A14!important; }
+    .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; box-shadow: 0 12px 32px rgba(27,94,32,0.25)!important; border-radius: 18px!important; }
+    """
+  else:
+    return raised + """
+    html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
+    .block-container { background: #FFFFFF!important; border: 3px solid #2E7D5B!important; border-radius: 18px!important; box-shadow: 0 12px 32px rgba(46,125,91,0.18)!important; }
+    """
+
+def get_theme_css():
+  theme = st.session_state.get("theme", "light")
+  # V200.2: Use cached CSS
+  try:
+    return get_theme_css_cached(theme)
+  except:
+    pass
+  if theme == "dim":
+    # V206 Requirement 1d: Same green shade stronger - screen feels slightly dark
+    return """
+    html, body,.stApp, [data-testid="stAppViewContainer"] { background: #C8DCCB!important; color: #0F2A14!important; }
+    .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; box-shadow: 0 8px 28px rgba(27,94,32,0.30)!important; }
+    .heading-h1 { color: #1B5E20!important; }
+    .graceful-card { background: #A8CCAD!important; border: 2px solid #1B5E20!important; }
+    .dash-section-title { background: #1B5E20!important; }
+    div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] { background: #E0F0E2!important; border: 2px solid #2E7D32!important; }
+    
+    """
+  else:
+    return """
+    html, body,.stApp, [data-testid="stAppViewContainer"] { background: #FFFFFF!important; color: #1F2D27!important; }
+    .block-container { background: #FFFFFF!important; border: 3px solid #2E7D5B!important; }
+    """
+
+def show_urdu_work_in_progress_note():
+  if st.session_state.get("logged_in", False):
+    st.markdown("""
+    <div style="background:#FFF9C4;border:2px solid #FBC02D;border-radius:12px;padding:12px;margin-top:20px;text-align:center;">
+      <span style="font-size:16px;font-weight:700;color:#1F2D27;">This is not final; work on it is currently in progress. You will be informed once the work is completed.</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+def scroll_to_top():
+  """V200 FIX: Ultra-light scroll - no iframe, prevents reboot hang"""
+  return # Disabled to prevent processing delay after reboot - Streamlit auto-scrolls
+  # Original scroll code kept below for compatibility but disabled
+  def _old_scroll():
+    
+    st.toast("Complete")
   # V200.2: Removed heavy scroll anchor and CSS - speed
 
 
@@ -471,7 +649,7 @@ def navigate_to(page):
   st.rerun()
 
 def language_selector():
-  # V200.2 SPEED FIX: Ultra-light - No # components.html removed safe, No localStorage JS, prevents page load delay
+  # V200.2 SPEED FIX: Ultra-light - No components.html, No localStorage JS, prevents page load delay
   st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
   c_spacer, c_theme, c_lang, c_lang_text = st.columns([6,1,1,1])
   with c_theme:
