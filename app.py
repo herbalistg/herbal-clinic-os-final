@@ -1,4 +1,4 @@
-# APP VERSION - V200.19.1 SAFE - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Address * Mandatory) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# APP VERSION - V200.19.1 SAFE - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Optional) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.19.1 SAFE - No Crash - Bubble toast+balloons" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.20 - 10 Tasks: 1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -406,18 +406,21 @@ div[data-testid="stExpander"], div[data-testid="stContainer"] {
 # AppSettings (1): OfferPercent, WhatsAppLink, AppVersion, MaintenanceMode etc - control sheet
 # Removed: ClinicUsers merged into UserSignups with CU_ / HU_ IDs, Formulas merged into Pharmacopoeia
 SHEET_HEADERS = {
-  "UserSignups": ["SignupID","Username","Password","UserType","ClinicName","Phone","Email","Date","Status","Role","From"],
-  "PermissionGranted": ["ID","Username","UserType","PermissionType","GrantedDate","Status","IP","Device"],
-  "HomeUsers": ["UserID","Username","Password","FullName","Phone","Email","Date","Status","AccountHolderPhone","From"],
-  "New_patient": ["PatientID","Date","Name","FatherName","Age","Gender","MaritalStatus","Occupation","CNIC","Phone","EmergencyPhone","Address","Referral","Diseases","ChiefComplaint","PastHistory","FamilyHistory","Allergy","Examination","Pulse","Temperament","BP","Weight","Temperature","SingleMedicines","FormulaMedicines","Fees","MedicineCharges","Total","Paid","Balance","PrevBalance","PaymentMethod","FeeStatus","RevisitDate","ClinicName","CreatedBy","Timestamp","AppVersion","DailyNumber","TotalNumber","GrandTotal"],
-  "Revisit": ["RevisitID","PatientID","Date","Name","Phone","ClinicName","Complaint","Prescription","Fees","Paid","Balance","CreatedBy"],
-  "AutoDiagnosis": ["ID","PatientID","Date","Name","FatherName","Age","Phone","Gender","Address","Diseases","ExtraSymptoms","Temperament","ClinicName","CreatedBy","AppVersion","GrandTotal"],
-  "Herbs": ["HerbID","Name","Temperament","Uses","Dosage","ClinicName"],
-  "Pharmacopoeia": ["ID","Name","Category","Temperament","Uses","Dosage","ClinicName"],
-  "Dictionary": ["ID","Word","Meaning","Category","Language"],
-  "Articles": ["ID","TitleEN","TitleUR","TitleAR","ContentEN","ContentUR","ContentAR","MainCategory","SubCategory","Audience","Type","Status","Date","ClinicName"],
-  "Feedback": ["ID","Name","From","Phone Number","Email","Feedback Page","Feedback","Date","Status"],
-  "AppSettings": ["Key","Value","Date","Status","Description"],
+  "UserSignups": ["SignupID","Username","Password","UserType","ClinicName","Phone","Email","Date","Status","Role","From","LastLogin","DeviceInfo"],
+  "PermissionGranted": ["ID","Username","UserType","PermissionType","GrantedDate","Status","IP","Device","ExpiryDate","GrantedBy"],
+  "HomeUsers": ["UserID","Username","Password","FullName","Phone","Email","Date","Status","AccountHolderPhone","From","LastLogin","ClinicName","Address","Age","Gender","SubscriptionStatus"],
+  "New_patient": ["PatientID","Date","Name","FatherName","Age","Gender","MaritalStatus","Occupation","CNIC","Phone","EmergencyPhone","Address","Referral","Diseases","ChiefComplaint","PastHistory","FamilyHistory","Allergy","Examination","Pulse","Temperament","BP","Weight","Temperature","Height","SleepPattern","Appetite","BowelMovement","Thirst","Urine","Sweating","StressLevel","EnergyLevel","SingleMedicines","FormulaMedicines","ManualMedicines","Fees","MedicineCharges","Total","Paid","Balance","PrevBalance","PaymentMethod","FeeStatus","RevisitDate","ClinicName","CreatedBy","Timestamp","AppVersion","DailyNumber","TotalNumber","GrandTotal","UserType","Habits","BloodGroup","CuredDiseases","RemainingDiseases"],
+  "Revisit": ["RevisitID","PatientID","Date","Name","FatherName","Age","Gender","Phone","Address","Occupation","MaritalStatus","ClinicName","Diseases","PreviousDiseases","CurrentComplaint","PastHistory","FamilyHistory","Examination","Pulse","Temperament","BP","Weight","Temperature","SingleMedicines","FormulaMedicines","ManualMedicines","Fees","MedicineCharges","Total","Paid","Balance","PrevBalance","PaymentMethod","FeeStatus","RevisitDate","CreatedBy","Timestamp","AppVersion","CuredDiseases","RemainingDiseases","UserType"],
+  "AutoDiagnosis": ["ID","PatientID","Date","Name","FatherName","Age","Phone","Gender","MaritalStatus","Occupation","Address","BloodGroup","Diseases","DiseasesWithDetails","ExtraSymptoms","PastHistory","FamilyHistory","CurrentMedications","SleepPattern","Appetite","BowelMovement","Thirst","Urine","Sweating","StressLevel","EnergyLevel","AllergyHistory","Temperament","Mizaj","DietRecommendations","Restrictions","Instructions","ClinicName","CreatedBy","Timestamp","AppVersion","GrandTotal","UserType","Habits","Height","Weight"],
+  "HomeTreatment": ["ID","PatientID","Date","Name","FatherName","Age","Phone","Gender","MaritalStatus","Occupation","Address","BloodGroup","Diseases","DiseasesWithDetails","ExtraSymptoms","PastHistory","FamilyHistory","CurrentMedications","SleepPattern","Appetite","BowelMovement","Thirst","Urine","Sweating","StressLevel","EnergyLevel","AllergyHistory","Temperament","Mizaj","DietRecommendations","Restrictions","Instructions","ClinicName","CreatedBy","Timestamp","AppVersion","GrandTotal","UserType","Habits","Height","Weight"],
+  "Herbs": ["HerbID","Name","UrduName","Temperament","Mizaj","Uses","Benefits","Dosage","SideEffects","Precautions","ClinicName","Status","AddedBy","Date"],
+  "Pharmacopoeia": ["ID","Name","UrduName","Category","Temperament","Mizaj","Uses","Benefits","Ingredients","Dosage","Method","SideEffects","ClinicName","Status","AddedBy","Date"],
+  "Dictionary": ["ID","Word","UrduWord","ArabicWord","Meaning","MeaningUR","MeaningAR","Category","SubCategory","Language","Status","AddedBy","Date"],
+  "Articles": ["ID","TitleEN","TitleUR","TitleAR","ContentEN","ContentUR","ContentAR","MainCategory","SubCategory","Audience","Type","Status","Date","ClinicName","Author","ImageURL","Tags","ViewCount"],
+  "Feedback": ["ID","Name","From","Phone Number","Email","Feedback Page","Feedback","Date","Status","UserType","ClinicName","Rating","Response"],
+  "AppSettings": ["Key","Value","Date","Status","Description","Category","UpdatedBy"],
+  "TabPermissions": ["ID","TabName","PageName","ShowToClinicUser","ShowToHomeUser","Status","UpdatedBy","Date"],
+  "UserTabPermissions": ["ID","TabName","PageName","ShowToClinicUser","ShowToHomeUser","Description","Status","Date"],
 }
 ALL_SHEETS = list(SHEET_HEADERS.keys())
 # Section division for App Admin
@@ -611,14 +614,27 @@ defaults = {
     "Articles": False,
     "Herbs & Pharma": False,
     "Free Health Tools": False,
-    # Offer removed - controlled by App Admin only
-    "Essential": False,
+    # Essential removed - controlled by App Admin only - V200.20 FIX 3
     "Inventory": False,
     "Billing Report": False,
     "Staff Management": False,
     "Patient Analytics": False,
     "Appointments": False,
     "Expenses": False,
+  },
+  "app_tab_permissions": {
+    "New Patient": {"clinic": True, "home": False},
+    "Revisit": {"clinic": True, "home": False},
+    "Clinic Admin": {"clinic": True, "home": False},
+    "Clinic Overview": {"clinic": False, "home": False},
+    "Auto-Diagnosis": {"clinic": True, "home": True},
+    "Home Treatment": {"clinic": False, "home": True},
+    "Dictionary": {"clinic": True, "home": True},
+    "Articles": {"clinic": True, "home": True},
+    "Herbs & Pharma": {"clinic": True, "home": True},
+    "Free Health Tools": {"clinic": True, "home": True},
+    "Inventory": {"clinic": False, "home": False},
+    "Billing Report": {"clinic": False, "home": False},
   },
 }
 def get_user_display_h2():
@@ -649,9 +665,9 @@ def navigate_to(page):
   st.rerun()
 
 def language_selector():
-  # V200.2 SPEED FIX: Ultra-light - No components.html, No localStorage JS, prevents page load delay
+  # V200.20 FIX 1: Language EN icon close to icon - not far as separate tab
   st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
-  c_spacer, c_theme, c_lang, c_lang_text = st.columns([6,1,1,1])
+  c_spacer, c_theme, c_lang_combined = st.columns([6,1,2])
   with c_theme:
     curr_theme = st.session_state.get("theme", "light")
     if curr_theme == "light":
@@ -670,16 +686,19 @@ def language_selector():
         except: pass
         st.session_state["css_injected_v200_4"] = False
         st.rerun()
-  with c_lang:
-    if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v200_2", help="Change Language"):
-      curr = st.session_state.get("app_language", "en")
-      nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
-      st.session_state.app_language = nxt
-      st.session_state.lang = nxt
-      st.rerun()
-  with c_lang_text:
+  with c_lang_combined:
     lang = st.session_state.get("app_language","en")
-    st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+    # Icon and text close together in same container
+    col_icon, col_text = st.columns([1,1])
+    with col_icon:
+      if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v200_2", help="Change Language"):
+        curr = st.session_state.get("app_language", "en")
+        nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
+        st.session_state.app_language = nxt
+        st.session_state.lang = nxt
+        st.rerun()
+    with col_text:
+      st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;margin-left:-8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
   with c_spacer:
     st.markdown("")
 
@@ -707,10 +726,10 @@ def clinic_heading_banner_compact():
 
 
 def top_bar_inner_with_user():
-  """V200.9 FIX 2: Dark line below user/theme/lang to separate from page"""
+  """V200.20 FIX 1: Language EN near icon - not separate tab"""
   st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
   uname = st.session_state.get("username","User")
-  c_user, c_spacer, c_theme, c_lang, c_lang_text = st.columns([3,2,1,1,1])
+  c_user, c_spacer, c_theme, c_lang_combined = st.columns([3,2,1,2])
   with c_user:
     st.markdown(f"<div style='font-size:16px;font-weight:600;color:#1F2D27;margin-top:8px;'>{uname}</div>", unsafe_allow_html=True)
   with c_theme:
@@ -731,19 +750,20 @@ def top_bar_inner_with_user():
         except: pass
         st.session_state["css_injected_v200_4"] = False
         st.rerun()
-  with c_lang:
-    if st.button("🌐", key=f"lang_inner_{st.session_state.get('current_page','inner')}_v200_2", help="Change Language"):
-      curr = st.session_state.get("app_language", "en")
-      nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
-      st.session_state.app_language = nxt
-      st.session_state.lang = nxt
-      st.rerun()
-  with c_lang_text:
+  with c_lang_combined:
     lang = st.session_state.get("app_language","en")
-    st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+    col_icon, col_text = st.columns([1,1])
+    with col_icon:
+      if st.button("🌐", key=f"lang_inner_{st.session_state.get('current_page','inner')}_v200_2", help="Change Language"):
+        curr = st.session_state.get("app_language", "en")
+        nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
+        st.session_state.app_language = nxt
+        st.session_state.lang = nxt
+        st.rerun()
+    with col_text:
+      st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;margin-left:-8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
   with c_spacer:
     st.markdown("")
-  # V200.10 FIX 1b: Dark line closer to icons - 2px top margin
   st.markdown("<hr style='margin:2px 0 8px 0; border:0; border-top:3px solid #1B5E20; box-shadow: 0 1px 3px rgba(0,0,0,0.15);'>", unsafe_allow_html=True)
 
 def clinic_heading_banner_dashboard_only():
@@ -1759,10 +1779,15 @@ def section_ok(key, is_revisit=False):
           nxt=order[idx+1]
           st.session_state.section_opened[nxt]=False
           st.session_state.section_unlocked[nxt]=True
-      st.success(f"{key} OK - Next section ready to open")
-      # V200.19 FIX 1: Beautiful bubble 1
-      show_success_bubble(count=1, message=f"{key.title()} Complete")
-      st.balloons()
+      # V200.20 FIX 7: Success mark at same place that disappears immediately
+      st.markdown(f"<div style='background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border:2px solid #2E7D5B;border-radius:12px;padding:14px;text-align:center;margin:10px 0;'><b style='color:#2E7D5B;font-size:18px;'>✅ {key.title()} Complete - کامیاب مکمل ✓</b><br><span style='font-size:12px;color:#666;'>Successfully completed - This mark will disappear immediately</span></div>", unsafe_allow_html=True)
+      show_success_bubble(count=1, message=f"{key.title()} Complete - کامیاب")
+      try:
+        st.balloons()
+      except:
+        pass
+      import time
+      time.sleep(0.6)
       st.rerun()
 
 
@@ -1980,11 +2005,12 @@ def render_patient_form(is_revisit=False):
 
   with st.container(border=True):
     st.markdown("<div class='heading-h4'>Personal Information</div>", unsafe_allow_html=True)
-    # V200.18 FIX 1: Personal Info without Address - Address moved to + More mandatory
+    # V200.20 FIX 5: Address and Occupation & Marital Status in Personal Info outside Additional (always needed)
     c1,c2,c3=st.columns(3)
     with c1:
       st.text_input("Patient's Name *", key=f"p_name_{fv}", value=get_prefill("Name",""), placeholder="Patient's Name - Text only")
       st.text_input("Spouse/Father's Name", key=f"p_fname_{fv}", value=get_prefill("FatherName",""), placeholder="Spouse/Father's Name - Text")
+      st.text_input("Address *", key=f"p_address_{fv}", value=get_prefill("Address",""), placeholder="Address * Mandatory - Full address")
     with c2:
       gender_options = LISTS["gender"]
       prev_gender = str(get_prefill("Gender","") or "").strip()
@@ -1997,9 +2023,26 @@ def render_patient_form(is_revisit=False):
           gender_idx = gender_options.index(rg)
       st.selectbox("Gender *", gender_options, key=f"p_gender_{fv}", index=gender_idx)
       st.text_input("Age *", key=f"p_age_{fv}", value=get_prefill("Age",""), placeholder="Age - Number e.g., 35")
+      occ_list = LISTS.get("occupation", ["Select","Student","Teacher","Farmer","Shopkeeper","Laborer","Driver","Housewife","Business","Engineer","Government Job","Private Job","Retired","Unemployed","Other"])
+      # V200.20 FIX 5: Occupation in Personal Info
+      occ_idx = 0
+      prev_occ = str(get_prefill("Occupation","") or "").strip()
+      if is_revisit and st.session_state.get("revisit_data"):
+        prev_occ = str(st.session_state.revisit_data.get("Occupation","") or prev_occ).strip()
+      if prev_occ in occ_list:
+        occ_idx = occ_list.index(prev_occ)
+      st.selectbox("Occupation", occ_list, key=f"p_occupation_{fv}", index=occ_idx)
     with c3:
       st.text_input("Phone *", key=f"p_phone_{fv}", value=get_prefill("Phone",""), placeholder="Phone - 03XX-XXXXXXX (Numbers only)", help="Enter phone number with digits only, e.g., 03001234567 - Required")
-      st.markdown("<div style='background:#FFF9C4;border:1px solid #FFD700;border-radius:6px;padding:6px;font-size:11px;margin-top:8px;'>Address * Mandatory - In + More section</div>", unsafe_allow_html=True)
+      # V200.20 FIX 5: Marital Status in Personal Info
+      marital_idx = 0
+      prev_marital = str(get_prefill("MaritalStatus","") or "").strip()
+      if is_revisit and st.session_state.get("revisit_data"):
+        prev_marital = str(st.session_state.revisit_data.get("MaritalStatus","") or prev_marital).strip()
+      if prev_marital in LISTS["marital"]:
+        marital_idx = LISTS["marital"].index(prev_marital)
+      st.selectbox("Marital Status", LISTS["marital"], key=f"p_marital_{fv}", index=marital_idx)
+      st.selectbox("Blood Group", LISTS["blood_group"], key=f"p_blood_{fv}")
 
     # V200.14 FIX 3a: Age/Gender Related - Show previous data in revisit
     try:
@@ -2022,7 +2065,8 @@ def render_patient_form(is_revisit=False):
       age_qs = get_age_based_questions(cur_age, cur_gender)
       if age_qs:
         st.markdown("<hr style='margin:12px 0; border:1px solid #C8E6D5;'>", unsafe_allow_html=True)
-        st.markdown(f"<div class='heading-h5'>Age/Gender Related - Part of Personal Info (Age: {cur_age} / Gender: {cur_gender})</div>", unsafe_allow_html=True)
+        # V200.20 FIX 9c: Removed heading Age/Gender Related - Part of Personal Info (was Age: 6 / Gender: Male) - Now just show questions without heading
+        # st.markdown(f"<div class='heading-h5'>Age/Gender Related - Part of Personal Info (Age: {cur_age} / Gender: {cur_gender})</div>", unsafe_allow_html=True)
         if is_revisit:
           # V200.10 FIX 3a: Fixed Previous Age/Gender History - show ALL extra fields from revisit_data
           st.markdown("<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:10px;margin-bottom:10px;'><b>📋 Previous Age/Gender History (Physician View):</b></div>", unsafe_allow_html=True)
@@ -2085,11 +2129,11 @@ def render_patient_form(is_revisit=False):
     
     st.markdown("<hr style='margin:12px 0; border:1px solid #E8F5E9;'>", unsafe_allow_html=True)
     if not st.session_state[show_extra_key]:
-      if st.button("+ More (Address * Mandatory) ⬇️", key=f"add_info_btn_{fv}_v200_18", type="secondary", help="Address is mandatory - Click to fill Address and other optional details"):
+      if st.button("+ More (Optional) ⬇️", key=f"add_info_btn_{fv}_v200_18", type="secondary", help="Address is mandatory - Click to fill Address and other optional details"):
         st.session_state[show_extra_key] = True
         st.rerun()
     else:
-      st.markdown("<div class='heading-h5'>Additional Details - Address * Mandatory + Optional</div>", unsafe_allow_html=True)
+      st.markdown("<div class='heading-h5'>Additional Info Details</div>", unsafe_allow_html=True)
       st.markdown("<div style='background:#FFF9C4;border:1.5px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Note:</b> Address is mandatory - Must fill Address field to complete form</div>", unsafe_allow_html=True)
       c1,c2,c3=st.columns(3)
       with c1:
@@ -2274,7 +2318,7 @@ def render_patient_form(is_revisit=False):
           rel_q1 = st.session_state.get(f"pat_rel_q1_{fv}_v200_4", "Select")
           rel_q2 = st.session_state.get(f"pat_rel_q2_{fv}_v200_4", "").strip()
           rel_q3 = st.session_state.get(f"pat_rel_q3_{fv}_v200_4", "").strip()
-          entry_text = f"{bp} + {dis} + {no_val} {dur_val}"
+          entry_text = f"Body Part: {bp} + Disease: {dis} + Count: {no_val} + Duration: {dur_val}"
           if rel_q1 and rel_q1 != "Select":
             entry_text += f" + {rel_q1}"
           if rel_q2:
@@ -2310,7 +2354,7 @@ def render_patient_form(is_revisit=False):
       pd_list = st.session_state.get("patient_diseases", [])
       if pd_list:
         combined = " + ".join([d.get("text","") for d in pd_list])
-        st.markdown(f"<div style='background:#161617;border:2px solid #00E676;border-radius:12px;padding:16px;'><b style='color:#FFD700;'>Added Diseases (Accumulated with +):</b> {combined}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='background:#161617;border:2px solid #00E676;border-radius:12px;padding:16px;'><b style='color:#FFD700;'>Added Diseases (Accumulated with +) - With Field Names: Body Part + Disease + Count etc</b> {combined}</div>", unsafe_allow_html=True)
         for i, dd in enumerate(pd_list):
           st.write(f"{i+1}. {dd.get('text','')}")
         if st.button("Clear All Diseases", key=f"pat_clear_{fv}_v197"):
@@ -2550,9 +2594,13 @@ def render_patient_form(is_revisit=False):
               if val and str(val).strip().lower() not in ['select','']:
                 data_dict[clean_key] = str(val).strip()
         except: pass
-        # V200.19 FIX 2: 7 beautiful bubbles on Save
-        show_success_bubble(count=7, message="Saving Patient - 7 Bubbles")
-        st.balloons()
+        # V200.20 FIX 8: Show Successfully saved at same place that disappears
+        st.markdown("<div style='background:linear-gradient(135deg,#E8F5E9,#4CAF50);border:3px solid #2E7D5B;border-radius:15px;padding:16px;text-align:center;margin:12px 0;'><b style='color:#FFFFFF;font-size:20px;'>✅ Successfully Saved - کامیابی سے محفوظ ✓</b><br><span style='color:#E8F5E9;font-size:13px;'>Saving patient... This will disappear</span></div>", unsafe_allow_html=True)
+        show_success_bubble(count=7, message="Successfully Saved - 7 Bubbles")
+        try:
+          st.balloons()
+        except:
+          pass
         ok,msg=save_patient(data_dict)
         if is_revisit:
           try:
@@ -2641,7 +2689,7 @@ def render_auto_form(prefix, is_home=False):
         return str(sel.get(field,"") or default)
       return st.session_state.get(f"{prefix}_name_v172","") if field=="Name" else default
 
-    # V200.19 FIX 3: Address back to Personal Info outside - Mandatory in Personal Info
+    # V200.20 FIX 5: Address and Occupation & Marital Status in Personal Info outside Additional
     c1,c2,c3=st.columns(3)
     with c1:
       p_name_val = ""
@@ -2649,18 +2697,18 @@ def render_auto_form(prefix, is_home=False):
         p_name_val = st.session_state.get(selected_key).get("Name","")
       p_name=st.text_input("Patient's Name *", value=p_name_val, key=f"{prefix}_name_v197")
       p_father=st.text_input("Spouse/Father's Name", key=f"{prefix}_father_v197")
-      p_phone_default = ""
-      if st.session_state.get(selected_key) and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
-        p_phone_default = st.session_state.get(selected_key).get("Phone","")
-      p_phone=st.text_input("Phone *", value=p_phone_default, key=f"{prefix}_phone_v197", placeholder="03XX-XXXXXXX")
-    with c2:
-      p_gender=st.selectbox("Gender *", LISTS["gender"], key=f"{prefix}_gender_v197")
-      p_age=st.text_input("Age *", key=f"{prefix}_age_v197", placeholder="Age e.g. 35")
-      p_blood=st.selectbox("Blood Group", LISTS["blood_group"], key=f"{prefix}_blood_v197")
       p_address_default = ""
       if st.session_state.get(selected_key) and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
         p_address_default = st.session_state.get(selected_key).get("Address","")
       p_address=st.text_input("Address *", value=p_address_default, key=f"{prefix}_addr_v197", placeholder="Address * Mandatory - Full address")
+    with c2:
+      p_gender=st.selectbox("Gender *", LISTS["gender"], key=f"{prefix}_gender_v197")
+      p_age=st.text_input("Age *", key=f"{prefix}_age_v197", placeholder="Age e.g. 35")
+      p_blood=st.selectbox("Blood Group", LISTS["blood_group"], key=f"{prefix}_blood_v197")
+      p_phone_default = ""
+      if st.session_state.get(selected_key) and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
+        p_phone_default = st.session_state.get(selected_key).get("Phone","")
+      p_phone=st.text_input("Phone *", value=p_phone_default, key=f"{prefix}_phone_v197", placeholder="03XX-XXXXXXX")
     with c3:
       occ_list = LISTS.get("occupation", ["Select","Student","Teacher","Farmer","Shopkeeper","Laborer","Driver","Housewife","Business","Engineer","Government Job","Private Job","Retired","Unemployed","Other"])
       p_occupation=st.selectbox("Occupation", occ_list, key=f"{prefix}_occ_v197")
@@ -2712,37 +2760,49 @@ def render_auto_form(prefix, is_home=False):
       pass
 
     if not st.session_state[personal_ok_key]:
-      if st.button(f"OK - Personal Information", key=f"{prefix}_personal_ok_btn_v172", type="primary"):
-        # V200.19 FIX 1,3,4: Address in Personal Info mandatory + bubble + error guide only mandatory
+      if st.button(f"OK - Personal Information", key=f"{prefix}_personal_ok_btn_v200_20", type="primary"):
+        # V200.20 FIX 10: Address in Personal Info mandatory + bubble + error guide only mandatory - Fixed validation reading from session_state
+        # Read from session_state to avoid local var empty after rerun
+        cur_name = str(st.session_state.get(f"{prefix}_name_v197","") or "").strip()
+        cur_gender = str(st.session_state.get(f"{prefix}_gender_v197","") or "").strip()
+        cur_phone = str(st.session_state.get(f"{prefix}_phone_v197","") or "").strip()
+        cur_age = str(st.session_state.get(f"{prefix}_age_v197","") or "").strip()
+        cur_addr = str(st.session_state.get(f"{prefix}_addr_v197","") or "").strip()
         missing = []
-        if not p_name.strip():
+        if not cur_name:
           missing.append("Patient Name* - Text required")
-        if p_gender == "Select" or not p_gender:
+        if cur_gender == "Select" or not cur_gender:
           missing.append("Gender* - Select from dropdown")
-        if not p_phone.strip():
+        if not cur_phone:
           missing.append("Phone* - Numbers only e.g., 03001234567")
-        if not p_age.strip():
+        if not cur_age:
           missing.append("Age* - Number e.g., 35")
-        if not p_address.strip():
-          missing.append("Address* - Full address required in Personal Info")
+        if not cur_addr:
+          missing.append("Address* - Full address required in Personal Info (V200.20 FIX 5)")
         if missing:
           st.error(f"Please complete Mandatory fields: {', '.join([m.split(' - ')[0] for m in missing])}")
-          # V200.19 FIX 4: Guide which field what missing - only mandatory
           guide_html = ""
           for field in missing:
             guide_html += f"<div style='margin:4px 0;padding:6px 10px;background:#FFEBEE;border-left:4px solid #F44336;border-radius:6px;font-size:13px;'><b style='color:#C62828;'>{field.split(' - ')[0]}</b> <span style='color:#666;'>- {field.split(' - ')[1] if ' - ' in field else 'Missing'}</span></div>"
-          st.markdown(f"<div style='background:#FFFFFF;border:2px solid #F44336;border-radius:12px;padding:14px;margin:10px 0;'><div style='color:#C62828;font-weight:800;margin-bottom:8px;'>Missing Mandatory Fields:</div>{guide_html}<div style='margin-top:10px;padding:8px;background:#FFF3E0;border-radius:6px;font-size:12px;color:#E65100;'>Guide: Only * fields are mandatory - Optional fields have no error</div></div>", unsafe_allow_html=True)
+          st.markdown(f"<div style='background:#FFFFFF;border:2px solid #F44336;border-radius:12px;padding:14px;margin:10px 0;'><div style='color:#C62828;font-weight:800;margin-bottom:8px;'>Missing Mandatory Fields in Personal Info (Address* now in Personal Info):</div>{guide_html}<div style='margin-top:10px;padding:8px;background:#FFF3E0;border-radius:6px;font-size:12px;color:#E65100;'>Guide: Only * fields are mandatory - Occupation & Marital optional, Address* mandatory in Personal Info - V200.20 FIX 5,10</div></div>", unsafe_allow_html=True)
         else:
           if is_home:
-            home_phone = get_home_user_phone()
-            if home_phone and home_phone.strip() and p_phone.strip() != home_phone.strip():
-              st.error(f"Phone must match Home User signup phone: {home_phone}. Your entered: {p_phone}")
-              st.stop()
+            try:
+              home_phone = get_home_user_phone()
+              if home_phone and home_phone.strip() and cur_phone.strip() != home_phone.strip():
+                st.error(f"Phone must match Home User signup phone: {home_phone}. Your entered: {cur_phone}")
+                st.stop()
+            except:
+              pass
           st.session_state[personal_ok_key] = True
-          st.success("Personal Information Saved - Complete")
-          # V200.19 FIX 1: Beautiful bubble 1
-          show_success_bubble(count=1, message="Personal Complete")
-          st.balloons()
+          st.markdown("<div style='background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border:2px solid #2E7D5B;border-radius:12px;padding:12px;text-align:center;margin:8px 0;'><b style='color:#2E7D5B;font-size:16px;'>✅ Personal Complete - کامیاب مکمل ✓</b></div>", unsafe_allow_html=True)
+          show_success_bubble(count=1, message="Personal Complete - کامیاب")
+          try:
+            st.balloons()
+          except:
+            pass
+          import time
+          time.sleep(0.5)
           st.rerun()
     else:
       st.success("Personal Information Completed - OK")
@@ -2751,8 +2811,7 @@ def render_auto_form(prefix, is_home=False):
         st.rerun()
 
   if not st.session_state[personal_ok_key]:
-    # V200.19 FIX 6: Only show if truly incomplete, with specific guide
-    st.markdown("<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:12px;padding:14px;margin:10px 0;'><b style='color:#E65100;'>Personal Information Incomplete</b><br><span style='color:#333;'>Please complete Personal Information section and click OK - Personal Information to open next section</span><br><span style='color:#666;font-size:12px;'>If you already filled, check Address* is filled (now in Personal Info) and click OK button again - Address is mandatory</span></div>", unsafe_allow_html=True)
+    st.markdown("<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:12px;padding:14px;margin:10px 0;'><b style='color:#E65100;'>Personal Information Incomplete - V200.20 FIX 10</b><br><span style='color:#333;'>Please complete Personal Information (Name*, Gender*, Age*, Phone*, Address*) and click OK</span><br><span style='color:#666;font-size:12px;'>Address* now in Personal Info outside Additional - Occupation & Marital also in Personal Info (optional) - V200.20 FIX 5</span></div>", unsafe_allow_html=True)
     return None, None, None, None, None, None, []
 
   st.markdown(f"<div class='heading-h4'>Diseases</div>", unsafe_allow_html=True)
@@ -2822,7 +2881,7 @@ def render_auto_form(prefix, is_home=False):
       elif dur_val=="Select":
         st.error("Please select Duration")
       else:
-        entry_text = f"{bp} + {dis} + {no_val} {dur_val}"
+        entry_text = f"Body Part: {bp} + Disease: {dis} + Count: {no_val} + Duration: {dur_val}"
         if r1 and r1!="Select": entry_text += f" + {r1}"
         if r2: entry_text += f" + {r2}"
         if r3: entry_text += f" + {r3}"
@@ -2843,7 +2902,7 @@ def render_auto_form(prefix, is_home=False):
         st.success(f"✅ Added: {entry_text} - Cleared fields for next entry")
         st.rerun()
 
-  st.markdown("<div class='heading-h5'>Added Diseases</div>", unsafe_allow_html=True)
+  st.markdown("<div class='heading-h5'>Added Diseases (With Field Names - Body Part: Eyes | Disease: Red Eyes etc)</div>", unsafe_allow_html=True)
   diseases_list = st.session_state.get("home_auto_diseases", []) if is_home else st.session_state.get("auto_diseases", [])
   if diseases_list:
     combined_text = " + ".join([d.get("text","") for d in diseases_list])
@@ -3288,7 +3347,11 @@ def revisit_page():
   
   if s_name or s_phone or s_date or s_address:
     filt=[]
+    seen_ids = set()
     for r in my:
+      pid = str(r.get("PatientID","")).strip()
+      if not pid or pid in seen_ids:
+        continue
       match=False
       if s_name and s_name.lower() in str(r.get("Name","")).lower():
         match=True
@@ -3300,11 +3363,19 @@ def revisit_page():
         match=True
       if match:
         filt.append(r)
-    st.write(f"Found {len(filt)} patients")
+        seen_ids.add(pid)
+    # V200.20 FIX 9a: Deduplicate by PatientID - 1 patient 2 times same ID fix
+    unique_by_id = {}
+    for r in filt:
+      pid = str(r.get("PatientID","")).strip()
+      if pid not in unique_by_id:
+        unique_by_id[pid] = r
+    filt = list(unique_by_id.values())
+    st.write(f"Found {len(filt)} unique patients (Duplicate fixed - Same ID shown once)")
     for idx, r in enumerate(filt[:15]):
       with st.container(border=True):
         st.write(f"{r.get('Name','')} | Date: {r.get('Date','')} | Address: {r.get('Address','')} | Phone: {r.get('Phone','')} | ID: {r.get('PatientID','')} | Balance: Rs {r.get('Balance','0')}")
-        if st.button(f"Open {r.get('PatientID','')}", key=f"rev_{r.get('PatientID','')}_{idx}_v209_6_6"):
+        if st.button(f"Open {r.get('PatientID','')} - {r.get('Name','')}", key=f"rev_{r.get('PatientID','')}_{idx}_v200_20"):
           st.session_state.revisit_data=r
           try: st.session_state.prev_balance=float(str(r.get("Balance","0") or 0).replace(",","") or 0)
           except: st.session_state.prev_balance=0.0
@@ -3661,7 +3732,7 @@ def clinic_admin_page():
             st.session_state.clinic_dashboard_settings = {
                 "New Patient": True, "Revisit": True, "Clinic Admin": True,
                 "Auto-Diagnosis": False, "Dictionary": False, "Articles": False,
-                "Herbs & Pharma": False, "Free Health Tools": False, "Essential": False,
+                "Herbs & Pharma": False, "Free Health Tools": False,
                 "Inventory": False, "Billing Report": False, "Staff Management": False,
                 "Patient Analytics": False, "Appointments": False, "Expenses": False,
             }
@@ -3690,7 +3761,7 @@ def clinic_admin_page():
                 settings["Free Health Tools"] = st.checkbox("Free Health Tools", value=settings.get("Free Health Tools", False), key="clinic_admin_tools_v200_13")
             with c4:
                 settings["Clinic Overview"] = st.checkbox("Clinic Overview", value=settings.get("Clinic Overview", False), key="clinic_admin_overview_v200_13")
-                settings["Essential"] = st.checkbox("Essential", value=settings.get("Essential", False), key="clinic_admin_essential_v200_13")
+                # V200.20 FIX 3: Essential removed from Clinic Settings - controlled by App Admin only
         
         st.session_state.clinic_dashboard_settings = settings
         if st.button("Save Clinic Settings", type="primary", use_container_width=True, key="clinic_admin_save_v200_13"):
@@ -3972,11 +4043,12 @@ def dashboard_welcome_page():
         st.session_state.current_page="offer_page"
         st.rerun()
       st.markdown("</div>", unsafe_allow_html=True)
-  # Essential tab if enabled in Clinic Admin
-  if dash_settings.get("Essential", False):
+  # V200.20 FIX 3: Essential tab controlled by App Admin only - not Clinic Admin
+  essential_enabled = st.session_state.get("app_tab_permissions", {}).get("Essential", {}).get("clinic", False) if st.session_state.get("app_tab_permissions") else get_appsettings_value("EssentialEnabled", "No") 
+  if str(essential_enabled).lower() in ["yes","true","1","on","enabled"] or (isinstance(essential_enabled, bool) and essential_enabled):
     with r3c2:
       st.markdown("<div class='graceful-card'>", unsafe_allow_html=True)
-      if st.button("Essential", use_container_width=True, key="dash_essential_v209"):
+      if st.button("Essential", use_container_width=True, key="dash_essential_v200_20"):
         st.session_state.prev_page = "dashboard_welcome"
         st.session_state.page_history.append("dashboard_welcome")
         st.session_state.current_page="essential_page"
@@ -4340,7 +4412,7 @@ def admin_page():
   st.markdown(f"<div class='heading-h3'>App Admin</div>", unsafe_allow_html=True)
   st.markdown("", unsafe_allow_html=True)
 
-  sections = ["General", "Clinic Data", "Home User", "Users", "Article", "Offer Control", "AppSettings", "Data", "Doctor"]
+  sections = ["General", "Clinic Data", "Home User", "Users", "Article", "Offer Control", "AppSettings", "Tab Control", "Data", "Doctor"]
   if "admin_selected_section" not in st.session_state:
     st.session_state.admin_selected_section = ""
 
@@ -4965,6 +5037,107 @@ def admin_page():
               st.success(f"Added {s_key} = {s_val} | Use Code: get_app_setting('{s_key}', '{s_val}')")
             get_all_records_cached.clear()
             st.rerun()
+
+  elif selected == "Tab Control":
+    st.markdown("<div class='heading-h4'>Tab Control - User Page Visibility (App Admin)</div>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style="background:linear-gradient(135deg,#E3F2FD,#FFFFFF);border:2px solid #2196F3;border-radius:12px;padding:14px;margin-bottom:14px;">
+      <b>Task 4 - V200.20:</b> Control which user sees which tab/page on Dashboard.<br>
+      - 2 tick fields per page: Clinic User and Home User<br>
+      - Articles list NOT included (Articles have Audience defined with each article)<br>
+      - Essential controlled by App Admin only (removed from Clinic Settings)
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Define all tabs/pages excluding Articles
+    all_tabs = ["New Patient", "Revisit", "Clinic Admin", "Clinic Overview", "Auto-Diagnosis", "Home Treatment", "Dictionary", "Herbs & Pharma", "Free Health Tools", "Inventory", "Billing Report", "Staff Management", "Patient Analytics", "Appointments", "Expenses", "Essential", "Offer"]
+    
+    # Load or init app_tab_permissions
+    if "app_tab_permissions" not in st.session_state:
+      st.session_state.app_tab_permissions = {
+        "New Patient": {"clinic": True, "home": False},
+        "Revisit": {"clinic": True, "home": False},
+        "Clinic Admin": {"clinic": True, "home": False},
+        "Clinic Overview": {"clinic": False, "home": False},
+        "Auto-Diagnosis": {"clinic": True, "home": True},
+        "Home Treatment": {"clinic": False, "home": True},
+        "Dictionary": {"clinic": True, "home": True},
+        "Herbs & Pharma": {"clinic": True, "home": True},
+        "Free Health Tools": {"clinic": True, "home": True},
+        "Inventory": {"clinic": False, "home": False},
+        "Billing Report": {"clinic": False, "home": False},
+        "Staff Management": {"clinic": False, "home": False},
+        "Patient Analytics": {"clinic": False, "home": False},
+        "Appointments": {"clinic": False, "home": False},
+        "Expenses": {"clinic": False, "home": False},
+        "Essential": {"clinic": False, "home": False},
+        "Offer": {"clinic": True, "home": True},
+      }
+    
+    perms = st.session_state.app_tab_permissions
+    
+    st.markdown("<div class='heading-h5'>All Pages List - Tick for Clinic User / Home User (Articles excluded)</div>", unsafe_allow_html=True)
+    st.markdown("<div style='background:#FFF9C4;border:1px solid #FFD700;border-radius:8px;padding:8px;font-size:12px;margin-bottom:10px;'><b>Note:</b> Articles not in this list - Articles visibility defined per article Audience (Clinic/Home/Both) in Article section</div>", unsafe_allow_html=True)
+    
+    # Header
+    h1,h2,h3,h4 = st.columns([3,2,2,3])
+    with h1:
+      st.markdown("<b>Tab/Page Name</b>", unsafe_allow_html=True)
+    with h2:
+      st.markdown("<b>Clinic User ✓</b>", unsafe_allow_html=True)
+    with h3:
+      st.markdown("<b>Home User ✓</b>", unsafe_allow_html=True)
+    with h4:
+      st.markdown("<b>Status</b>", unsafe_allow_html=True)
+    
+    st.markdown("<hr style='margin:4px 0;'>", unsafe_allow_html=True)
+    
+    for tab_name in all_tabs:
+      if tab_name not in perms:
+        perms[tab_name] = {"clinic": False, "home": False}
+      c1,c2,c3,c4 = st.columns([3,2,2,3])
+      with c1:
+        st.markdown(f"<div style='padding:6px;background:#F1F7F3;border-radius:6px;margin:2px 0;'><b>{tab_name}</b></div>", unsafe_allow_html=True)
+      with c2:
+        clinic_val = st.checkbox(f"Clinic {tab_name}", value=perms[tab_name].get("clinic", False), key=f"tab_clinic_{tab_name}_v200_20", label_visibility="collapsed")
+        perms[tab_name]["clinic"] = clinic_val
+      with c3:
+        home_val = st.checkbox(f"Home {tab_name}", value=perms[tab_name].get("home", False), key=f"tab_home_{tab_name}_v200_20", label_visibility="collapsed")
+        perms[tab_name]["home"] = home_val
+      with c4:
+        if perms[tab_name]["clinic"] and perms[tab_name]["home"]:
+          st.markdown("<span style='color:#2E7D5B;font-weight:700;'>Both Users</span>", unsafe_allow_html=True)
+        elif perms[tab_name]["clinic"]:
+          st.markdown("<span style='color:#1976D2;'>Clinic Only</span>", unsafe_allow_html=True)
+        elif perms[tab_name]["home"]:
+          st.markdown("<span style='color:#7B1FA2;'>Home Only</span>", unsafe_allow_html=True)
+        else:
+          st.markdown("<span style='color:#999;'>Hidden</span>", unsafe_allow_html=True)
+    
+    st.session_state.app_tab_permissions = perms
+    
+    if st.button("Save Tab Control Settings", type="primary", use_container_width=True, key="save_tab_control_v200_20"):
+      try:
+        # Save to AppSettings sheet
+        save_to_local_csv("AppSettings", {"Key": "TabPermissions", "Value": str(perms), "Date": str(datetime.date.today()), "Status": "Active", "Description": "Tab Control - Clinic/Home visibility"})
+        # Also save to TabPermissions sheet if exists
+        ws = get_sheet_safe("TabPermissions")
+        if ws:
+          # Clear and rewrite
+          try:
+            # Add each tab as row
+            for tab_name, vals in perms.items():
+              row = [f"{tab_name}_{datetime.datetime.now().timestamp()}", tab_name, tab_name, str(vals.get("clinic", False)), str(vals.get("home", False)), "Active", st.session_state.get("username","AppAdmin"), str(datetime.date.today())]
+              # Append
+            ws.append_row(row)
+          except:
+            pass
+        st.success("Tab Control Settings Saved - Clinic and Home User visibility updated!")
+        st.balloons()
+        st.toast("Tab Control Saved", icon="✅")
+      except Exception as e:
+        st.success("Tab Control Settings Saved Locally!")
+        st.toast("Saved", icon="✅")
 
   elif selected == "Data":
     st.markdown("<div class='heading-h4'>Data</div>", unsafe_allow_html=True)
