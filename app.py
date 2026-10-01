@@ -1,4 +1,4 @@
-# APP VERSION - V200.16 - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# APP VERSION - V200.17 - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.16 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.17 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -494,20 +494,105 @@ DISEASE_RELATED_QUESTIONS = {
   "General": ["Onset?", "Severity?", "Family History?"],
 }
 
+# V200.17 FIX 1: Dropdown lists for Related Questions - Throat Sore Throat and all others
+DISEASE_RELATED_DROPDOWNS = {
+  "Head": {
+    "Pain Type": ["Select","Throbbing","Sharp","Dull","Pressure","Tightness"],
+    "Timing": ["Select","Morning","Evening","Night","Continuous","Intermittent"],
+    "Associated Nausea?": ["Select","Yes","No","Sometimes"]
+  },
+  "Eyes": {
+    "Vision Effect?": ["Select","Yes Blurred","No","Partial"],
+    "Pain on Movement?": ["Select","Yes","No","On Looking Up","On Looking Side"],
+    "Discharge Type?": ["Select","Watery","Thick","Yellow","White","None"]
+  },
+  "Nose": {
+    "Discharge Color?": ["Select","Clear","White","Yellow","Green","Bloody","None"],
+    "Allergy Trigger?": ["Select","Dust","Pollen","Cold","Food","Smoke","Unknown"],
+    "Smell Loss?": ["Select","Yes","No","Partial","Temporary"]
+  },
+  "Mouth": {
+    "Eating Difficulty?": ["Select","Yes","No","Mild","Severe"],
+    "Duration of Ulcer?": ["Select","1-2 Days","3-7 Days","1-2 Weeks","More than 2 Weeks"],
+    "Bleeding?": ["Select","Yes","No","On Brushing","Sometimes"]
+  },
+  "Throat": {
+    "Fever with Throat?": ["Select","Yes High Fever","Yes Low Fever","No Fever","On and Off"],
+    "Voice Change?": ["Select","No Change","Hoarseness","Loss of Voice","Rough Voice"],
+    "Swallowing Pain Level?": ["Select","Mild","Moderate","Severe","Only on Swallowing","Continuous"]
+  },
+  "Chest": {
+    "Cough Type?": ["Select","Dry","Wet","Productive","Whooping","Barking"],
+    "Worse at Night?": ["Select","Yes Worse at Night","No","Same Day Night","Only Night"],
+    "Sputum Color?": ["Select","White","Yellow","Green","Bloody","None","Clear"]
+  },
+  "Stomach": {
+    "Relation to Food?": ["Select","Before Eating","After Eating","Empty Stomach","No Relation"],
+    "Bowel Type?": ["Select","Constipated","Loose","Normal","Irregular","Hard"],
+    "Appetite Effect?": ["Select","Increased","Decreased","No Effect","Loss of Appetite"]
+  },
+  "Liver": {
+    "Appetite Loss?": ["Select","Yes","No","Partial","Complete Loss"],
+    "Yellow Urine?": ["Select","Yes Dark Yellow","No","Light Yellow","Pale"],
+    "Abdominal Swelling?": ["Select","Yes","No","Mild","Severe"]
+  },
+  "Kidney": {
+    "Pain Radiation?": ["Select","To Back","To Groin","To Leg","Local Only","No Radiation"],
+    "Urine Color?": ["Select","Clear","Yellow","Dark Yellow","Red/Bloody","Cloudy"],
+    "Swelling in Feet?": ["Select","Yes","No","Morning Only","Evening","Both"]
+  },
+  "Joints": {
+    "Stiffness Morning?": ["Select","Yes Morning Stiffness","No","Evening","Whole Day"],
+    "Worse on Movement?": ["Select","Yes Worse on Movement","Better on Movement","No Effect","Only at Rest"],
+    "Swelling?": ["Select","Yes Swollen","No","Mild Swelling","Severe Swelling"]
+  },
+  "Skin": {
+    "Itching Severity?": ["Select","Mild","Moderate","Severe","No Itching","At Night Only"],
+    "Spread Area?": ["Select","Local","Widespread","One Side","Both Sides","Increasing"],
+    "Seasonal?": ["Select","Summer","Winter","All Season","Rainy","Changing Season"]
+  },
+  "Heart": {
+    "Palpitation Frequency?": ["Select","Occasional","Frequent","Continuous","On Exertion","At Rest"],
+    "Exertion Effect?": ["Select","Worse on Exertion","No Effect","Better on Rest","Chest Tightness"],
+    "Sweating?": ["Select","Excess Sweating","No Sweating","Night Sweating","On Exertion"]
+  },
+  "General": {
+    "Onset?": ["Select","Sudden","Gradual","Since Birth","Since Childhood","Recent"],
+    "Severity?": ["Select","Mild","Moderate","Severe","Very Severe"],
+    "Family History?": ["Select","Yes","No","Father Side","Mother Side","Both Sides"]
+  }
+}
+
 LISTS = {
   "gender": ["Select","Male","Female"],
   "temperament": ["Select","Cold Dry","Dry Cold","Dry Hot","Hot Dry","Hot Wet","Wet Hot","Wet Cold","Cold Wet"],
   "fee_status": ["Select","Paid","Unpaid","Partial","Free"],
   "payment": ["Select","Cash","Online","JazzCash","Free"],
-  "marital": ["Select","Single","Married"],
-  "duration": ["Select","Day","Month","Year"],
-  "severity": ["Select","Mild","Moderate","Severe"],
-  "blood_group": ["Select","A+","A-","B+","B-","O+","O-","AB+","AB-"],
-  "sleep": ["Select","Normal","Less","Excess","Disturbed"],
-  "appetite": ["Select","Normal","Less","Excess","No Appetite"],
-  "bowel": ["Select","Normal","Constipated","Loose","Irregular"],
-  "allergy": ["Select","None","Dust","Pollen","Food","Medicine","Cold","Skin","Smoke","Other"],
+  "marital": ["Select","Single","Married","Widowed","Divorced"],
+  "duration": ["Select","Day","Week","Month","Year","Since Birth","Since Childhood"],
+  "severity": ["Select","Mild","Moderate","Severe","Very Mild","Very Severe"],
+  "blood_group": ["Select","A+","A-","B+","B-","O+","O-","AB+","AB-","Unknown"],
+  "sleep": ["Select","Normal","Less","Excess","Disturbed","Deep","Light","Broken"],
+  "appetite": ["Select","Normal","Less","Excess","No Appetite","Increased","Decreased"],
+  "bowel": ["Select","Normal","Constipated","Loose","Irregular","Hard","Watery","Frequent"],
+  "allergy": ["Select","None","Dust","Pollen","Food","Medicine","Cold","Skin","Smoke","Other","Chemical","Animal"],
   "occupation": ["Select","Student","Teacher","Farmer","Shopkeeper","Laborer","Driver","Housewife","Business","Engineer","Government Job","Private Job","Retired","Unemployed","Other"],
+  "pulse": ["Select","Normal","Fast","Slow","Irregular","Weak","Strong"],
+  "bp": ["Select","Normal","Low","High","Very High","Very Low"],
+  "temperature": ["Select","Normal","Low Grade Fever","High Fever","Very High Fever","Hypothermia"],
+  "weight_status": ["Select","Normal","Underweight","Overweight","Obese","Thin"],
+  "height": ["Select","Short","Average","Tall","Very Tall"],
+  "habits": ["Select","None","Smoking","Tobacco","Alcohol","Tea Excess","Coffee Excess","Naswar","Other"],
+  "thirst": ["Select","Normal","Excess","Less","Very Excess","No Thirst"],
+  "urine": ["Select","Normal","Burning","Frequent","Less","Dark Yellow","Red","Cloudy","Painful"],
+  "sweat": ["Select","Normal","Excess","Less","Night Sweating","Day Sweating","No Sweating"],
+  "stress": ["Select","Low","Medium","High","Very High","No Stress"],
+  "energy": ["Select","Low","Normal","High","Very Low","Very High"],
+  "cough_type": ["Select","Dry","Wet","Productive","Whooping","Barking","Continuous"],
+  "pain_type": ["Select","Throbbing","Sharp","Dull","Pressure","Tightness","Burning","Stabbing"],
+  "timing": ["Select","Morning","Evening","Night","Continuous","Intermittent","After Eating","Before Eating"],
+  "yes_no": ["Select","Yes","No"],
+  "yes_no_sometimes": ["Select","Yes","No","Sometimes","Often","Rarely"],
 }
 
 defaults = {
@@ -2033,12 +2118,12 @@ def render_patient_form(is_revisit=False):
     if section_heading_clickable("vital","Vital Signs"):
       c1,c2,c3=st.columns(3)
       with c1:
-        st.text_input("BP", key=f"v_bp_{fv}", value=get_prefill("BP",""))
-        st.text_input("Weight", key=f"v_weight_{fv}", value=get_prefill("Weight",""))
+        st.selectbox("BP", LISTS["bp"], key=f"v_bp_{fv}")
+        st.text_input("Weight (kg)", key=f"v_weight_{fv}", value=get_prefill("Weight",""), placeholder="e.g., 70")
         st.selectbox("Sleep Pattern", LISTS["sleep"], key=f"v_sleep_{fv}")
       with c2:
-        st.text_input("Temperature", key=f"v_temp_{fv}", value=get_prefill("Temperature",""))
-        st.selectbox("Pulse", ["Select","Normal","Fast","Slow"], key=f"v_pulse_{fv}")
+        st.selectbox("Temperature", LISTS["temperature"], key=f"v_temp_{fv}")
+        st.selectbox("Pulse", LISTS["pulse"], key=f"v_pulse_{fv}")
         st.selectbox("Appetite", LISTS["appetite"], key=f"v_appetite_{fv}")
       with c3:
         st.selectbox("Temperament", LISTS["temperament"], key=f"u_temperament_{fv}")
@@ -2111,21 +2196,34 @@ def render_patient_form(is_revisit=False):
         d_no = st.text_input("No/Count *", key=f"pat_no_{fv}_v197", placeholder="e.g., 2 - Mandatory")
       with c4:
         d_duration = st.selectbox("Duration *", LISTS["duration"], key=f"pat_dur_{fv}_v197")
-      # V200.4 FIX 4d: Disease related questions - nature/stage etc as part of Diseases info
-      st.markdown("<div class='heading-h5'>Disease Related Questions - Nature/Stage etc</div>", unsafe_allow_html=True)
-      st.markdown("<div style='background:#F1F7F3;border:1.5px solid #C8E6D5;border-radius:10px;padding:8px;margin-bottom:8px;font-size:13px;'>Additional Questions - Disease Nature/Stage - For Physician Reference</div>", unsafe_allow_html=True)
-      rq1_col, rq2_col, rq3_col = st.columns(3)
-      with rq1_col:
-        # Get related questions based on body part
-        related_qs = DISEASE_RELATED_QUESTIONS.get(st.session_state.get(f"pat_body_part_{fv}_v197","Select"), DISEASE_RELATED_QUESTIONS.get("General", ["Severity","Trigger","Associated Symptom"]))
-        q1_label = related_qs[0] if len(related_qs)>0 else "Severity/Stage"
-        st.selectbox(q1_label, LISTS["severity"], key=f"pat_rel_q1_{fv}_v200_4")
-      with rq2_col:
-        q2_label = related_qs[1] if len(related_qs)>1 else "Nature/Trigger"
-        st.text_input(q2_label, key=f"pat_rel_q2_{fv}_v200_4", placeholder="e.g., After eating, Continuous")
-      with rq3_col:
-        q3_label = related_qs[2] if len(related_qs)>2 else "Associated Symptom"
-        st.text_input(q3_label, key=f"pat_rel_q3_{fv}_v200_4", placeholder="e.g., Nausea, Burning")
+      # V200.17 FIX 1,2,3: Disease related questions with dropdowns after all fields complete
+      bp_complete = st.session_state.get(f"pat_body_part_{fv}_v197","Select") != "Select"
+      dis_complete = st.session_state.get(f"pat_disease_sub_{fv}_v197","Select") != "Select"
+      no_complete = str(st.session_state.get(f"pat_no_{fv}_v197","")).strip() != ""
+      dur_complete = st.session_state.get(f"pat_dur_{fv}_v197","Select") != "Select"
+      all_disease_fields_done = bp_complete and dis_complete and no_complete and dur_complete
+      
+      if all_disease_fields_done:
+        st.markdown("<div class='heading-h5'>Disease Related Questions - Nature/Stage etc (After all fields complete)</div>", unsafe_allow_html=True)
+        st.markdown("<div style='background:#F1F7F3;border:1.5px solid #C8E6D5;border-radius:10px;padding:8px;margin-bottom:8px;font-size:13px;'>Additional Questions - Disease Nature/Stage - Dropdown lists - For Physician Reference</div>", unsafe_allow_html=True)
+        rq1_col, rq2_col, rq3_col = st.columns(3)
+        with rq1_col:
+          related_qs = DISEASE_RELATED_QUESTIONS.get(st.session_state.get(f"pat_body_part_{fv}_v197","Select"), DISEASE_RELATED_QUESTIONS.get("General", ["Severity","Trigger","Associated Symptom"]))
+          q1_label = related_qs[0] if len(related_qs)>0 else "Severity/Stage"
+          # V200.17 FIX 1: Dropdown for related questions
+          bp_for_dd = st.session_state.get(f"pat_body_part_{fv}_v197","General")
+          dd_options = DISEASE_RELATED_DROPDOWNS.get(bp_for_dd, {}).get(q1_label, LISTS["severity"])
+          st.selectbox(q1_label, dd_options, key=f"pat_rel_q1_{fv}_v200_4")
+        with rq2_col:
+          q2_label = related_qs[1] if len(related_qs)>1 else "Nature/Trigger"
+          dd_options2 = DISEASE_RELATED_DROPDOWNS.get(bp_for_dd, {}).get(q2_label, ["Select","Yes","No","Sometimes","After eating","Before eating","Continuous","Intermittent"])
+          st.selectbox(q2_label, dd_options2, key=f"pat_rel_q2_{fv}_v200_4")
+        with rq3_col:
+          q3_label = related_qs[2] if len(related_qs)>2 else "Associated Symptom"
+          dd_options3 = DISEASE_RELATED_DROPDOWNS.get(bp_for_dd, {}).get(q3_label, ["Select","Nausea","Burning","Pain","Itching","None","Other"])
+          st.selectbox(q3_label, dd_options3, key=f"pat_rel_q3_{fv}_v200_4")
+      else:
+        st.info("Complete Body Part*, Disease*, No/Count* and Duration* to see Related Questions (Dropdowns)")
 
       if st.button("Add Disease +", key=f"pat_add_{fv}_v200_4", type="secondary", use_container_width=True):
         bp = st.session_state.get(f"pat_body_part_{fv}_v197", "Select")
@@ -2574,23 +2672,30 @@ def render_auto_form(prefix, is_home=False):
 
     if not st.session_state[personal_ok_key]:
       if st.button(f"OK - Personal Information", key=f"{prefix}_personal_ok_btn_v172", type="primary"):
+        # V200.17 FIX 4: Detailed validation with reminder which field missing
+        missing = []
         if not p_name.strip():
-          st.error("Please complete: Patient Name")
-        elif p_gender == "Select":
-          st.error("Please complete: Gender")
-        elif not p_phone.strip():
-          st.error("Please complete: Phone")
-        elif not p_age.strip():
-          st.error("Please complete: Age")
+          missing.append("Patient Name*")
+        if p_gender == "Select" or not p_gender:
+          missing.append("Gender*")
+        if not p_phone.strip():
+          missing.append("Phone*")
+        if not p_age.strip():
+          missing.append("Age*")
+        # Check if any missing
+        if missing:
+          st.error(f"Please complete Personal Information - Missing: {', '.join(missing)}")
+          st.warning(f"Reminder: Fill these fields: {', '.join(missing)}")
         else:
-          # Home User phone matching validation
+          # Home User phone matching - only if home_phone exists and not empty
           if is_home:
             home_phone = get_home_user_phone()
-            if home_phone and p_phone.strip() != home_phone:
-              st.error(f"Phone must match Home User signup phone: {home_phone}")
+            if home_phone and home_phone.strip() and p_phone.strip() != home_phone.strip():
+              st.error(f"Phone must match Home User signup phone: {home_phone}. Your entered: {p_phone}")
+              st.info("If your signup phone is wrong, update HomeUsers sheet")
               st.stop()
           st.session_state[personal_ok_key] = True
-          st.success("Personal Information Saved")
+          st.success("Personal Information Saved - Complete")
           st.rerun()
     else:
       st.success("Personal Information Completed - OK")
@@ -2618,18 +2723,30 @@ def render_auto_form(prefix, is_home=False):
       d_duration = st.selectbox("Duration *", LISTS["duration"], key=f"{prefix}_dur_v197")
 
     rq1_val = st.session_state.get(f"{prefix}_rel_q1_v197", "Select")
-    rq2_val = st.session_state.get(f"{prefix}_rel_q2_v197", "")
-    rq3_val = st.session_state.get(f"{prefix}_rel_q3_v197", "")
-    if body_part != "Select" and disease != "Select":
-      st.markdown(f"<div class='heading-h5'>Related Questions for {body_part} - {disease}</div>", unsafe_allow_html=True)
+    rq2_val = st.session_state.get(f"{prefix}_rel_q2_v197", "Select")
+    rq3_val = st.session_state.get(f"{prefix}_rel_q3_v197", "Select")
+    # V200.17 FIX 1,3: Related Questions only after all disease fields complete, with dropdowns
+    all_fields_complete = body_part != "Select" and disease != "Select" and str(d_no).strip() != "" and d_duration != "Select"
+    if all_fields_complete:
+      st.markdown(f"<div class='heading-h5'>Related Questions for {body_part} - {disease} (Dropdowns - After all fields complete)</div>", unsafe_allow_html=True)
       related_qs = DISEASE_RELATED_QUESTIONS.get(body_part, DISEASE_RELATED_QUESTIONS["General"])
+      dd_map = DISEASE_RELATED_DROPDOWNS.get(body_part, {})
       cq1,cq2,cq3=st.columns(3)
       with cq1:
-        rq1_val = st.selectbox(related_qs[0] if len(related_qs)>0 else "Severity", LISTS["severity"], key=f"{prefix}_rel_q1_v197")
+        q1_label = related_qs[0] if len(related_qs)>0 else "Severity"
+        q1_options = dd_map.get(q1_label, LISTS["severity"])
+        rq1_val = st.selectbox(q1_label, q1_options, key=f"{prefix}_rel_q1_v197")
       with cq2:
-        rq2_val = st.text_input(related_qs[1] if len(related_qs)>1 else "Trigger", key=f"{prefix}_rel_q2_v197", placeholder="e.g., After eating")
+        q2_label = related_qs[1] if len(related_qs)>1 else "Trigger"
+        q2_options = dd_map.get(q2_label, ["Select","Yes","No","Sometimes","After eating","Before eating","Continuous","Intermittent","Mild","Severe"])
+        rq2_val = st.selectbox(q2_label, q2_options, key=f"{prefix}_rel_q2_v197")
       with cq3:
-        rq3_val = st.text_input(related_qs[2] if len(related_qs)>2 else "Associated Symptom", key=f"{prefix}_rel_q3_v197", placeholder="e.g., Nausea")
+        q3_label = related_qs[2] if len(related_qs)>2 else "Associated Symptom"
+        q3_options = dd_map.get(q3_label, ["Select","Nausea","Burning","Pain","Itching","None","Other","Fever","Swelling"])
+        rq3_val = st.selectbox(q3_label, q3_options, key=f"{prefix}_rel_q3_v197")
+    else:
+      if body_part != "Select" and disease != "Select":
+        st.info("Complete No/Count* and Duration* to see Related Questions (Dropdowns)")
 
     # V200.15 FIX 2: Add Disease functional for Home treatment - fixed key and logic
     if st.button("Add Disease +", key=f"{prefix}_add_v200_15", type="secondary", use_container_width=True):
@@ -2695,19 +2812,20 @@ def render_auto_form(prefix, is_home=False):
     if not st.session_state[diseases_ok_key]:
       if st.button(f"OK - Diseases", key=f"{prefix}_diseases_ok_btn_v172", type="primary"):
         if not diseases_list:
-          st.error("Please complete: Add at least one disease")
+          st.error("Please complete: Add at least one disease - Use Select Body Part and Disease then Add Disease +")
+          st.warning("Reminder: Fill Body Part*, Disease*, No/Count*, Duration* and click Add Disease +")
         else:
           st.session_state[diseases_ok_key] = True
           st.success("Diseases OK - Next section unlocked")
           st.rerun()
     else:
-      st.success("Diseases Completed - OK")
+      st.success("Diseases Completed - OK - Next section open")
       if st.button(f"Edit Diseases", key=f"{prefix}_diseases_edit_v172"):
         st.session_state[diseases_ok_key] = False
         st.rerun()
 
   if not st.session_state[diseases_ok_key]:
-    st.warning("Please complete Diseases section and click OK to open next section")
+    st.warning("Please complete Diseases section and click OK to open next section. Reminder: Add at least one disease via Add Disease + button")
     return p_name, p_father, p_age, p_phone, p_gender, p_address, diseases_list
 
   st.markdown("<div class='heading-h4'>Additional Information</div>", unsafe_allow_html=True)
@@ -2749,18 +2867,19 @@ def render_auto_form(prefix, is_home=False):
         if allergy_hist == "Select": mandatory_missing.append("Allergy History")
         if mandatory_missing:
           st.error(f"Please complete: {', '.join(mandatory_missing)}")
+          st.warning(f"Reminder: Fill these fields in Additional Information: {', '.join(mandatory_missing)} - All are dropdowns")
         else:
           st.session_state[additional_ok_key] = True
           st.success("Additional Information OK - Proceed unlocked")
           st.rerun()
     else:
-      st.success("Additional Information Completed - OK")
+      st.success("Additional Information Completed - OK - Proceed button below Additional Questions will be enabled")
       if st.button(f"Edit Additional Information", key=f"{prefix}_additional_edit_v172"):
         st.session_state[additional_ok_key] = False
         st.rerun()
 
   if not st.session_state[additional_ok_key]:
-    st.warning("Please complete Additional Information and click OK to enable Proceed")
+    st.warning("Please complete Additional Information and click OK to enable Proceed. Reminder: Complete all dropdowns in Lifestyle and Symptoms")
     return p_name, p_father, p_age, p_phone, p_gender, p_address, diseases_list
 
   # V200.15 FIX 1c: Additional Questions BEFORE Proceed button
@@ -2950,10 +3069,10 @@ def auto_selection_page():
         if s_address and s_address.lower() in str(r.get("Address","")).lower(): match=True
         if match:
           filt.append(r)
-      for r in filt[:10]:
+      for idx, r in enumerate(filt[:10]):
         with st.container(border=True):
           st.write(f"{r.get('Name','')} | {r.get('Phone','')} | {r.get('Date','')} | {r.get('Diseases','')[:100]}")
-          if st.button(f"Select {r.get('ID','')}", key=f"auto_sel_{r.get('ID','')}_v172"):
+          if st.button(f"Select {r.get('ID','')}", key=f"auto_sel_{r.get('ID','')}_{idx}_v200_17"):
             st.session_state.auto_selected_patient = r
             st.session_state.auto_revisit_data = r
             st.rerun()
@@ -3012,10 +3131,10 @@ def home_user_page():
           if s_address and s_address.lower() in str(r.get("Address","")).lower(): match=True
           if match:
             filt.append(r)
-        for r in filt[:10]:
+        for idx, r in enumerate(filt[:10]):
           with st.container(border=True):
             st.write(f"{r.get('Name','')} | {r.get('Phone','')} | {r.get('Date','')}")
-            if st.button(f"Select {r.get('ID','')}", key=f"home_auto_sel_{r.get('ID','')}_v172"):
+            if st.button(f"Select {r.get('ID','')}", key=f"home_auto_sel_{r.get('ID','')}_{idx}_v200_17"):
               st.session_state.home_auto_selected_patient = r
               st.rerun()
     else:
