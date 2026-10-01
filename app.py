@@ -2113,21 +2113,16 @@ def render_patient_form(is_revisit=False):
         st.rerun()
     else:
       st.markdown("<div class='heading-h5'>Additional Info Details</div>", unsafe_allow_html=True)
-      st.markdown("<div style='background:#FFF9C4;border:1.5px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Note:</b> Address is mandatory - Must fill Address field to complete form</div>", unsafe_allow_html=True)
+      st.markdown("<div style='background:#FFF9C4;border:1.5px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Note:</b> Optional details - Address, Occupation, Marital already filled in Personal Info above</div>", unsafe_allow_html=True)
       c1,c2,c3=st.columns(3)
       with c1:
-        # V200.18 FIX 1: Address mandatory in Additional
-        st.text_input("Address * (Mandatory)", key=f"p_address_{fv}", value=get_prefill("Address",""), placeholder="Address * Mandatory - Full address")
-        st.selectbox("Blood Group", LISTS["blood_group"], key=f"p_blood_{fv}")
+        # V200.21 FIX: Address, Occupation, Marital, Blood now in Personal Info - not duplicate here
         st.text_input("Height (Optional)", key=f"p_height_{fv}", placeholder="e.g., 5.6 ft")
-        occ_list = LISTS.get("occupation", ["Select","Student","Teacher","Farmer","Shopkeeper","Laborer","Driver","Housewife","Business","Engineer","Government Job","Private Job","Retired","Unemployed","Other"])
-        st.selectbox("Occupation", occ_list, key=f"p_occupation_{fv}")
-      with c2:
-        st.selectbox("Marital Status", LISTS["marital"], key=f"p_marital_{fv}")
-        st.text_input("CNIC (Optional)", key=f"p_cnic_{fv}", value=get_prefill("CNIC",""), placeholder="CNIC - Number")
         st.text_input("Weight (Optional)", key=f"p_weight_{fv}", placeholder="e.g., 70 kg")
-      with c3:
+      with c2:
+        st.text_input("CNIC (Optional)", key=f"p_cnic_{fv}", value=get_prefill("CNIC",""), placeholder="CNIC - Number")
         st.text_input("Emergency Phone (Optional)", key=f"p_emergency_{fv}", placeholder="Emergency Phone")
+      with c3:
         st.text_input("Referral (Optional)", key=f"p_referral_{fv}", placeholder="Referral - Text")
         st.selectbox("Allergy (Optional)", LISTS["allergy"], key=f"p_allergy_{fv}")
       if st.button("Close ✕", key=f"hide_extra_{fv}_v200_19"):
