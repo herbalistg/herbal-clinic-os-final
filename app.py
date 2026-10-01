@@ -1,4 +1,4 @@
-# APP VERSION - V200.18 - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Address * Mandatory) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# APP VERSION - V200.19 - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Address * Mandatory) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
 
@@ -22,9 +22,101 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.18 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.19 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
+
+
+def show_success_bubble(count=1, message="Complete"):
+  """V200.19 FIX 1,2: Show beautiful bubble(s) that disappear immediately"""
+  try:
+    import random
+    colors = ["#2E7D5B", "#00E676", "#FFD700", "#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A"]
+    bubbles_html = ""
+    for i in range(count):
+      color = random.choice(colors)
+      left = random.randint(10, 90)
+      delay = i * 0.2
+      bubbles_html += f"""
+      <div style="
+        position: fixed;
+        left: {left}%;
+        bottom: 20px;
+        width: 60px;
+        height: 60px;
+        background: radial-gradient(circle at 30% 30%, {color}, {color}AA);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 24px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 2px 5px rgba(255,255,255,0.5);
+        animation: bubbleFloat 2.5s ease-in-out {delay}s forwards;
+        z-index: 9999;
+        pointer-events: none;
+      ">&#10003;</div>
+      """
+    html = f"""
+    <style>
+    @keyframes bubbleFloat {{
+      0% {{ transform: translateY(0) scale(0); opacity: 0; }}
+      20% {{ transform: translateY(-20px) scale(1.1); opacity: 1; }}
+      80% {{ transform: translateY(-100px) scale(1); opacity: 1; }}
+      100% {{ transform: translateY(-150px) scale(0); opacity: 0; }}
+    }}
+    </style>
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998;">
+      {bubbles_html}
+      <div style="
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #2E7D5B, #4CAF50);
+        color: white;
+        padding: 16px 28px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 16px;
+        box-shadow: 0 8px 25px rgba(46,125,91,0.4);
+        animation: bubbleMessage 2s ease-in-out forwards;
+        z-index: 9999;
+      ">{message} &#10003;</div>
+    </div>
+    <style>
+    @keyframes bubbleMessage {{
+      0% {{ opacity: 0; transform: translate(-50%, -40%); }}
+      20% {{ opacity: 1; transform: translate(-50%, -50%); }}
+      80% {{ opacity: 1; transform: translate(-50%, -50%); }}
+      100% {{ opacity: 0; transform: translate(-50%, -60%); }}
+    }}
+    </style>
+    """
+    import streamlit.components.v1 as components
+    components.html(html, height=0)
+  except:
+    pass
+
+def show_error_guide(missing_fields, section_name=""):
+  """V200.19 FIX 1,4: Show error only for mandatory with guide which field missing what"""
+  try:
+    guide_html = ""
+    for field in missing_fields:
+      guide_html += f"<div style='margin:4px 0;padding:6px 10px;background:#FFEBEE;border-left:4px solid #F44336;border-radius:6px;font-size:13px;'><b style='color:#C62828;'>{field}</b> <span style='color:#666;'>is missing - Please fill this field</span></div>"
+    full_html = f"""
+    <div style='background:#FFFFFF;border:2px solid #F44336;border-radius:12px;padding:14px;margin:10px 0;box-shadow:0 2px 8px rgba(244,67,54,0.15);'>
+      <div style='color:#C62828;font-weight:800;font-size:14px;margin-bottom:8px;'>Missing Mandatory Fields in {section_name}:</div>
+      {guide_html}
+      <div style='margin-top:10px;padding:8px;background:#FFF3E0;border-radius:6px;font-size:12px;color:#E65100;'>Guide: Fill all fields marked with * (Mandatory) - Optional fields have no error</div>
+    </div>
+    """
+    import streamlit as st
+    st.markdown(full_html, unsafe_allow_html=True)
+  except:
+    pass
+
 
 def sanitize_for_sheet(text):
   if not text: return ""
@@ -1733,19 +1825,21 @@ def section_close_button(key):
     st.rerun()
 
 def section_ok(key, is_revisit=False):
-  # V200.13 FIX 1a: OK and Close side by side below same field
+  # V200.19 FIX 1,4: OK and Close side by side + bubble + mandatory only error with guide
   c_ok, c_close = st.columns([2,1])
   with c_close:
-    if st.button(f"Close {key}", key=f"close_btn_{key}_{st.session_state.form_version}_v200_13", type="secondary"):
+    if st.button(f"Close {key}", key=f"close_btn_{key}_{st.session_state.form_version}_v200_19", type="secondary"):
       st.session_state.section_opened[key]=False
       st.rerun()
   with c_ok:
-    if st.button(f"OK - {key} -> Next", key=f"ok_{key}_{st.session_state.form_version}_v200_13", type="primary"):
+    if st.button(f"OK - {key} -> Next", key=f"ok_{key}_{st.session_state.form_version}_v200_19", type="primary"):
       fv = st.session_state.form_version
       if key == "personal":
         name = str(st.session_state.get(f"p_name_{fv}","") or "").strip()
         age = str(st.session_state.get(f"p_age_{fv}","") or "").strip()
         gender = str(st.session_state.get(f"p_gender_{fv}","") or "").strip()
+        address = str(st.session_state.get(f"p_address_{fv}","") or "").strip()
+        phone = str(st.session_state.get(f"p_phone_{fv}","") or "").strip()
         if is_revisit and st.session_state.get("revisit_data"):
           rd = st.session_state.revisit_data
           if not name:
@@ -1754,14 +1848,28 @@ def section_ok(key, is_revisit=False):
             age = str(rd.get("Age","") or "").strip()
           if not gender or gender=="Select":
             gender = str(rd.get("Gender","") or "").strip()
+          if not address:
+            address = str(rd.get("Address","") or "").strip()
+          if not phone:
+            phone = str(rd.get("Phone","") or "").strip()
+        missing = []
         if not name:
-          st.error("Please complete: Patient Name * is mandatory")
-          return
+          missing.append("Patient Name* - Text required")
         if not age:
-          st.error("Please complete: Age * is mandatory")
-          return
+          missing.append("Age* - Number e.g., 35")
         if gender == "Select" or not gender:
-          st.error("Please complete: Gender * is mandatory")
+          missing.append("Gender* - Select Male/Female")
+        if not phone:
+          missing.append("Phone* - Numbers only e.g., 03001234567")
+        if not address:
+          missing.append("Address* - Full address required in Personal Info")
+        if missing:
+          for m in missing:
+            st.error(f"Please complete: {m.split(' - ')[0]} is mandatory - {m.split(' - ')[1] if ' - ' in m else ''}")
+          guide_html = ""
+          for m in missing:
+            guide_html += f"<div style='margin:4px 0;padding:6px 10px;background:#FFEBEE;border-left:4px solid #F44336;border-radius:6px;font-size:13px;'><b style='color:#C62828;'>{m.split(' - ')[0]}</b> <span style='color:#666;'>- {m.split(' - ')[1] if ' - ' in m else 'Missing'}</span></div>"
+          st.markdown(f"<div style='background:#FFFFFF;border:2px solid #F44336;border-radius:12px;padding:14px;margin:10px 0;'><div style='color:#C62828;font-weight:800;margin-bottom:8px;'>Missing Mandatory Fields in Personal Info:</div>{guide_html}<div style='margin-top:10px;padding:8px;background:#FFF3E0;border-radius:6px;font-size:12px;color:#E65100;'>Guide: Only * fields are mandatory - Optional fields have no error</div></div>", unsafe_allow_html=True)
           return
       order=["personal","vital","diseases","assessment","complaint","history","prescription","billing"]
       if key not in order:
@@ -1773,6 +1881,9 @@ def section_ok(key, is_revisit=False):
           st.session_state.section_opened[nxt]=False
           st.session_state.section_unlocked[nxt]=True
       st.success(f"{key} OK - Next section ready to open")
+      # V200.19 FIX 1: Beautiful bubble 1
+      show_success_bubble(count=1, message=f"{key.title()} Complete")
+      st.balloons()
       st.rerun()
 
 
@@ -2117,10 +2228,33 @@ def render_patient_form(is_revisit=False):
         st.text_input("Emergency Phone (Optional)", key=f"p_emergency_{fv}", placeholder="Emergency Phone")
         st.text_input("Referral (Optional)", key=f"p_referral_{fv}", placeholder="Referral - Text")
         st.selectbox("Allergy (Optional)", LISTS["allergy"], key=f"p_allergy_{fv}")
-      if st.button("Close ✕", key=f"hide_extra_{fv}_v200_18"):
+      if st.button("Close ✕", key=f"hide_extra_{fv}_v200_19"):
         st.session_state[show_extra_key] = False
         st.rerun()
     section_ok("personal", is_revisit=is_revisit)
+
+  # V200.19 FIX 5b: Age/Gender Related History after Personal Info
+  if is_revisit and st.session_state.revisit_data:
+    r = st.session_state.revisit_data
+    st.markdown("<div class='heading-h4'>Age/Gender Related History (from previous form) - After Personal Info</div>", unsafe_allow_html=True)
+    with st.container(border=True):
+      try:
+        related_keys = []
+        for k in r.keys():
+          lk = k.lower()
+          if any(x in lk for x in ['female_', 'male_', 'child_', 'menarche', 'cycle', 'flow', 'preg', 'miscarriage', 'contraception', 'leucorrhoea', 'menopause', 'hrt', 'puberty', 'voice', 'beard', 'marital_effect', 'sexual', 'nightfall', 'prostate', 'urine_weak', 'erectile', 'birth', 'vaccination', 'school', 'growth', 'age_q_', 'occupation', 'marital', 'blood', 'height', 'weight', 'allergy', 'habits', 'sleep', 'appetite', 'bowel', 'temperament', 'bp', 'temperature', 'pulse']):
+            if str(r.get(k,'')).strip() and str(r.get(k,'')).strip().lower() not in ['select', '']:
+              related_keys.append(k)
+        if related_keys:
+          cols = st.columns(3)
+          for idx, key in enumerate(related_keys[:12]):
+            col = cols[idx % 3]
+            with col:
+              st.markdown(f"<div style='background:#F1F7F3;border:1px solid #C8E6D5;border-radius:8px;padding:6px;margin:2px 0;font-size:12px;'><b>{key}:</b> {str(r.get(key,''))[:60]}</div>", unsafe_allow_html=True)
+        else:
+          st.caption("No extra age/gender history")
+      except:
+        st.caption("Age/Gender history in Personal/Vital sections")
 
   with st.container(border=True):
     if section_heading_clickable("vital","Vital Signs"):
@@ -2138,25 +2272,21 @@ def render_patient_form(is_revisit=False):
         st.selectbox("Bowel Movement", LISTS["bowel"], key=f"v_bowel_{fv}")
       section_ok("vital", is_revisit=is_revisit)
 
-  # V200.10 FIX 3d: Previous Diseases - Only selected patient, not others - Fix duplicate and filtering
+  # V200.19 FIX 5d: Previous Diseases in single row/line with cure/undo per disease + dedup + compact
   if is_revisit and st.session_state.revisit_data:
-    # Ensure we only show selected patient's diseases - use PatientID to verify
     selected_pid = str(st.session_state.revisit_data.get("PatientID","") or "").strip()
     selected_name = str(st.session_state.revisit_data.get("Name","") or "").strip()
     prev_text = str(st.session_state.revisit_data.get("Diseases","") or "").strip()
     if prev_text:
-      st.markdown(f"<div class='heading-h4'>Previous Diseases - History (Patient: {selected_name} - ID: {selected_pid})</div>", unsafe_allow_html=True)
+      st.markdown(f"<div class='heading-h4'>Previous Diseases - History (Patient: {selected_name} - ID: {selected_pid}) - Single Row</div>", unsafe_allow_html=True)
       with st.container(border=True):
-        # Split and deduplicate to prevent 2 times display (FIX 3c)
         raw_list = [d.strip() for d in prev_text.split(" + ") if d.strip()]
-        # Deduplicate preserving order
         seen = set()
         prev_list = []
         for item in raw_list:
           if item.lower() not in seen:
             seen.add(item.lower())
             prev_list.append(item)
-        # Reset cured/remaining if PatientID changed (prevents other patients history)
         last_pid_key = f"last_revisit_pid_{fv}"
         if st.session_state.get(last_pid_key, "") != selected_pid:
           st.session_state.revisit_cured_diseases = []
@@ -2166,26 +2296,33 @@ def render_patient_form(is_revisit=False):
           st.session_state.revisit_cured_diseases = []
         if "revisit_remaining_diseases" not in st.session_state:
           st.session_state.revisit_remaining_diseases = prev_list.copy()
+        # V200.19 FIX 5d: Single row/line with chips - each disease with cure/undo option
+        chips_html = ""
         for idx, pd in enumerate(prev_list):
-          c1,c2 = st.columns([4,1])
-          with c1:
+          is_cured = pd in st.session_state.revisit_cured_diseases
+          bg = "#FFEBEE" if is_cured else "#E8F5E9"
+          border = "#F44336" if is_cured else "#2E7D5B"
+          tag = "Cured" if is_cured else "Active"
+          chips_html += f"<span style='display:inline-block;background:{bg};border:1.5px solid {border};border-radius:20px;padding:6px 10px;margin:4px;font-size:12px;'><b>{pd}</b> <small>({tag})</small></span> "
+        st.markdown(f"<div style='background:#FFFFFF;border:2px solid #C8E6D5;border-radius:12px;padding:12px;margin-bottom:10px;'>{chips_html}</div>", unsafe_allow_html=True)
+        # Buttons in single row - 4 per row
+        cols = st.columns(4)
+        for idx, pd in enumerate(prev_list):
+          col = cols[idx % 4]
+          with col:
             is_cured = pd in st.session_state.revisit_cured_diseases
-            style = "text-decoration: line-through; opacity:0.5;" if is_cured else "font-weight:600;"
-            tag = " (Cured)" if is_cured else " (Remaining)"
-            st.markdown(f"<div style='{style}'>{idx+1}. {pd}{tag}</div>", unsafe_allow_html=True)
-          with c2:
-            if pd not in st.session_state.revisit_cured_diseases:
-              if st.button("❌", key=f"cure_prev_{fv}_{idx}_v200_10", help="Mark cured"):
+            if not is_cured:
+              if st.button(f"❌ {pd[:20]}", key=f"cure_prev_{fv}_{idx}_v200_19", help=f"Mark cured: {pd}"):
                 st.session_state.revisit_cured_diseases.append(pd)
                 if pd in st.session_state.revisit_remaining_diseases:
                   st.session_state.revisit_remaining_diseases.remove(pd)
                 st.rerun()
             else:
-              if st.button("↩️", key=f"uncure_prev_{fv}_{idx}_v200_10"):
+              if st.button(f"↩️ {pd[:15]}", key=f"uncure_prev_{fv}_{idx}_v200_19", help=f"Undo cured: {pd}"):
                 st.session_state.revisit_cured_diseases.remove(pd)
                 st.session_state.revisit_remaining_diseases.append(pd)
                 st.rerun()
-        st.info(f"Patient: {selected_name} | Prev: {len(prev_list)} | Cured: {len(st.session_state.revisit_cured_diseases)} | Remaining: {len(st.session_state.revisit_remaining_diseases)}")
+        st.markdown(f"<div style='background:#F1F7F3;border:1px solid #C8E6D5;border-radius:8px;padding:8px;font-size:12px;margin-top:8px;'>Patient: {selected_name} | Total Prev: {len(prev_list)} | Cured: {len(st.session_state.revisit_cured_diseases)} | Remaining: {len(st.session_state.revisit_remaining_diseases)} - Each disease chip has ❌ to mark cured and ↩️ to undo</div>", unsafe_allow_html=True)
     else:
       st.caption(f"No previous diseases for {selected_name} (ID: {selected_pid})")
 
@@ -2314,6 +2451,15 @@ def render_patient_form(is_revisit=False):
 
   with st.container(border=True):
     if section_heading_clickable("prescription","Prescription"):
+      # V200.19 FIX 5d: Show previous prescription in medicines section for easier prescription
+      if is_revisit and st.session_state.revisit_data:
+        r = st.session_state.revisit_data
+        prev_single = str(r.get("SingleMedicines","") or "").strip()
+        prev_formula = str(r.get("FormulaMedicines","") or "").strip()
+        prev_all = str(r.get("Prescription","") or "").strip()
+        if prev_single or prev_formula or prev_all:
+          st.markdown("<div class='heading-h5'>Previous Prescription - For Reference (Patient History)</div>", unsafe_allow_html=True)
+          st.markdown(f"<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:10px;margin-bottom:10px;'><b>Previous Single:</b> {prev_single[:300] if prev_single else 'None'}<br><b>Previous Formula:</b> {prev_formula[:300] if prev_formula else 'None'}<br><b>Previous Full Prescription:</b> {prev_all[:300] if prev_all else 'None'}</div>", unsafe_allow_html=True)
       # V200.14 FIX 2a,2b,2c: No Add buttons, Single/Formula labels simple, Manual field bigger
       try:
         single_options = []
@@ -2525,6 +2671,9 @@ def render_patient_form(is_revisit=False):
               if val and str(val).strip().lower() not in ['select','']:
                 data_dict[clean_key] = str(val).strip()
         except: pass
+        # V200.19 FIX 2: 7 beautiful bubbles on Save
+        show_success_bubble(count=7, message="Saving Patient - 7 Bubbles")
+        st.balloons()
         ok,msg=save_patient(data_dict)
         if is_revisit:
           try:
@@ -2613,8 +2762,7 @@ def render_auto_form(prefix, is_home=False):
         return str(sel.get(field,"") or default)
       return st.session_state.get(f"{prefix}_name_v172","") if field=="Name" else default
 
-    # V200.15 FIX 1a: Phone, Blood Group, Marital Status NOT hidden - included in Personal Info visible
-    # V200.15 FIX 1b: Address, Height, Weight, Habits NOT required - moved to Additional Personal Details hidden
+    # V200.19 FIX 3: Address back to Personal Info outside - Mandatory in Personal Info
     c1,c2,c3=st.columns(3)
     with c1:
       p_name_val = ""
@@ -2622,7 +2770,6 @@ def render_auto_form(prefix, is_home=False):
         p_name_val = st.session_state.get(selected_key).get("Name","")
       p_name=st.text_input("Patient's Name *", value=p_name_val, key=f"{prefix}_name_v197")
       p_father=st.text_input("Spouse/Father's Name", key=f"{prefix}_father_v197")
-      # Phone visible per 1a
       p_phone_default = ""
       if st.session_state.get(selected_key) and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
         p_phone_default = st.session_state.get(selected_key).get("Phone","")
@@ -2630,41 +2777,40 @@ def render_auto_form(prefix, is_home=False):
     with c2:
       p_gender=st.selectbox("Gender *", LISTS["gender"], key=f"{prefix}_gender_v197")
       p_age=st.text_input("Age *", key=f"{prefix}_age_v197", placeholder="Age e.g. 35")
-      # Blood Group visible per 1a
       p_blood=st.selectbox("Blood Group", LISTS["blood_group"], key=f"{prefix}_blood_v197")
+      p_address_default = ""
+      if st.session_state.get(selected_key) and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
+        p_address_default = st.session_state.get(selected_key).get("Address","")
+      p_address=st.text_input("Address *", value=p_address_default, key=f"{prefix}_addr_v197", placeholder="Address * Mandatory - Full address")
     with c3:
       occ_list = LISTS.get("occupation", ["Select","Student","Teacher","Farmer","Shopkeeper","Laborer","Driver","Housewife","Business","Engineer","Government Job","Private Job","Retired","Unemployed","Other"])
       p_occupation=st.selectbox("Occupation", occ_list, key=f"{prefix}_occ_v197")
-      # Marital Status visible per 1a
       p_marital=st.selectbox("Marital Status", LISTS["marital"], key=f"{prefix}_marital_v197")
 
-    # V200.18 FIX 1: Address in Additional and Mandatory + Button + More (Optional) cleanup
+    # V200.19 FIX 3: Address back to Personal Info - Additional only Height Weight Habits optional
     show_extra_key = f"show_extra_auto_{prefix}"
     if show_extra_key not in st.session_state:
       st.session_state[show_extra_key] = False
     
     if not st.session_state[show_extra_key]:
-      if st.button("+ More (Address * Mandatory) ⬇️", key=f"auto_add_info_{prefix}_v200_18", help="Address is mandatory - Open to fill Address, Height, Weight, Habits"):
+      if st.button("+ More (Optional) ⬇️", key=f"auto_add_info_{prefix}_v200_19", help="Optional details - Height, Weight, Habits"):
         st.session_state[show_extra_key] = True
         st.rerun()
     else:
       st.markdown("---")
-      st.markdown("<div class='heading-h5'>Additional Details - Address * Mandatory + Other Optional</div>", unsafe_allow_html=True)
-      st.markdown("<div style='background:#FFF9C4;border:1.5px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Note:</b> Address is mandatory - Must fill to complete Personal Information</div>", unsafe_allow_html=True)
+      st.markdown("<div class='heading-h5'>Additional Optional Details</div>", unsafe_allow_html=True)
       c1,c2,c3=st.columns(3)
       with c1:
-        p_address=st.text_input("Address * (Mandatory)", key=f"{prefix}_addr_v197", placeholder="Address * Mandatory - Fill full address")
         p_height=st.text_input("Height (Optional)", key=f"{prefix}_height_v197", placeholder="e.g., 5.6 ft")
       with c2:
         p_weight=st.text_input("Weight (Optional)", key=f"{prefix}_weight_v197", placeholder="e.g., 70 kg")
       with c3:
         p_habits=st.text_input("Habits (Optional)", key=f"{prefix}_habits_v197", placeholder="e.g., Smoking, Tea")
-      if st.button("Close ✕", type="secondary", key=f"auto_hide_{prefix}_v200_18"):
+      if st.button("Close ✕", type="secondary", key=f"auto_hide_{prefix}_v200_19"):
         st.session_state[show_extra_key] = False
         st.rerun()
     
-    # Ensure variables exist
-    p_address = st.session_state.get(f"{prefix}_addr_v197", "")
+    # Ensure variables exist - Address now in Personal Info
     p_height = st.session_state.get(f"{prefix}_height_v197", "")
     p_weight = st.session_state.get(f"{prefix}_weight_v197", "")
     p_habits = st.session_state.get(f"{prefix}_habits_v197", "")
@@ -2688,34 +2834,36 @@ def render_auto_form(prefix, is_home=False):
 
     if not st.session_state[personal_ok_key]:
       if st.button(f"OK - Personal Information", key=f"{prefix}_personal_ok_btn_v172", type="primary"):
-        # V200.18 FIX 1,4: Address mandatory in Additional + detailed validation + sequential reminder
+        # V200.19 FIX 1,3,4: Address in Personal Info mandatory + bubble + error guide only mandatory
         missing = []
         if not p_name.strip():
-          missing.append("Patient Name*")
+          missing.append("Patient Name* - Text required")
         if p_gender == "Select" or not p_gender:
-          missing.append("Gender*")
+          missing.append("Gender* - Select from dropdown")
         if not p_phone.strip():
-          missing.append("Phone*")
+          missing.append("Phone* - Numbers only e.g., 03001234567")
         if not p_age.strip():
-          missing.append("Age*")
-        # V200.18 FIX 1: Address mandatory from Additional section
+          missing.append("Age* - Number e.g., 35")
         if not p_address.strip():
-          missing.append("Address* (In + More Section - Mandatory)")
-        # Check if any missing
+          missing.append("Address* - Full address required in Personal Info")
         if missing:
-          st.error(f"Please complete Personal Information - Missing: {', '.join(missing)}")
-          # V200.18: Unified reminder card
-          st.markdown(f"<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:10px;padding:12px;margin:8px 0;'><b style='color:#E65100;'>Reminder:</b> <span style='color:#333;'>Fill these fields: {', '.join(missing)}</span><br><span style='color:#666;font-size:12px;'>Note: Address is in + More (Address * Mandatory) section - Click + More button to open and fill Address</span></div>", unsafe_allow_html=True)
+          st.error(f"Please complete Mandatory fields: {', '.join([m.split(' - ')[0] for m in missing])}")
+          # V200.19 FIX 4: Guide which field what missing - only mandatory
+          guide_html = ""
+          for field in missing:
+            guide_html += f"<div style='margin:4px 0;padding:6px 10px;background:#FFEBEE;border-left:4px solid #F44336;border-radius:6px;font-size:13px;'><b style='color:#C62828;'>{field.split(' - ')[0]}</b> <span style='color:#666;'>- {field.split(' - ')[1] if ' - ' in field else 'Missing'}</span></div>"
+          st.markdown(f"<div style='background:#FFFFFF;border:2px solid #F44336;border-radius:12px;padding:14px;margin:10px 0;'><div style='color:#C62828;font-weight:800;margin-bottom:8px;'>Missing Mandatory Fields:</div>{guide_html}<div style='margin-top:10px;padding:8px;background:#FFF3E0;border-radius:6px;font-size:12px;color:#E65100;'>Guide: Only * fields are mandatory - Optional fields have no error</div></div>", unsafe_allow_html=True)
         else:
-          # Home User phone matching - only if home_phone exists and not empty
           if is_home:
             home_phone = get_home_user_phone()
             if home_phone and home_phone.strip() and p_phone.strip() != home_phone.strip():
               st.error(f"Phone must match Home User signup phone: {home_phone}. Your entered: {p_phone}")
-              st.markdown(f"<div style='background:#FFEBEE;border:2px solid #F44336;border-radius:10px;padding:12px;'><b>Error:</b> Phone mismatch - Signup: {home_phone} vs Entered: {p_phone}</div>", unsafe_allow_html=True)
               st.stop()
           st.session_state[personal_ok_key] = True
-          st.success("Personal Information Saved - Complete (Address included)")
+          st.success("Personal Information Saved - Complete")
+          # V200.19 FIX 1: Beautiful bubble 1
+          show_success_bubble(count=1, message="Personal Complete")
+          st.balloons()
           st.rerun()
     else:
       st.success("Personal Information Completed - OK")
@@ -2724,7 +2872,8 @@ def render_auto_form(prefix, is_home=False):
         st.rerun()
 
   if not st.session_state[personal_ok_key]:
-    st.warning("Please complete Personal Information and click OK to open next section")
+    # V200.19 FIX 6: Only show if truly incomplete, with specific guide
+    st.markdown("<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:12px;padding:14px;margin:10px 0;'><b style='color:#E65100;'>Personal Information Incomplete</b><br><span style='color:#333;'>Please complete Personal Information section and click OK - Personal Information to open next section</span><br><span style='color:#666;font-size:12px;'>If you already filled, check Address* is filled (now in Personal Info) and click OK button again - Address is mandatory</span></div>", unsafe_allow_html=True)
     return None, None, None, None, None, None, []
 
   st.markdown(f"<div class='heading-h4'>Diseases</div>", unsafe_allow_html=True)
@@ -2842,10 +2991,12 @@ def render_auto_form(prefix, is_home=False):
       if st.button(f"OK - Diseases", key=f"{prefix}_diseases_ok_btn_v172", type="primary"):
         if not diseases_list:
           st.error("Please complete: Add at least one disease - Use Select Body Part and Disease then Add Disease +")
-          st.warning("Reminder: Fill Body Part*, Disease*, No/Count*, Duration* and click Add Disease +")
+          st.markdown("<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:10px;padding:12px;margin:8px 0;'><b style='color:#E65100;'>Reminder:</b> <span style='color:#333;'>Fill Body Part*, Disease*, No/Count*, Duration* (Dropdowns) and click Add Disease +</span><br><span style='color:#666;font-size:12px;'>Only mandatory fields * need to be filled - Optional Related Questions have no error</span></div>", unsafe_allow_html=True)
         else:
           st.session_state[diseases_ok_key] = True
           st.success("Diseases OK - Next section unlocked")
+          show_success_bubble(count=1, message="Diseases Complete")
+          st.balloons()
           st.rerun()
     else:
       st.success("Diseases Completed - OK - Next section open")
@@ -2885,21 +3036,26 @@ def render_auto_form(prefix, is_home=False):
     if not st.session_state[additional_ok_key]:
       if st.button(f"OK - Additional Information", key=f"{prefix}_additional_ok_btn_v172", type="primary"):
         mandatory_missing = []
-        if sleep_pat == "Select": mandatory_missing.append("Sleep Pattern")
-        if appetite_pat == "Select": mandatory_missing.append("Appetite")
-        if thirst == "Select": mandatory_missing.append("Thirst")
-        if bowel == "Select": mandatory_missing.append("Bowel Movement")
-        if urine == "Select": mandatory_missing.append("Urine")
-        if sweat == "Select": mandatory_missing.append("Sweating")
-        if stress == "Select": mandatory_missing.append("Stress Level")
-        if energy == "Select": mandatory_missing.append("Energy Level")
-        if allergy_hist == "Select": mandatory_missing.append("Allergy History")
+        if sleep_pat == "Select": mandatory_missing.append("Sleep Pattern* - Select from dropdown")
+        if appetite_pat == "Select": mandatory_missing.append("Appetite* - Select from dropdown")
+        if thirst == "Select": mandatory_missing.append("Thirst* - Select from dropdown")
+        if bowel == "Select": mandatory_missing.append("Bowel Movement* - Select from dropdown")
+        if urine == "Select": mandatory_missing.append("Urine* - Select from dropdown")
+        if sweat == "Select": mandatory_missing.append("Sweating* - Select from dropdown")
+        if stress == "Select": mandatory_missing.append("Stress Level* - Select from dropdown")
+        if energy == "Select": mandatory_missing.append("Energy Level* - Select from dropdown")
+        if allergy_hist == "Select": mandatory_missing.append("Allergy History* - Select from dropdown")
         if mandatory_missing:
-          st.error(f"Please complete: {', '.join(mandatory_missing)}")
-          st.warning(f"Reminder: Fill these fields in Additional Information: {', '.join(mandatory_missing)} - All are dropdowns")
+          st.error(f"Please complete Mandatory: {', '.join([m.split('*')[0]+'*' for m in mandatory_missing])}")
+          guide_html = ""
+          for m in mandatory_missing:
+            guide_html += f"<div style='margin:4px 0;padding:6px 10px;background:#FFEBEE;border-left:4px solid #F44336;border-radius:6px;font-size:13px;'><b style='color:#C62828;'>{m.split(' - ')[0]}</b> <span style='color:#666;'>- {m.split(' - ')[1] if ' - ' in m else 'Select from dropdown - Mandatory'}</span></div>"
+          st.markdown(f"<div style='background:#FFFFFF;border:2px solid #F44336;border-radius:12px;padding:14px;margin:10px 0;'><div style='color:#C62828;font-weight:800;margin-bottom:8px;'>Missing Mandatory Fields in Additional Info:</div>{guide_html}<div style='margin-top:10px;padding:8px;background:#FFF3E0;border-radius:6px;font-size:12px;color:#E65100;'>Guide: Only * fields are mandatory - Past/Family History, Current Meds, Other Symptoms are optional - No error on optional</div></div>", unsafe_allow_html=True)
         else:
           st.session_state[additional_ok_key] = True
           st.success("Additional Information OK - Proceed unlocked")
+          show_success_bubble(count=1, message="Additional Complete")
+          st.balloons()
           st.rerun()
     else:
       st.success("Additional Information Completed - OK - Proceed button below Additional Questions will be enabled")
