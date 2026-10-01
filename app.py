@@ -1,4 +1,4 @@
-# APP VERSION - V200.17 - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# APP VERSION - V200.18 - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Address * Mandatory) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.17 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.18 - V200.4 Structure+Stream Fix+English Only+Close Buttons+Prescription Sheet+Manual Med+No FinalStep+Clinic Settings/Formulas" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -1901,10 +1901,16 @@ def validate_required_data_types(form_version):
   if not p_phone:
     errors.append("Phone is required (Numeric String type)")
   else:
-    # Remove dashes and spaces
     phone_clean = re.sub(r'[^0-9]', '', p_phone)
     if len(phone_clean) < 10 or len(phone_clean) > 12:
       errors.append("Phone must be 10-12 digits (Numeric String, e.g., 03001234567)")
+
+  # V200.18 FIX 1: Address mandatory in Additional
+  p_address = st.session_state.get(f"p_address_{fv}", "").strip()
+  if not p_address:
+    errors.append("Address * is mandatory (In + More section - Must fill)")
+  elif len(p_address) < 5:
+    errors.append("Address must be at least 5 characters")
   
   return errors
 
@@ -1984,13 +1990,12 @@ def render_patient_form(is_revisit=False):
 
   with st.container(border=True):
     st.markdown("<div class='heading-h4'>Personal Information</div>", unsafe_allow_html=True)
-    # V200.14 FIX 3a: Personal Info - Show previous Gender/Age in revisit
+    # V200.18 FIX 1: Personal Info without Address - Address moved to + More mandatory
     c1,c2,c3=st.columns(3)
     with c1:
       st.text_input("Patient's Name *", key=f"p_name_{fv}", value=get_prefill("Name",""), placeholder="Patient's Name - Text only")
       st.text_input("Spouse/Father's Name", key=f"p_fname_{fv}", value=get_prefill("FatherName",""), placeholder="Spouse/Father's Name - Text")
     with c2:
-      # V200.14: Gender with previous data
       gender_options = LISTS["gender"]
       prev_gender = str(get_prefill("Gender","") or "").strip()
       gender_idx = 0
@@ -2003,8 +2008,8 @@ def render_patient_form(is_revisit=False):
       st.selectbox("Gender *", gender_options, key=f"p_gender_{fv}", index=gender_idx)
       st.text_input("Age *", key=f"p_age_{fv}", value=get_prefill("Age",""), placeholder="Age - Number e.g., 35")
     with c3:
-      st.text_input("Phone *", key=f"p_phone_{fv}", value=get_prefill("Phone",""), placeholder="Phone - 03XX-XXXXXXX (Numbers only)", help="Enter phone number with digits only, e.g., 03001234567 - Required data type: Numeric String")
-      st.text_input("Address", key=f"p_address_{fv}", value=get_prefill("Address",""), placeholder="Address - Text")
+      st.text_input("Phone *", key=f"p_phone_{fv}", value=get_prefill("Phone",""), placeholder="Phone - 03XX-XXXXXXX (Numbers only)", help="Enter phone number with digits only, e.g., 03001234567 - Required")
+      st.markdown("<div style='background:#FFF9C4;border:1px solid #FFD700;border-radius:6px;padding:6px;font-size:11px;margin-top:8px;'>Address * Mandatory - In + More section</div>", unsafe_allow_html=True)
 
     # V200.14 FIX 3a: Age/Gender Related - Show previous data in revisit
     try:
@@ -2090,26 +2095,29 @@ def render_patient_form(is_revisit=False):
     
     st.markdown("<hr style='margin:12px 0; border:1px solid #E8F5E9;'>", unsafe_allow_html=True)
     if not st.session_state[show_extra_key]:
-      if st.button("Additional Personal Details ⬇️ (After Age/Gender Qs)", key=f"add_info_btn_{fv}_v200_9", type="secondary"):
+      if st.button("+ More (Address * Mandatory) ⬇️", key=f"add_info_btn_{fv}_v200_18", type="secondary", help="Address is mandatory - Click to fill Address and other optional details"):
         st.session_state[show_extra_key] = True
         st.rerun()
     else:
-      st.markdown("<div class='heading-h5'>Additional Personal Details (Below Age/Gender Qs - Hidden by default)</div>", unsafe_allow_html=True)
+      st.markdown("<div class='heading-h5'>Additional Details - Address * Mandatory + Optional</div>", unsafe_allow_html=True)
+      st.markdown("<div style='background:#FFF9C4;border:1.5px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Note:</b> Address is mandatory - Must fill Address field to complete form</div>", unsafe_allow_html=True)
       c1,c2,c3=st.columns(3)
       with c1:
+        # V200.18 FIX 1: Address mandatory in Additional
+        st.text_input("Address * (Mandatory)", key=f"p_address_{fv}", value=get_prefill("Address",""), placeholder="Address * Mandatory - Full address")
         st.selectbox("Blood Group", LISTS["blood_group"], key=f"p_blood_{fv}")
-        st.text_input("Height", key=f"p_height_{fv}", placeholder="e.g., 5.6 ft - Number")
+        st.text_input("Height (Optional)", key=f"p_height_{fv}", placeholder="e.g., 5.6 ft")
         occ_list = LISTS.get("occupation", ["Select","Student","Teacher","Farmer","Shopkeeper","Laborer","Driver","Housewife","Business","Engineer","Government Job","Private Job","Retired","Unemployed","Other"])
         st.selectbox("Occupation", occ_list, key=f"p_occupation_{fv}")
       with c2:
         st.selectbox("Marital Status", LISTS["marital"], key=f"p_marital_{fv}")
-        st.text_input("CNIC", key=f"p_cnic_{fv}", value=get_prefill("CNIC",""), placeholder="CNIC - Number")
-        st.text_input("Weight", key=f"p_weight_{fv}", placeholder="e.g., 70 kg - Number")
+        st.text_input("CNIC (Optional)", key=f"p_cnic_{fv}", value=get_prefill("CNIC",""), placeholder="CNIC - Number")
+        st.text_input("Weight (Optional)", key=f"p_weight_{fv}", placeholder="e.g., 70 kg")
       with c3:
-        st.text_input("Emergency Phone", key=f"p_emergency_{fv}", placeholder="Emergency Phone - Number")
-        st.text_input("Referral", key=f"p_referral_{fv}", placeholder="Referral - Text")
-        st.selectbox("Allergy", LISTS["allergy"], key=f"p_allergy_{fv}")
-      if st.button("Hide Additional Details ⬆️", key=f"hide_extra_{fv}_v200_9"):
+        st.text_input("Emergency Phone (Optional)", key=f"p_emergency_{fv}", placeholder="Emergency Phone")
+        st.text_input("Referral (Optional)", key=f"p_referral_{fv}", placeholder="Referral - Text")
+        st.selectbox("Allergy (Optional)", LISTS["allergy"], key=f"p_allergy_{fv}")
+      if st.button("Close ✕", key=f"hide_extra_{fv}_v200_18"):
         st.session_state[show_extra_key] = False
         st.rerun()
     section_ok("personal", is_revisit=is_revisit)
@@ -2193,7 +2201,14 @@ def render_patient_form(is_revisit=False):
       with c2:
         disease = st.selectbox(f"Disease in {body_part} *", sub_diseases, key=f"pat_disease_sub_{fv}_v197")
       with c3:
-        d_no = st.text_input("No/Count *", key=f"pat_no_{fv}_v197", placeholder="e.g., 2 - Mandatory")
+        # V200.18 FIX 2: No/Count dropdown 1-10 + Other
+        no_options_pat = ["Select","1","2","3","4","5","6","7","8","9","10","Other"]
+        d_no_sel_pat = st.selectbox("No/Count *", no_options_pat, key=f"pat_no_sel_{fv}_v200_18")
+        if d_no_sel_pat == "Other":
+          d_no = st.text_input("Enter Count", key=f"pat_no_{fv}_v197", placeholder="Enter number")
+        else:
+          d_no = d_no_sel_pat if d_no_sel_pat != "Select" else ""
+          st.session_state[f"pat_no_{fv}_v197"] = d_no
       with c4:
         d_duration = st.selectbox("Duration *", LISTS["duration"], key=f"pat_dur_{fv}_v197")
       # V200.17 FIX 1,2,3: Disease related questions with dropdowns after all fields complete
@@ -2623,27 +2638,28 @@ def render_auto_form(prefix, is_home=False):
       # Marital Status visible per 1a
       p_marital=st.selectbox("Marital Status", LISTS["marital"], key=f"{prefix}_marital_v197")
 
-    # Hidden fields - Additional Personal Details (Address, Height, Weight, Habits) per 1b
+    # V200.18 FIX 1: Address in Additional and Mandatory + Button + More (Optional) cleanup
     show_extra_key = f"show_extra_auto_{prefix}"
     if show_extra_key not in st.session_state:
       st.session_state[show_extra_key] = False
     
     if not st.session_state[show_extra_key]:
-      if st.button("Additional Personal Details (Hidden by default) ⬇️", key=f"auto_add_info_{prefix}_v200_15"):
+      if st.button("+ More (Address * Mandatory) ⬇️", key=f"auto_add_info_{prefix}_v200_18", help="Address is mandatory - Open to fill Address, Height, Weight, Habits"):
         st.session_state[show_extra_key] = True
         st.rerun()
     else:
       st.markdown("---")
-      st.markdown("<div class='heading-h5'>Additional Personal Details (Hidden by default) - Address, Height, Weight, Habits not required</div>", unsafe_allow_html=True)
+      st.markdown("<div class='heading-h5'>Additional Details - Address * Mandatory + Other Optional</div>", unsafe_allow_html=True)
+      st.markdown("<div style='background:#FFF9C4;border:1.5px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Note:</b> Address is mandatory - Must fill to complete Personal Information</div>", unsafe_allow_html=True)
       c1,c2,c3=st.columns(3)
       with c1:
-        p_address=st.text_input("Address (Optional)", key=f"{prefix}_addr_v197", placeholder="Address optional")
+        p_address=st.text_input("Address * (Mandatory)", key=f"{prefix}_addr_v197", placeholder="Address * Mandatory - Fill full address")
         p_height=st.text_input("Height (Optional)", key=f"{prefix}_height_v197", placeholder="e.g., 5.6 ft")
       with c2:
         p_weight=st.text_input("Weight (Optional)", key=f"{prefix}_weight_v197", placeholder="e.g., 70 kg")
       with c3:
         p_habits=st.text_input("Habits (Optional)", key=f"{prefix}_habits_v197", placeholder="e.g., Smoking, Tea")
-      if st.button("Close Additional Details ✕", type="secondary", key=f"auto_hide_{prefix}_v200_15"):
+      if st.button("Close ✕", type="secondary", key=f"auto_hide_{prefix}_v200_18"):
         st.session_state[show_extra_key] = False
         st.rerun()
     
@@ -2672,7 +2688,7 @@ def render_auto_form(prefix, is_home=False):
 
     if not st.session_state[personal_ok_key]:
       if st.button(f"OK - Personal Information", key=f"{prefix}_personal_ok_btn_v172", type="primary"):
-        # V200.17 FIX 4: Detailed validation with reminder which field missing
+        # V200.18 FIX 1,4: Address mandatory in Additional + detailed validation + sequential reminder
         missing = []
         if not p_name.strip():
           missing.append("Patient Name*")
@@ -2682,20 +2698,24 @@ def render_auto_form(prefix, is_home=False):
           missing.append("Phone*")
         if not p_age.strip():
           missing.append("Age*")
+        # V200.18 FIX 1: Address mandatory from Additional section
+        if not p_address.strip():
+          missing.append("Address* (In + More Section - Mandatory)")
         # Check if any missing
         if missing:
           st.error(f"Please complete Personal Information - Missing: {', '.join(missing)}")
-          st.warning(f"Reminder: Fill these fields: {', '.join(missing)}")
+          # V200.18: Unified reminder card
+          st.markdown(f"<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:10px;padding:12px;margin:8px 0;'><b style='color:#E65100;'>Reminder:</b> <span style='color:#333;'>Fill these fields: {', '.join(missing)}</span><br><span style='color:#666;font-size:12px;'>Note: Address is in + More (Address * Mandatory) section - Click + More button to open and fill Address</span></div>", unsafe_allow_html=True)
         else:
           # Home User phone matching - only if home_phone exists and not empty
           if is_home:
             home_phone = get_home_user_phone()
             if home_phone and home_phone.strip() and p_phone.strip() != home_phone.strip():
               st.error(f"Phone must match Home User signup phone: {home_phone}. Your entered: {p_phone}")
-              st.info("If your signup phone is wrong, update HomeUsers sheet")
+              st.markdown(f"<div style='background:#FFEBEE;border:2px solid #F44336;border-radius:10px;padding:12px;'><b>Error:</b> Phone mismatch - Signup: {home_phone} vs Entered: {p_phone}</div>", unsafe_allow_html=True)
               st.stop()
           st.session_state[personal_ok_key] = True
-          st.success("Personal Information Saved - Complete")
+          st.success("Personal Information Saved - Complete (Address included)")
           st.rerun()
     else:
       st.success("Personal Information Completed - OK")
@@ -2718,7 +2738,15 @@ def render_auto_form(prefix, is_home=False):
       disease_key = f"{prefix}_disease_sub_v197"
       disease = st.selectbox(f"Disease in {body_part} *", sub_diseases, key=disease_key)
     with c3:
-      d_no = st.text_input("No/Count *", key=f"{prefix}_no_v197", placeholder="e.g., 2 - Mandatory")
+      # V200.18 FIX 2: No/Count dropdown 1-10 + Other
+      no_options = ["Select","1","2","3","4","5","6","7","8","9","10","Other"]
+      d_no_sel = st.selectbox("No/Count *", no_options, key=f"{prefix}_no_sel_v200_18")
+      if d_no_sel == "Other":
+        d_no = st.text_input("Enter Count", key=f"{prefix}_no_v197", placeholder="Enter number")
+      else:
+        d_no = d_no_sel if d_no_sel != "Select" else ""
+        # Keep old key for compatibility
+        st.session_state[f"{prefix}_no_v197"] = d_no
     with c4:
       d_duration = st.selectbox("Duration *", LISTS["duration"], key=f"{prefix}_dur_v197")
 
@@ -2791,7 +2819,8 @@ def render_auto_form(prefix, is_home=False):
   diseases_list = st.session_state.get("home_auto_diseases", []) if is_home else st.session_state.get("auto_diseases", [])
   if diseases_list:
     combined_text = " + ".join([d.get("text","") for d in diseases_list])
-    st.markdown(f"<div style='background:#161617;border:2px solid #00E676;border-radius:12px;padding:16px;margin:8px 0;'><b style='color:#FFD700;'>Combined (+):</b> <span style='color:#e0e0e0;'>{combined_text}</span></div>", unsafe_allow_html=True)
+    # V200.18 FIX: Unified white card green border - not dark card
+    st.markdown(f"<div style='background:#FFFFFF;border:2px solid #2E7D5B;border-radius:12px;padding:16px;margin:8px 0;box-shadow:0 2px 8px rgba(46,125,91,0.1);'><b style='color:#2E7D5B;'>Combined (+):</b> <span style='color:#1F2D27;'>{combined_text}</span></div>", unsafe_allow_html=True)
     for i, dd in enumerate(diseases_list):
       c1,c2=st.columns([4,1])
       with c1:
