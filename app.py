@@ -1,4 +1,4 @@
-# APP VERSION - app V200.22 Fixed - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Optional) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from list (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# APP VERSION - V200.19.1 SAFE - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Optional) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from list (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
 
@@ -22,7 +22,7 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.22 - Revisit Form Fix: 1a-Selected Patient below Personal Info, 1b-Only fed fields from Personal + More, 1c-Continuous structure Name | Age | Gender | Phone | Address | CNIC | Last Date | Chief Complaint | Past History, 1d-Same structure for Diseases & Medicines history, 1d-extra-Removed Age/Gender Related History + Current Questions + School Performance extra text, 1e-Removed Previous Diseases box completely, Prescription version update fix" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.21 - 9 Tasks: 1-Admin tabs 2 lines readable, 2-Age/Gender History merged, 3-Current Qs single line text physician ref, 4-No bubbles popup success, 5-Prev Diseases single line, 6-Remove Google Sheet ref, 7-Prev Prescription single line [Haldi], 8-Added Diseases field names Body Part+ Disease+ Count+ etc, 9-EN very close to icon" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -174,13 +174,20 @@ def show_urdu_work_in_progress_note():
     """, unsafe_allow_html=True)
 
 def scroll_to_top():
-  """V200 FIX: Ultra-light scroll - no iframe, prevents reboot hang"""
-  return # Disabled to prevent processing delay after reboot - Streamlit auto-scrolls
-  # Original scroll code kept below for compatibility but disabled
-  def _old_scroll():
-    
-    st.toast("Complete")
-  # V200.2: Removed heavy scroll anchor and CSS - speed
+  """V201 FIX 5: Navigation click page opens at top - robust scroll"""
+  try:
+    st.markdown("""
+    <script>
+    window.scrollTo(0,0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    var main = window.parent.document.querySelector('.main');
+    if(main){ main.scrollTop = 0; }
+    setTimeout(function(){ window.scrollTo(0,0); }, 100);
+    </script>
+    """, unsafe_allow_html=True)
+  except:
+    pass
 
 
 st.markdown("""
@@ -1938,6 +1945,13 @@ def validate_required_data_types(form_version):
 
 
 def render_patient_form(is_revisit=False):
+  # V201 FIX 6: New Patient form goes to top
+  if st.session_state.get("scroll_to_top_next"):
+    try:
+      st.markdown("<script>window.scrollTo(0,0);</script>", unsafe_allow_html=True)
+      st.session_state.scroll_to_top_next = False
+    except:
+      pass
   # V209 Fix 6: Ensure Added Diseases empty by default for each patient
   if not is_revisit and "patient_diseases" not in st.session_state:
     st.session_state.patient_diseases = []
@@ -2110,17 +2124,17 @@ def render_patient_form(is_revisit=False):
       presc_text = str(r.get("Prescription","") or "").strip()
       
       if diseases_text:
-        st.markdown(f"<div style='background:#FFFFFF;border:1px solid #C8E6D5;border-radius:8px;padding:8px;margin-top:8px;font-size:13px;'><b>Diseases History:</b> {diseases_text}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='background:#FFFFFF;border:1.5px solid #2E7D5B;border-radius:10px;padding:10px;margin-top:8px;font-size:13px;'><b>Diseases History (with Titles):</b><br>{diseases_text}<br><span style='font-size:11px;color:#666;'><i>Format: Body Part: Eyes | Disease: Blurred Vision | Count: 2 | Duration: Day | Nature: Partial | Trigger: On Looking Up | Symptom: Watery</i></span></div>", unsafe_allow_html=True)
       if single_text or formula_text or presc_text:
         med_line = []
         if single_text:
-          med_line.append(f"Single: {single_text}")
+          med_line.append(f"<b>Previous Single:</b> [{single_text}]")
         if formula_text:
-          med_line.append(f"Formula: {formula_text}")
+          med_line.append(f"<b>Previous Formula:</b> [{formula_text}]")
         if presc_text:
-          med_line.append(f"Full Prescription: {presc_text}")
+          med_line.append(f"<b>Previous Full Prescription:</b> {presc_text}")
         med_continuous = " | ".join(med_line)
-        st.markdown(f"<div style='background:#FFFFFF;border:1px solid #C8E6D5;border-radius:8px;padding:8px;margin-top:6px;font-size:13px;'><b>Medicines History:</b> {med_continuous}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #C8E6D5;border-radius:10px;padding:10px;margin-top:8px;font-size:13px;'><b>Medicines History (with Titles):</b><br>{med_continuous}</div>", unsafe_allow_html=True)
 
   # V200.22 FIX 1d,e: Removed old separate Age/Gender History and Previous Diseases boxes - now merged above
 
@@ -2222,13 +2236,16 @@ def render_patient_form(is_revisit=False):
           rel_q1 = st.session_state.get(f"pat_rel_q1_{fv}_v200_4", "Select")
           rel_q2 = st.session_state.get(f"pat_rel_q2_{fv}_v200_4", "").strip()
           rel_q3 = st.session_state.get(f"pat_rel_q3_{fv}_v200_4", "").strip()
+          q1_label = st.session_state.get(f"pat_rel_q1_label_{fv}", "Q1")
+          q2_label = st.session_state.get(f"pat_rel_q2_label_{fv}", "Q2")
+          q3_label = st.session_state.get(f"pat_rel_q3_label_{fv}", "Q3")
           entry_text = f"Body Part: {bp} + Disease: {dis} + Count: {no_val} + Duration: {dur_val}"
           if rel_q1 and rel_q1 != "Select":
-            entry_text += f" + {rel_q1}"
-          if rel_q2:
-            entry_text += f" + {rel_q2}"
-          if rel_q3:
-            entry_text += f" + {rel_q3}"
+            entry_text += f" + {q1_label}: {rel_q1}"
+          if rel_q2 and rel_q2 not in ["Select",""]:
+            entry_text += f" + {q2_label}: {rel_q2}"
+          if rel_q3 and rel_q3 not in ["Select",""]:
+            entry_text += f" + {q3_label}: {rel_q3}"
           if "patient_diseases" not in st.session_state:
             st.session_state.patient_diseases = []
           # V209 Fix 7: Check duplicate before adding
@@ -2376,7 +2393,7 @@ def render_patient_form(is_revisit=False):
         payment_method = st.selectbox("Payment Method", LISTS["payment"], key=f"payment_method_{fv}")
       with c6:
         if prev_bal > 0:
-          st.markdown(f"<div style='background:#1a1c23;border:2px solid #ffaa00;border-radius:10px;padding:10px;text-align:center;'><b>Outstanding: Rs {prev_bal:.0f}</b></div>", unsafe_allow_html=True)
+          st.markdown(f"<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:10px;padding:10px;text-align:center;'><b style='color:#E65100;'>Outstanding: Rs {prev_bal:.0f}</b></div>", unsafe_allow_html=True)
       try:
         f = float(str(fee_val).replace(",","") or 0)
         m = float(str(med_val).replace(",","") or 0)
@@ -2386,17 +2403,10 @@ def render_patient_form(is_revisit=False):
       grand_total = f + m + prev_bal
       balance = grand_total - p
       if balance<0: balance=0
-      st.markdown("<div style='margin:6px 0;'></div>", unsafe_allow_html=True)
-      st.markdown("<div class='heading-h4'>Grand Total - Billing Details Calculation</div>", unsafe_allow_html=True)
-      if prev_bal > 0:
-        st.markdown(f"<div class='demo-card'>Fee Rs {f:.0f} + Medicine Rs {m:.0f} + Outstanding Rs {prev_bal:.0f} = Grand Total Rs {grand_total:.0f} | Paid Rs {p:.0f} = Balance Rs {balance:.0f}</div>", unsafe_allow_html=True)
-      else:
-        st.markdown(f"<div class='demo-card'>Fee Rs {f:.0f} + Medicine Rs {m:.0f} = Grand Total Rs {grand_total:.0f} | Paid Rs {p:.0f} = Balance Rs {balance:.0f}</div>", unsafe_allow_html=True)
-      cc1,cc2=st.columns(2)
-      with cc1:
-        st.metric("Grand Total", f"Rs {grand_total:.0f}")
-      with cc2:
-        st.metric("Balance", f"Rs {balance:.0f}")
+      st.markdown("<div style='margin:10px 0;'></div>", unsafe_allow_html=True)
+      # V201 FIX 3: Grand Total - Billing Details Calculation section removed - Grand Total as text heading at end of Billing Details
+      st.markdown(f"<div class='heading-h3'>Grand Total: Rs {grand_total:.0f} | Balance: Rs {balance:.0f}</div>", unsafe_allow_html=True)
+      st.markdown(f"<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:10px;font-size:14px;'><b>Billing Summary:</b> Fee Rs {f:.0f} + Medicine Rs {m:.0f} {'+ Outstanding Rs '+str(int(prev_bal)) if prev_bal>0 else ''} = Grand Total Rs {grand_total:.0f} | Paid Rs {p:.0f} = Balance Rs {balance:.0f}</div>", unsafe_allow_html=True)
       st.session_state[f"calc_gt_{fv}"]=grand_total
       st.session_state[f"calc_bal_{fv}"]=balance
       st.session_state[f"calc_f_{fv}"]=f
@@ -2510,6 +2520,11 @@ def render_patient_form(is_revisit=False):
         except:
           pass
         ok,msg=save_patient(data_dict)
+        # V201 FIX 6: After patient complete, next New Patient form goes to top
+        try:
+          st.session_state.scroll_to_top_next = True
+        except:
+          pass
         if is_revisit:
           try:
             prev_for_sheet = str(st.session_state.revisit_data.get("Diseases","") or "") if st.session_state.revisit_data else ""
@@ -3220,10 +3235,13 @@ def home_user_page():
   add_footer()
 
 def patient_page():
+  # V201 FIX 5,6: Navigation and New Patient tab opens at top
   scroll_to_top()
   top_bar_inner_with_user()
   top_nav_inner()
   st.markdown("<div class='heading-h3'>New Patient</div>", unsafe_allow_html=True)
+  # V201 FIX 6: Force scroll to top when New Patient tab clicked for new entries
+  st.markdown("<script>window.scrollTo({top:0,behavior:'auto'}); document.documentElement.scrollTop=0; if(window.parent){ try{ window.parent.document.querySelector('section.main').scrollTop=0; }catch(e){} } </script>", unsafe_allow_html=True)
   render_patient_form(is_revisit=False)
   under_development_footer("New Patient")
   add_footer()
@@ -3773,7 +3791,8 @@ def dashboard_welcome_page():
         total_patients = len(my_records)
         today_str = str(datetime.date.today())
         today_patients = len([r for r in my_records if today_str in str(r.get("Date",""))])
-        pending = len([r for r in my_records if str(r.get("Balance","0")).strip() not in ["0","","0.0"]])
+        # V201 FIX 4: PENDING only today pending - if no appointment today shows 0
+        pending = len([r for r in my_records if str(r.get("Date","")).strip() == today_str and str(r.get("Balance","0")).strip() not in ["0","","0.0","0.00"]])
         total_income = 0
         for r in my_records[:500]: # Limit to 500 for income calc to prevent hang
           try:
