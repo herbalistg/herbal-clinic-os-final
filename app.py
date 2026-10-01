@@ -1,4 +1,4 @@
-# APP VERSION - V200.19.1 SAFE - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Optional) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription from Google Sheet searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from Google Sheet (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
+# APP VERSION - V200.19.1 SAFE - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Optional) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from list (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
 
@@ -22,28 +22,30 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.20 - 10 Tasks: 1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V200.21 - 9 Tasks: 1-Admin tabs 2 lines readable, 2-Age/Gender History merged, 3-Current Qs single line text physician ref, 4-No bubbles popup success, 5-Prev Diseases single line, 6-Remove Google Sheet ref, 7-Prev Prescription single line [Haldi], 8-Added Diseases field names Body Part+ Disease+ Count+ etc, 9-EN very close to icon" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
 
 def show_success_bubble(count=1, message="Complete"):
-  """V200.19.1 SAFE - toast+balloons only"""
+  """V200.21 FIX 4 - No bubbles, Success popup that auto closes"""
   try:
     import streamlit as st
-    if count == 1:
-      st.toast(f" {message} ", icon="✅")
-      try:
-        st.balloons()
-      except:
-        pass
-    else:
-      for i in range(min(count, 3)):
-        st.toast(f" {message} {i+1}/{count} ", icon="✅")
-      try:
-        st.balloons()
-      except:
-        pass
+    st.success(f"✅ {message} - Success!")
+    st.toast(f"✅ {message}", icon="✅")
+  except:
+    pass
+
+def show_success_popup(message="Complete"):
+  """V200.21 FIX 4: Success popup"""
+  try:
+    import streamlit as st
+    st.markdown(f"""
+    <div style='background:linear-gradient(135deg,#2E7D5B,#4CAF50);color:white;padding:16px;border-radius:12px;text-align:center;margin:10px 0;'>
+      <b>✅ {message} - Successfully Completed</b>
+    </div>
+    """, unsafe_allow_html=True)
+    st.toast(f"✅ {message}", icon="✅")
   except:
     pass
 
@@ -665,13 +667,13 @@ def navigate_to(page):
   st.rerun()
 
 def language_selector():
-  # V200.20 FIX 1: Language EN icon close to icon - not far as separate tab
+  # V200.21 FIX 9: Language EN very close to icon - not separate tab feeling
   st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
-  c_spacer, c_theme, c_lang_combined = st.columns([6,1,2])
+  c_spacer, c_theme, c_lang_combined = st.columns([6,1,1.2], gap="small")
   with c_theme:
     curr_theme = st.session_state.get("theme", "light")
     if curr_theme == "light":
-      if st.button("🌿", key="theme_toggle_dim_v200_8", help="Dim Theme"):
+      if st.button("🌿", key="theme_toggle_dim_v200_21", help="Dim Theme"):
         st.session_state.theme = "dim"
         try:
           get_theme_css_cached.clear()
@@ -679,7 +681,7 @@ def language_selector():
         st.session_state["css_injected_v200_4"] = False
         st.rerun()
     else:
-      if st.button("☀️", key="theme_toggle_light_v200_8", help="Light Theme"):
+      if st.button("☀️", key="theme_toggle_light_v200_21", help="Light Theme"):
         st.session_state.theme = "light"
         try:
           get_theme_css_cached.clear()
@@ -688,17 +690,17 @@ def language_selector():
         st.rerun()
   with c_lang_combined:
     lang = st.session_state.get("app_language","en")
-    # Icon and text close together in same container
-    col_icon, col_text = st.columns([1,1])
+    # V200.21 FIX 9: Icon + EN in same flex, very close, not separate tab
+    col_icon, col_text = st.columns([1,1], gap="small")
     with col_icon:
-      if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v200_2", help="Change Language"):
+      if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v200_21", help="Change Language"):
         curr = st.session_state.get("app_language", "en")
         nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
         st.session_state.app_language = nxt
         st.session_state.lang = nxt
         st.rerun()
     with col_text:
-      st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;margin-left:-8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+      st.markdown(f"<div style='text-align:left;font-size:13px;font-weight:800;color:#2E7D5B;margin-top:6px;margin-left:-14px;padding:0px;'>{lang.upper()}</div>", unsafe_allow_html=True)
   with c_spacer:
     st.markdown("")
 
@@ -1068,7 +1070,7 @@ def get_sheet_connection_status():
     tb = traceback.format_exc()[:500]
     err_str = str(e)
     if "PERMISSION_DENIED" in err_str or "403" in err_str:
-      add_log("CHECK 6c - Open spreadsheet", False, f"PERMISSION DENIED: {err_str[:200]}", f"Share your Google Sheet with service account email as EDITOR: {creds_dict.get('client_email','')} -> Go to Sheet > Share > Add email > Editor")
+      add_log("CHECK 6c - Open spreadsheet", False, f"PERMISSION DENIED: {err_str[:200]}", f"Share your Medicine List with service account email as EDITOR: {creds_dict.get('client_email','')} -> Go to Sheet > Share > Add email > Editor")
     elif "not found" in err_str.lower() or "404" in err_str:
       add_log("CHECK 6c - Open spreadsheet", False, f"Spreadsheet NOT FOUND: {err_str[:200]}", f"Check ID is correct: 1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA. Your ID: {sid}")
     else:
@@ -1438,7 +1440,7 @@ def save_patient(data_dict):
     except:
       local_ok = False
     
-    # STEP 3: Google Sheet - FAST save - no diagnosis on every save for speed
+    # STEP 3: Medicine List - FAST save - no diagnosis on every save for speed
     sheet_ok = False
     sheet_msg = "Not connected"
     sheet_diagnosis = st.session_state.get("last_sheet_diagnosis", {})
@@ -2044,9 +2046,8 @@ def render_patient_form(is_revisit=False):
       st.selectbox("Marital Status", LISTS["marital"], key=f"p_marital_{fv}", index=marital_idx)
       st.selectbox("Blood Group", LISTS["blood_group"], key=f"p_blood_{fv}")
 
-    # V200.14 FIX 3a: Age/Gender Related - Show previous data in revisit
+    # V200.21 FIX 2 & 3: Age/Gender Related History merged + Current Qs single line - physician reference - no separate section - no long form
     try:
-      # FIX: Get age/gender from session first, then revisit_data, then prefill - ensure revisit data visible
       cur_age = str(st.session_state.get(f"p_age_{fv}","") or "").strip()
       cur_gender = str(st.session_state.get(f"p_gender_{fv}","") or "").strip()
       if not cur_age and is_revisit and st.session_state.get("revisit_data"):
@@ -2057,68 +2058,46 @@ def render_patient_form(is_revisit=False):
         cur_age = str(get_prefill("Age","") or "").strip()
       if not cur_gender:
         cur_gender = str(get_prefill("Gender","") or "").strip()
-      # Update session for display
       if cur_age and f"p_age_{fv}" not in st.session_state:
         st.session_state[f"p_age_{fv}"] = cur_age
       if cur_gender and f"p_gender_{fv}" not in st.session_state:
         st.session_state[f"p_gender_{fv}"] = cur_gender
       age_qs = get_age_based_questions(cur_age, cur_gender)
-      if age_qs:
-        st.markdown("<hr style='margin:12px 0; border:1px solid #C8E6D5;'>", unsafe_allow_html=True)
-        # V200.20 FIX 9c: Removed heading Age/Gender Related - Part of Personal Info (was Age: 6 / Gender: Male) - Now just show questions without heading
-        # st.markdown(f"<div class='heading-h5'>Age/Gender Related - Part of Personal Info (Age: {cur_age} / Gender: {cur_gender})</div>", unsafe_allow_html=True)
-        if is_revisit:
-          # V200.10 FIX 3a: Fixed Previous Age/Gender History - show ALL extra fields from revisit_data
-          st.markdown("<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:10px;margin-bottom:10px;'><b>📋 Previous Age/Gender History (Physician View):</b></div>", unsafe_allow_html=True)
-          hist_cols = st.columns(3)
-          hist_count = 0
-          # Show all keys except basic ones, so nothing missed
-          basic_keys = ['PatientID','Date','Name','FatherName','Age','Gender','Phone','Address','CNIC','EmergencyPhone','Diseases','ChiefComplaint','PastHistory','FamilyHistory','Allergy','Examination','Pulse','Temperament','BP','Weight','Temperature','SingleMedicines','FormulaMedicines','Fees','MedicineCharges','Total','Paid','Balance','PrevBalance','PaymentMethod','FeeStatus','RevisitDate','ClinicName','CreatedBy','Timestamp','AppVersion','DailyNumber','TotalNumber','GrandTotal','Referral','Occupation','MaritalStatus']
-          for k in st.session_state.revisit_data.keys() if st.session_state.revisit_data else []:
-            if k in basic_keys:
-              continue
-            val = str(st.session_state.revisit_data.get(k,'')).strip()
-            if val and val.lower() not in ['select', '', 'none', 'n/a']:
-              col = hist_cols[hist_count % 3]
-              with col:
-                st.markdown(f"<div style='background:#FFFFFF;border:1.5px solid #C8E6D5;border-radius:8px;padding:6px;margin:3px 0;font-size:12px;'><b>{k}:</b> {val[:60]}</div>", unsafe_allow_html=True)
-              hist_count += 1
-          if hist_count == 0:
-            # If no extra keys, show basic age/gender info as history
-            st.markdown(f"<div style='background:#FFFFFF;border:1.5px solid #C8E6D5;border-radius:8px;padding:8px;font-size:13px;'><b>Age:</b> {st.session_state.revisit_data.get('Age','')} | <b>Gender:</b> {st.session_state.revisit_data.get('Gender','')} | <b>Marital:</b> {st.session_state.revisit_data.get('MaritalStatus','')} | <b>Blood:</b> {st.session_state.revisit_data.get('BloodGroup','') or st.session_state.revisit_data.get('Blood','')} | <b>Occupation:</b> {st.session_state.revisit_data.get('Occupation','')}</div>", unsafe_allow_html=True)
-            st.caption("Extra Age/Gender details will be collected below - basic info shown above")
-          st.markdown("<hr style='margin:8px 0; border:1px dashed #A8CCAD;'>", unsafe_allow_html=True)
-          st.markdown("<div style='font-size:13px;font-weight:700;color:#2E7D5B;margin-bottom:6px;'>Current Age/Gender Questions - Update below:</div>", unsafe_allow_html=True)
-        cols = st.columns(3)
-        for idx, (q_label, q_type, q_key) in enumerate(age_qs):
-          col = cols[idx % 3]
-          with col:
-            prev_val = ""
-            if is_revisit and st.session_state.revisit_data:
-              prev_val = str(st.session_state.revisit_data.get(q_key,"") or st.session_state.revisit_data.get(q_label,"") or "")
+      if is_revisit and st.session_state.revisit_data:
+        r = st.session_state.revisit_data
+        basic_keys = ['PatientID','Date','Name','FatherName','Age','Gender','Phone','Address','CNIC','EmergencyPhone','Diseases','ChiefComplaint','PastHistory','FamilyHistory','Allergy','Examination','Pulse','Temperament','BP','Weight','Temperature','SingleMedicines','FormulaMedicines','Fees','MedicineCharges','Total','Paid','Balance','PrevBalance','PaymentMethod','FeeStatus','RevisitDate','ClinicName','CreatedBy','Timestamp','AppVersion','DailyNumber','TotalNumber','GrandTotal','Referral','Occupation','MaritalStatus']
+        prev_extra = []
+        for k in r.keys():
+          if k in basic_keys:
+            continue
+          val = str(r.get(k,'')).strip()
+          if val and val.lower() not in ['select','','none','n/a']:
+            prev_extra.append(f"{k}: {val}")
+        prev_line = " | ".join(prev_extra[:10]) if prev_extra else f"Age: {r.get('Age','')} | Gender: {r.get('Gender','')} | Marital: {r.get('MaritalStatus','')} | Occupation: {r.get('Occupation','')}"
+        st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #C8E6D5;border-radius:10px;padding:10px;margin:10px 0;'><b>Age/Gender Related History (from previous form) + Current Age/Gender Questions - Update below:</b><br><span style='font-size:13px;color:#333;'>{prev_line}</span></div>", unsafe_allow_html=True)
+        if age_qs:
+          qs_text = []
+          for (q_label, q_type, q_key) in age_qs:
+            prev_val = str(r.get(q_key,"") or r.get(q_label,"") or "")
             if isinstance(q_type, list):
-              default_idx = 0
-              if prev_val and prev_val in q_type:
-                default_idx = q_type.index(prev_val)
-              st.selectbox(q_label, q_type, key=f"age_q_{q_key}_{fv}", index=default_idx)
+              opts = ", ".join(q_type[:4])
+              qs_text.append(f"{q_label} [{opts}] = {prev_val if prev_val else '___'}")
             else:
-              st.text_input(q_label, key=f"age_q_{q_key}_{fv}", value=prev_val)
+              qs_text.append(f"{q_label} = {prev_val if prev_val else '___'}")
+          qs_line = " | ".join(qs_text)
+          st.markdown(f"<div style='background:#FFFFFF;border:1px solid #A8CCAD;border-radius:8px;padding:10px;margin-bottom:10px;font-size:13px;'><b>Current Questions (Physician Reference - General Text):</b><br>{qs_line}</div>", unsafe_allow_html=True)
+          st.caption("Note: Physician reference only - Not long form - V200.21 FIX 2,3")
       else:
-        if is_revisit and (cur_age or cur_gender):
-          st.markdown("<hr style='margin:12px 0; border:1px solid #C8E6D5;'>", unsafe_allow_html=True)
-          st.caption(f"Age {cur_age} / Gender {cur_gender} - No extra Age/Gender Qs for this combination")
-          # Still show previous history even if no current Qs
-          if st.session_state.revisit_data:
-            st.markdown("<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:8px;margin-top:8px;'><b>Previous Age/Gender History:</b></div>", unsafe_allow_html=True)
-            hist_found = False
-            for k in st.session_state.revisit_data.keys():
-              if any(x in k.lower() for x in ['female_', 'male_', 'child_', 'menarche', 'cycle', 'age_q_']):
-                val = str(st.session_state.revisit_data.get(k,'')).strip()
-                if val and val.lower() not in ['select','']:
-                  st.caption(f"{k}: {val}")
-                  hist_found = True
-            if not hist_found:
-              st.caption("No previous Age/Gender history")
+        if age_qs:
+          qs_text = []
+          for (q_label, q_type, q_key) in age_qs:
+            if isinstance(q_type, list):
+              opts = ", ".join(q_type[:3])
+              qs_text.append(f"{q_label} [{opts}]")
+            else:
+              qs_text.append(f"{q_label}")
+          qs_line = " | ".join(qs_text)
+          st.markdown(f"<div style='background:#FFFFFF;border:1px solid #C8E6D5;border-radius:8px;padding:8px;font-size:12px;'><b>Age/Gender Related (Reference - Single Line):</b> {qs_line}</div>", unsafe_allow_html=True)
     except Exception as e:
       st.caption(f"Age/Gender Qs: {str(e)[:80]}")
 
@@ -2156,28 +2135,8 @@ def render_patient_form(is_revisit=False):
         st.rerun()
     section_ok("personal", is_revisit=is_revisit)
 
-  # V200.19 FIX 5b: Age/Gender Related History after Personal Info
-  if is_revisit and st.session_state.revisit_data:
-    r = st.session_state.revisit_data
-    st.markdown("<div class='heading-h4'>Age/Gender Related History (from previous form) - After Personal Info</div>", unsafe_allow_html=True)
-    with st.container(border=True):
-      try:
-        related_keys = []
-        for k in r.keys():
-          lk = k.lower()
-          if any(x in lk for x in ['female_', 'male_', 'child_', 'menarche', 'cycle', 'flow', 'preg', 'miscarriage', 'contraception', 'leucorrhoea', 'menopause', 'hrt', 'puberty', 'voice', 'beard', 'marital_effect', 'sexual', 'nightfall', 'prostate', 'urine_weak', 'erectile', 'birth', 'vaccination', 'school', 'growth', 'age_q_', 'occupation', 'marital', 'blood', 'height', 'weight', 'allergy', 'habits', 'sleep', 'appetite', 'bowel', 'temperament', 'bp', 'temperature', 'pulse']):
-            if str(r.get(k,'')).strip() and str(r.get(k,'')).strip().lower() not in ['select', '']:
-              related_keys.append(k)
-        if related_keys:
-          cols = st.columns(3)
-          for idx, key in enumerate(related_keys[:12]):
-            col = cols[idx % 3]
-            with col:
-              st.markdown(f"<div style='background:#F1F7F3;border:1px solid #C8E6D5;border-radius:8px;padding:6px;margin:2px 0;font-size:12px;'><b>{key}:</b> {str(r.get(key,''))[:60]}</div>", unsafe_allow_html=True)
-        else:
-          st.caption("No extra age/gender history")
-      except:
-        st.caption("Age/Gender history in Personal/Vital sections")
+  # V200.21 FIX 2 & 5: Age/Gender History merged + Previous Diseases History single line - physician reference
+  # This section now handled in Personal Info merged - see above - V200.21 no separate section here
 
   with st.container(border=True):
     if section_heading_clickable("vital","Vital Signs"):
@@ -2195,57 +2154,49 @@ def render_patient_form(is_revisit=False):
         st.selectbox("Bowel Movement", LISTS["bowel"], key=f"v_bowel_{fv}")
       section_ok("vital", is_revisit=is_revisit)
 
-  # V200.19 FIX 5d: Previous Diseases in single row/line with cure/undo per disease + dedup + compact
+  # V200.21 FIX 5: Previous Diseases - History single line continuous text - physician reference, no tabs
   if is_revisit and st.session_state.revisit_data:
     selected_pid = str(st.session_state.revisit_data.get("PatientID","") or "").strip()
     selected_name = str(st.session_state.revisit_data.get("Name","") or "").strip()
     prev_text = str(st.session_state.revisit_data.get("Diseases","") or "").strip()
     if prev_text:
-      st.markdown(f"<div class='heading-h4'>Previous Diseases - History (Patient: {selected_name} - ID: {selected_pid}) - Single Row</div>", unsafe_allow_html=True)
-      with st.container(border=True):
-        raw_list = [d.strip() for d in prev_text.split(" + ") if d.strip()]
-        seen = set()
-        prev_list = []
-        for item in raw_list:
-          if item.lower() not in seen:
-            seen.add(item.lower())
-            prev_list.append(item)
-        last_pid_key = f"last_revisit_pid_{fv}"
-        if st.session_state.get(last_pid_key, "") != selected_pid:
-          st.session_state.revisit_cured_diseases = []
-          st.session_state.revisit_remaining_diseases = prev_list.copy()
-          st.session_state[last_pid_key] = selected_pid
-        if "revisit_cured_diseases" not in st.session_state:
-          st.session_state.revisit_cured_diseases = []
-        if "revisit_remaining_diseases" not in st.session_state:
-          st.session_state.revisit_remaining_diseases = prev_list.copy()
-        # V200.19 FIX 5d: Single row/line with chips - each disease with cure/undo option
-        chips_html = ""
-        for idx, pd in enumerate(prev_list):
+      st.markdown(f"<div class='heading-h4'>Previous Diseases - History (Patient: {selected_name} - ID: {selected_pid}) - Single Line</div>", unsafe_allow_html=True)
+      raw_list = [d.strip() for d in prev_text.split(" + ") if d.strip()]
+      seen = set()
+      prev_list = []
+      for item in raw_list:
+        if item.lower() not in seen:
+          seen.add(item.lower())
+          prev_list.append(item)
+      last_pid_key = f"last_revisit_pid_{fv}"
+      if st.session_state.get(last_pid_key, "") != selected_pid:
+        st.session_state.revisit_cured_diseases = []
+        st.session_state.revisit_remaining_diseases = prev_list.copy()
+        st.session_state[last_pid_key] = selected_pid
+      if "revisit_cured_diseases" not in st.session_state:
+        st.session_state.revisit_cured_diseases = []
+      if "revisit_remaining_diseases" not in st.session_state:
+        st.session_state.revisit_remaining_diseases = prev_list.copy()
+      # V200.21 FIX 5: Single continuous line text, not tabs/chips grid
+      continuous_text = " | ".join([f"{pd} ({'Cured' if pd in st.session_state.revisit_cured_diseases else 'Active'})" for pd in prev_list])
+      st.markdown(f"<div style='background:#FFFFFF;border:2px solid #C8E6D5;border-radius:12px;padding:12px;margin-bottom:10px;font-size:13px;'><b>Previous Diseases (Single Line - Physician Reference):</b><br>{continuous_text}<br><span style='font-size:11px;color:#666;'>Patient: {selected_name} | Total: {len(prev_list)} | Cured: {len(st.session_state.revisit_cured_diseases)} | Remaining: {len(st.session_state.revisit_remaining_diseases)}</span></div>", unsafe_allow_html=True)
+      # Cure/Undo buttons still in compact row
+      cols = st.columns(6)
+      for idx, pd in enumerate(prev_list):
+        col = cols[idx % 6]
+        with col:
           is_cured = pd in st.session_state.revisit_cured_diseases
-          bg = "#FFEBEE" if is_cured else "#E8F5E9"
-          border = "#F44336" if is_cured else "#2E7D5B"
-          tag = "Cured" if is_cured else "Active"
-          chips_html += f"<span style='display:inline-block;background:{bg};border:1.5px solid {border};border-radius:20px;padding:6px 10px;margin:4px;font-size:12px;'><b>{pd}</b> <small>({tag})</small></span> "
-        st.markdown(f"<div style='background:#FFFFFF;border:2px solid #C8E6D5;border-radius:12px;padding:12px;margin-bottom:10px;'>{chips_html}</div>", unsafe_allow_html=True)
-        # Buttons in single row - 4 per row
-        cols = st.columns(4)
-        for idx, pd in enumerate(prev_list):
-          col = cols[idx % 4]
-          with col:
-            is_cured = pd in st.session_state.revisit_cured_diseases
-            if not is_cured:
-              if st.button(f"❌ {pd[:20]}", key=f"cure_prev_{fv}_{idx}_v200_19", help=f"Mark cured: {pd}"):
-                st.session_state.revisit_cured_diseases.append(pd)
-                if pd in st.session_state.revisit_remaining_diseases:
-                  st.session_state.revisit_remaining_diseases.remove(pd)
-                st.rerun()
-            else:
-              if st.button(f"↩️ {pd[:15]}", key=f"uncure_prev_{fv}_{idx}_v200_19", help=f"Undo cured: {pd}"):
-                st.session_state.revisit_cured_diseases.remove(pd)
-                st.session_state.revisit_remaining_diseases.append(pd)
-                st.rerun()
-        st.markdown(f"<div style='background:#F1F7F3;border:1px solid #C8E6D5;border-radius:8px;padding:8px;font-size:12px;margin-top:8px;'>Patient: {selected_name} | Total Prev: {len(prev_list)} | Cured: {len(st.session_state.revisit_cured_diseases)} | Remaining: {len(st.session_state.revisit_remaining_diseases)} - Each disease chip has ❌ to mark cured and ↩️ to undo</div>", unsafe_allow_html=True)
+          if not is_cured:
+            if st.button(f"❌ {pd[:12]}", key=f"cure_prev_{fv}_{idx}_v200_21", help=f"Mark cured: {pd}"):
+              st.session_state.revisit_cured_diseases.append(pd)
+              if pd in st.session_state.revisit_remaining_diseases:
+                st.session_state.revisit_remaining_diseases.remove(pd)
+              st.rerun()
+          else:
+            if st.button(f"↩️ {pd[:10]}", key=f"uncure_prev_{fv}_{idx}_v200_21", help=f"Undo cured: {pd}"):
+              st.session_state.revisit_cured_diseases.remove(pd)
+              st.session_state.revisit_remaining_diseases.append(pd)
+              st.rerun()
     else:
       st.caption(f"No previous diseases for {selected_name} (ID: {selected_pid})")
 
@@ -2285,18 +2236,20 @@ def render_patient_form(is_revisit=False):
         with rq1_col:
           related_qs = DISEASE_RELATED_QUESTIONS.get(st.session_state.get(f"pat_body_part_{fv}_v197","Select"), DISEASE_RELATED_QUESTIONS.get("General", ["Severity","Trigger","Associated Symptom"]))
           q1_label = related_qs[0] if len(related_qs)>0 else "Severity/Stage"
-          # V200.17 FIX 1: Dropdown for related questions
           bp_for_dd = st.session_state.get(f"pat_body_part_{fv}_v197","General")
           dd_options = DISEASE_RELATED_DROPDOWNS.get(bp_for_dd, {}).get(q1_label, LISTS["severity"])
           st.selectbox(q1_label, dd_options, key=f"pat_rel_q1_{fv}_v200_4")
+          st.session_state[f"pat_rel_q1_label_{fv}"] = q1_label
         with rq2_col:
           q2_label = related_qs[1] if len(related_qs)>1 else "Nature/Trigger"
           dd_options2 = DISEASE_RELATED_DROPDOWNS.get(bp_for_dd, {}).get(q2_label, ["Select","Yes","No","Sometimes","After eating","Before eating","Continuous","Intermittent"])
           st.selectbox(q2_label, dd_options2, key=f"pat_rel_q2_{fv}_v200_4")
+          st.session_state[f"pat_rel_q2_label_{fv}"] = q2_label
         with rq3_col:
           q3_label = related_qs[2] if len(related_qs)>2 else "Associated Symptom"
           dd_options3 = DISEASE_RELATED_DROPDOWNS.get(bp_for_dd, {}).get(q3_label, ["Select","Nausea","Burning","Pain","Itching","None","Other"])
           st.selectbox(q3_label, dd_options3, key=f"pat_rel_q3_{fv}_v200_4")
+          st.session_state[f"pat_rel_q3_label_{fv}"] = q3_label
       else:
         st.info("Complete Body Part*, Disease*, No/Count* and Duration* to see Related Questions (Dropdowns)")
 
@@ -2381,8 +2334,12 @@ def render_patient_form(is_revisit=False):
         prev_formula = str(r.get("FormulaMedicines","") or "").strip()
         prev_all = str(r.get("Prescription","") or "").strip()
         if prev_single or prev_formula or prev_all:
-          st.markdown("<div class='heading-h5'>Previous Prescription - For Reference (Patient History)</div>", unsafe_allow_html=True)
-          st.markdown(f"<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:10px;margin-bottom:10px;'><b>Previous Single:</b> {prev_single[:300] if prev_single else 'None'}<br><b>Previous Formula:</b> {prev_formula[:300] if prev_formula else 'None'}<br><b>Previous Full Prescription:</b> {prev_all[:300] if prev_all else 'None'}</div>", unsafe_allow_html=True)
+          st.markdown("<div class='heading-h5'>Previous Prescription - For Reference</div>", unsafe_allow_html=True)
+          # V200.21 FIX 7: Single line - Previous Single: ['Haldi'], Previous Formula: ['Majoon Dabeed'], Previous Full: None
+          single_txt = prev_single[:400] if prev_single else "None"
+          formula_txt = prev_formula[:400] if prev_formula else "None"
+          full_txt = prev_all[:400] if prev_all else "None"
+          st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #C8E6D5;border-radius:10px;padding:10px;margin-bottom:10px;font-size:13px;'><b>Previous Single:</b> [{single_txt}] , <b>Previous Formula:</b> [{formula_txt}] , <b>Previous Full Prescription:</b> {full_txt}</div>", unsafe_allow_html=True)
       # V200.14 FIX 2a,2b,2c: No Add buttons, Single/Formula labels simple, Manual field bigger
       try:
         single_options = []
@@ -2420,10 +2377,10 @@ def render_patient_form(is_revisit=False):
         # V200.14 FIX 2c: Only Single Medicines
         st.markdown("<div class='heading-h5'>Single Medicines</div>", unsafe_allow_html=True)
         # V200.14 FIX 2a: No Add button - direct multiselect searchable
-        selected_single = st.multiselect("Single Medicines", single_options, key=f"single_meds_{fv}", help="Type to search medicine from Google Sheet")
+        selected_single = st.multiselect("Single Medicines", single_options, key=f"single_meds_{fv}", help="Type to search medicine")
       with c2:
         st.markdown("<div class='heading-h5'>Formula Medicines</div>", unsafe_allow_html=True)
-        selected_formula = st.multiselect("Formula Medicines", formula_options, key=f"formula_meds_{fv}", help="Type to search formula from Google Sheet")
+        selected_formula = st.multiselect("Formula Medicines", formula_options, key=f"formula_meds_{fv}", help="Type to search formula from list")
       
       # V200.14 FIX 2b: Physician Manual Medicine Entry field bigger
       st.markdown("<hr style='margin:12px 0; border:1px solid #C8E6D5;'>", unsafe_allow_html=True)
@@ -3414,7 +3371,7 @@ def clinic_herb_formula_page():
   top_bar_inner_with_user()
   top_nav_inner()
   st.markdown("<div class='heading-h3'>Herbs & Pharmacopoeia</div>", unsafe_allow_html=True)
-  st.info("Data Source: Google Sheets - Herbs and Formulas sheets. When you add data to sheet, it will appear here automatically")
+  st.info("Data Source: Medicine Lists - Herbs and Formulas sheets. When you add data to sheet, it will appear here automatically")
   tab_search_herb, tab_all_herbs, tab_search_form, tab_all_form = st.tabs(["Search Herbs", "All Herbs", "Search Formulas", "All Formulas"])
   with tab_search_herb:
     st.markdown("<div class='heading-h4'>Search Herbs</div>", unsafe_allow_html=True)
@@ -3430,13 +3387,13 @@ def clinic_herb_formula_page():
       with st.container(border=True):
         st.markdown(f"<b>{r.get('Name','')}</b> - {r.get('Temperament','')} | Uses: {r.get('Uses','')[:150]}", unsafe_allow_html=True)
   with tab_all_herbs:
-    st.markdown("<div class='heading-h4'>All Herbs - Complete List from Google Sheet</div>", unsafe_allow_html=True)
+    st.markdown("<div class='heading-h4'>All Herbs - Complete List from list</div>", unsafe_allow_html=True)
     herb_all = get_all_records_cached("Herbs")
     if not herb_all:
       herb_all = get_all_records_cached("Pharmacopoeia")
     st.write(f"Total Herbs in Sheet: {len(herb_all)}")
     if not herb_all:
-      st.warning("Herbs sheet is empty - add herbs to Google Sheet Herbs tab, they will appear here")
+      st.warning("Herbs sheet is empty - add herbs to Medicine List Herbs tab, they will appear here")
     else:
       df_herbs = pd.DataFrame(herb_all)
       st.dataframe(df_herbs, use_container_width=True)
@@ -3457,11 +3414,11 @@ def clinic_herb_formula_page():
       with st.container(border=True):
         st.markdown(f"<b>{r.get('Name','')}</b> - Ingredients: {r.get('Ingredients','')} | Uses: {r.get('Uses','')}", unsafe_allow_html=True)
   with tab_all_form:
-    st.markdown("<div class='heading-h4'>All Formulas - Complete List from Google Sheet</div>", unsafe_allow_html=True)
+    st.markdown("<div class='heading-h4'>All Formulas - Complete List from list</div>", unsafe_allow_html=True)
     formula_all = get_all_records_cached("Formulas")
     st.write(f"Total Formulas in Sheet: {len(formula_all)}")
     if not formula_all:
-      st.warning("Formulas sheet is empty - add formulas to Google Sheet Formulas tab, they will appear here")
+      st.warning("Formulas sheet is empty - add formulas to Medicine List Formulas tab, they will appear here")
     else:
       df_form = pd.DataFrame(formula_all)
       st.dataframe(df_form, use_container_width=True)
@@ -3811,7 +3768,7 @@ def clinic_admin_page():
                             if not hdr or len(hdr) < 3: hdr = list(formula_dict.keys())
                             row = [str(formula_dict.get(h,"")) for h in hdr]
                             ws.append_row(row, value_input_option="RAW")
-                            st.success(f"Formula '{formula_name}' saved to Google Sheet!")
+                            st.success(f"Formula '{formula_name}' saved to Medicine List!")
                     except Exception as e:
                         st.warning(f"Sheet save: {e} - saved locally")
                     save_to_local_csv("Formulas", formula_dict)
@@ -4426,17 +4383,32 @@ def admin_page():
     box-shadow: 0 4px 0 #007a33, 0 6px 16px rgba(0,230,118,0.4) !important;
   }
   </style>''', unsafe_allow_html=True)
-  cols = st.columns(len(sections))
-  for idx, sec in enumerate(sections):
-    with cols[idx]:
-      is_selected = st.session_state.admin_selected_section == sec
-      btn_type = "primary" if is_selected else "secondary"
-      # Highlight the opened menu tab
-      if is_selected:
-        st.markdown(f"<div style='background:#00E676;color:#000;font-weight:900;text-align:center;padding:4px;border-radius:6px;margin-bottom:4px;border:2px solid #00c853;box-shadow:0 2px 0 #007a33;'>✓ {sec}</div>", unsafe_allow_html=True)
-      if st.button(sec, key=f"admin_nav_{sec}_v197", use_container_width=True, type=btn_type):
-        st.session_state.admin_selected_section = sec
-        st.rerun()
+  # V200.21 FIX 1: Admin tabs readable - 2 rows, wrap, smaller font
+  st.markdown("""
+  <style>
+  .admin-tabs-wrap button {
+    white-space: normal !important;
+    word-break: break-word !important;
+    height: auto !important;
+    min-height: 48px !important;
+    line-height: 1.2 !important;
+    font-size: 11px !important;
+  }
+  </style>
+  """, unsafe_allow_html=True)
+  row1 = sections[:5]
+  row2 = sections[5:]
+  for row_secs in [row1, row2]:
+    cols = st.columns(len(row_secs))
+    for idx, sec in enumerate(row_secs):
+      with cols[idx]:
+        is_selected = st.session_state.admin_selected_section == sec
+        btn_type = "primary" if is_selected else "secondary"
+        if is_selected:
+          st.markdown(f"<div style='background:#00E676;color:#000;font-weight:900;text-align:center;padding:4px;border-radius:6px;margin-bottom:4px;border:2px solid #00c853;font-size:11px;white-space:normal;'>✓ {sec}</div>", unsafe_allow_html=True)
+        if st.button(sec, key=f"admin_nav_{sec}_v200_21", use_container_width=True, type=btn_type, help=f"Open {sec}"):
+          st.session_state.admin_selected_section = sec
+          st.rerun()
   selected = st.session_state.admin_selected_section
   if selected:
     st.markdown(f"<div style='background:#1a1c23;border-left:4px solid #00E676;padding:8px 12px;border-radius:8px;margin:8px 0;color:#00E676;font-weight:700;'>📂 Open Tab: {selected}</div>", unsafe_allow_html=True)
