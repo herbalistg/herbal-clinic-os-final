@@ -1,8 +1,8 @@
 # ============================================
-# CURRENT APP VERSION: V203
-# V203 - Fixes: 1a-OK-Next 2 popups -> 1 popup only, 1b-Selected Patient - Past History & Personal Info + Age/Gender Info removed (extra - already in Personal Information), 1c-Additional Info Details previous history now shown inside section, 1d-Vital Signs previous history now shown inside section, 1e-Revisit date 1 and 2 shows all patients (Google Sheet has many but app showed 1 - fixed dedup logic + increased max_rows 200->1000), 2-Clinic Overview Last 7 Days TOTAL PATIENTS 2 bug fixed (sheet has more - fixed max_rows + cache 15min->60sec), 3a-Google Sheet PatientID same but DailyNumber/TotalNumber same bug fixed (now PatientID same for same patient but Daily/Total NEW for each visit), 3b-Google Sheet column titles missing in many sheets fixed (ensure headers + added missing sheets)
-# Date: 2026-05-14
-# Previous: V202, V201, V200.22, V200.21
+# CURRENT APP VERSION: V204
+# V204 - Fixes: 1-Revisit Search Patient specific + partial with dash logic (Date: 1=day only, 1-05=month, 1-05-2026 or 2026-05-01=full, Name partial first/last, Address city/village partial, Phone partial), 1a-Additional Info Details previous history with fallback chain (if last visit empty then earlier), 1b-Vital Signs previous history with fallback chain, 1c-Chief Complaint & History exact from last visit with fallback chain (important principle: if section empty in last visit fetch from earlier), Previous Prescription [[]] None bug fixed (now shows correct last visit medicines with chain fallback)
+# Date: 2026-05-15
+# Previous: V203, V202, V201, V200.22
 # ============================================
 # APP VERSION - V200.19.1 SAFE - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Optional) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from list (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
@@ -29,7 +29,7 @@ except ImportError:
   GSPREAD_AVAILABLE = False
 
 # CURRENT VERSION COMMENT: V202 - Every new app version number must be commented in code - This is V202
-APP_VERSION = "V203 - Fixes: 1a-Only 1 popup on OK-Next (was 2), 1b-Selected Patient Past History block removed (extra), 1c-Additional Info Details previous history now shown, 1d-Vital Signs previous history now shown, 1e-Revisit date search shows all visits (Google Sheet date 1 and 2 has many but app showed 1 - fixed), 2-Clinic Overview Last 7 Days TOTAL PATIENTS count fixed (was 2 but sheet has more - max_rows 200->1000 + cache fix), 3a-PatientID same but DailyNumber TotalNumber same bug fixed (now Daily/Total NEW for each revisit), 3b-Sheet column titles missing fixed" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V204 - Fixes: 1-Revisit Search specific+partial with dash logic (Date: 1=day only not 11/21/31, -05 or 1-05=month, --2026 or 1-05-2026=year, 2026-05-01=full, Name first/last partial, Address city/village partial), Additional Info Details previous history with fallback chain, Vital Signs previous history with fallback chain, Chief Complaint exact from last visit with fallback chain (if empty fetch earlier), Previous Prescription [[]] None bug fixed" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -2112,19 +2112,32 @@ def render_patient_form(is_revisit=False):
 
   with st.container(border=True):
     if section_heading_clickable("vital","Vital Signs"):
-      # V203 FIX 1d: Vital Signs previous history - always show inside section
+      # V204 FIX b: Vital Signs previous history with fallback chain - if last visit empty, fetch from earlier
       if is_revisit and st.session_state.revisit_data:
         r = st.session_state.revisit_data
+        chain = st.session_state.get("revisit_history_chain", [r])
         vital_fields = []
+        found_source = "Last Visit"
         for label, key in [("BP","BP"),("Weight","Weight"),("Sleep","SleepPattern"),("Temperature","Temperature"),("Pulse","Pulse"),("Appetite","Appetite"),("Temperament","Temperament"),("Bowel","BowelMovement")]:
           val = str(r.get(key,"") or "").strip()
           if val and val.lower() not in ['select','', 'none']:
             vital_fields.append(f"{label}: {val}")
+        if not vital_fields and len(chain) > 1:
+          for rec in chain[1:]:
+            temp_fields = []
+            for label, key in [("BP","BP"),("Weight","Weight"),("Sleep","SleepPattern"),("Temperature","Temperature"),("Pulse","Pulse"),("Appetite","Appetite"),("Temperament","Temperament"),("Bowel","BowelMovement")]:
+              val = str(rec.get(key,"") or "").strip()
+              if val and val.lower() not in ['select','', 'none']:
+                temp_fields.append(f"{label}: {val}")
+            if temp_fields:
+              vital_fields = temp_fields
+              found_source = f"Previous Visit {rec.get('Date','')}"
+              break
         if vital_fields:
           vital_line = " | ".join(vital_fields)
-          st.markdown(f"<div style='background:#E8F5E9;border:1.5px solid #2E7D5B;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Previous Vital Signs - For Reference (Last Visit - If no new change, previous continues):</b><br>{vital_line}</div>", unsafe_allow_html=True)
+          st.markdown(f"<div style='background:#E8F5E9;border:1.5px solid #2E7D5B;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Previous Vital Signs - For Reference ({found_source} - If no new change, previous continues):</b><br>{vital_line}</div>", unsafe_allow_html=True)
         else:
-          st.caption("No previous vital signs - Enter new")
+          st.caption("No previous vital signs - Enter new (checks earlier visits)")
       c1,c2,c3=st.columns(3)
       with c1:
         st.selectbox("BP", LISTS["bp"], key=f"v_bp_{fv}")
@@ -2277,16 +2290,32 @@ def render_patient_form(is_revisit=False):
 
   with st.container(border=True):
     if section_heading_clickable("complaint","Chief Complaint & History"):
+      # V204 FIX c: Chief Complaint previous history - exact from last visit, fallback to earlier if empty
       if is_revisit and st.session_state.revisit_data:
         r = st.session_state.revisit_data
+        chain = st.session_state.get("revisit_history_chain", [r])
         comp_fields = []
-        for label, key in [("Chief Complaint","ChiefComplaint"),("Past History","PastHistory"),("Family History","FamilyHistory")]:
+        found_source = "Last Visit"
+        for label, key in [("Chief Complaint","ChiefComplaint"),("Past History","PastHistory"),("Family History","FamilyHistory"),("Habits","Habits")]:
           val = str(r.get(key,"") or "").strip()
           if val:
             comp_fields.append(f"{label}: {val}")
+        if not comp_fields and len(chain) > 1:
+          for rec in chain[1:]:
+            temp_fields = []
+            for label, key in [("Chief Complaint","ChiefComplaint"),("Past History","PastHistory"),("Family History","FamilyHistory"),("Habits","Habits")]:
+              val = str(rec.get(key,"") or "").strip()
+              if val:
+                temp_fields.append(f"{label}: {val}")
+            if temp_fields:
+              comp_fields = temp_fields
+              found_source = f"Previous Visit {rec.get('Date','')}"
+              break
         if comp_fields:
           comp_line = " | ".join(comp_fields)
-          st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #2E7D5B;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Previous Complaint & History - For Reference:</b><br>{comp_line}</div>", unsafe_allow_html=True)
+          st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #2E7D5B;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Previous Complaint & History - For Reference ({found_source}):</b><br>{comp_line}</div>", unsafe_allow_html=True)
+        else:
+          st.caption("No previous Complaint history - Enter new (checks earlier visits)")
       st.text_area("Chief Complaint", key=f"chief_complaint_{fv}", value=get_prefill("ChiefComplaint",""))
       st.text_area("Past History", key=f"past_history_{fv}", value=get_prefill("PastHistory",""))
       st.text_area("Family History", key=f"family_hist_{fv}")
@@ -2295,19 +2324,65 @@ def render_patient_form(is_revisit=False):
 
   with st.container(border=True):
     if section_heading_clickable("prescription","Prescription"):
-      # V200.19 FIX 5d: Show previous prescription in medicines section for easier prescription
+      # V204 FIX: Previous Prescription - For Reference - correct results from last visit with fallback chain
       if is_revisit and st.session_state.revisit_data:
         r = st.session_state.revisit_data
+        chain = st.session_state.get("revisit_history_chain", [r])
         prev_single = str(r.get("SingleMedicines","") or "").strip()
         prev_formula = str(r.get("FormulaMedicines","") or "").strip()
-        prev_all = str(r.get("Prescription","") or "").strip()
-        if prev_single or prev_formula or prev_all:
+        prev_manual = str(r.get("ManualMedicines","") or "").strip()
+        prev_all = str(r.get("Prescription","") or r.get("ManualMedicines","") or "").strip()
+        found_source = "Last Visit"
+        # If last visit empty, check earlier visits
+        if (not prev_single or prev_single in ["[]", "[[]]", "None", ""]) and (not prev_formula or prev_formula in ["[]", "[[]]", "None", ""]) and (not prev_manual or prev_manual in ["[]", "[[]]", "None", ""]):
+          if len(chain) > 1:
+            for rec in chain[1:]:
+              s = str(rec.get("SingleMedicines","") or "").strip()
+              f = str(rec.get("FormulaMedicines","") or "").strip()
+              m = str(rec.get("ManualMedicines","") or rec.get("Prescription","") or "").strip()
+              if (s and s not in ["[]", "[[]]", "None", ""]) or (f and f not in ["[]", "[[]]", "None", ""]) or (m and m not in ["[]", "[[]]", "None", ""]):
+                prev_single = s
+                prev_formula = f
+                prev_manual = m
+                prev_all = m if m else f
+                found_source = f"Previous Visit {rec.get('Date','')}"
+                break
+        if prev_single or prev_formula or prev_manual or prev_all:
           st.markdown("<div class='heading-h5'>Previous Prescription - For Reference</div>", unsafe_allow_html=True)
-          # V200.21 FIX 7: Single line - Previous Single: ['Haldi'], Previous Formula: ['Majoon Dabeed'], Previous Full: None
-          single_txt = prev_single[:400] if prev_single else "None"
-          formula_txt = prev_formula[:400] if prev_formula else "None"
-          full_txt = prev_all[:400] if prev_all else "None"
-          st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #C8E6D5;border-radius:10px;padding:10px;margin-bottom:10px;font-size:13px;'><b>Previous Single:</b> [{single_txt}] , <b>Previous Formula:</b> [{formula_txt}] , <b>Previous Full Prescription:</b> {full_txt}</div>", unsafe_allow_html=True)
+          # V204: Clean display - remove [[]] and show actual medicines
+          def clean_med_display(med_str):
+            if not med_str or med_str.strip() in ["[]", "[[]]", "None", "", "['']", '[""]']:
+              return "None"
+            # Remove extra brackets and quotes for display
+            cleaned = med_str.strip()
+            # If it's like "['Haldi', 'Saunf']" keep as is but clean
+            if cleaned.startswith("[") and cleaned.endswith("]"):
+              # Try to parse
+              try:
+                import ast
+                parsed = ast.literal_eval(cleaned)
+                if isinstance(parsed, list):
+                  if len(parsed) == 0:
+                    return "None"
+                  # Flatten nested
+                  flat = []
+                  for item in parsed:
+                    if isinstance(item, list):
+                      flat.extend(item)
+                    else:
+                      flat.append(str(item))
+                  flat = [x for x in flat if x and x not in ["[]", "None", ""]]
+                  if not flat:
+                    return "None"
+                  return ", ".join(flat[:10])
+              except:
+                pass
+            return cleaned[:500] if len(cleaned) > 0 else "None"
+          
+          single_txt = clean_med_display(prev_single)
+          formula_txt = clean_med_display(prev_formula)
+          full_txt = clean_med_display(prev_manual if prev_manual else prev_all)
+          st.markdown(f"<div style='background:#E8F5E9;border:1.5px solid #2E7D5B;border-radius:10px;padding:10px;margin-bottom:10px;font-size:13px;'><b>Source: {found_source}</b><br><b>Previous Single:</b> {single_txt} | <b>Previous Formula:</b> {formula_txt} | <b>Previous Manual/Full:</b> {full_txt}</div>", unsafe_allow_html=True)
       # V200.14 FIX 2a,2b,2c: No Add buttons, Single/Formula labels simple, Manual field bigger
       try:
         single_options = []
@@ -3260,71 +3335,275 @@ def patient_revisit_form_page():
   under_development_footer("Revisit Form")
   add_footer()
 
+def parse_date_search(s_date):
+  # V204 FIX: Date search logic as per user instruction:
+  # If date without dash "-" => only date (day), if "-" after then month, if "--" then year
+  # Examples: "1" => day=1, "1-05" => day=1 month=05, "1-05-2026" => day=1 month=05 year=2026
+  # Also supports: "05" => if no dash but 2 digits could be day? We'll treat as day if 1-31
+  # "-05" => month=05, "--2026" => year=2026, "2026-05-01" => year-month-day
+  # Returns dict with day, month, year or None
+  try:
+    s = str(s_date).strip()
+    if not s:
+      return None
+    # Count dashes
+    if "-" not in s:
+      # Only day
+      if s.isdigit():
+        day = int(s)
+        if 1 <= day <= 31:
+          return {"day": day, "month": None, "year": None, "raw": s}
+      return {"day": None, "month": None, "year": None, "raw": s, "partial": s}
+    else:
+      parts = s.split("-")
+      # Handle YYYY-MM-DD format (first part 4 digits)
+      if len(parts) == 3 and len(parts[0]) == 4 and parts[0].isdigit():
+        # YYYY-MM-DD
+        try:
+          year = int(parts[0]) if parts[0] else None
+          month = int(parts[1]) if parts[1] else None
+          day = int(parts[2]) if parts[2] else None
+          return {"day": day, "month": month, "year": year, "raw": s}
+        except:
+          return {"day": None, "month": None, "year": None, "raw": s, "partial": s}
+      # Handle --YYYY (year only with 2 dashes)
+      if s.startswith("--") and len(parts) >= 3:
+        # --2026
+        try:
+          year_part = parts[2] if len(parts) > 2 else parts[-1]
+          if year_part.isdigit() and len(year_part) == 4:
+            return {"day": None, "month": None, "year": int(year_part), "raw": s}
+        except:
+          pass
+      # Handle -MM (month only)
+      if s.startswith("-") and not s.startswith("--"):
+        try:
+          month = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
+          return {"day": None, "month": month, "year": None, "raw": s}
+        except:
+          pass
+      # Handle D-M or D-M-Y
+      if len(parts) == 2:
+        # D-M or M-Y? If first part <=31 and second <=12 => day-month
+        try:
+          d = int(parts[0]) if parts[0].isdigit() else None
+          m = int(parts[1]) if parts[1].isdigit() else None
+          # If d > 31 and m <=12, maybe year-month? But treat as day-month
+          return {"day": d, "month": m, "year": None, "raw": s}
+        except:
+          return {"day": None, "month": None, "year": None, "raw": s, "partial": s}
+      if len(parts) == 3:
+        try:
+          d = int(parts[0]) if parts[0].isdigit() else None
+          m = int(parts[1]) if parts[1].isdigit() else None
+          y = int(parts[2]) if parts[2].isdigit() else None
+          return {"day": d, "month": m, "year": y, "raw": s}
+        except:
+          return {"day": None, "month": None, "year": None, "raw": s, "partial": s}
+      return {"day": None, "month": None, "year": None, "raw": s, "partial": s}
+  except:
+    return None
+
+def match_date_record(record_date_str, search_parsed):
+  # V204 FIX: Match date record against parsed search - specific entity logic
+  # record_date_str is like "2026-05-14" or "2026-05-01"
+  try:
+    if not search_parsed:
+      return False
+    # If search has partial only (no structured day/month/year), do substring but specific
+    if "partial" in search_parsed and search_parsed.get("day") is None and search_parsed.get("month") is None and search_parsed.get("year") is None:
+      # For partial date without dash logic, fallback to specific partial
+      raw = str(search_parsed.get("raw","")).strip().lower()
+      # If raw is single digit day, match exact day not substring
+      if raw.isdigit() and 1 <= int(raw) <= 31:
+        # Parse record date to get day
+        try:
+          from datetime import datetime
+          # Try parse YYYY-MM-DD
+          if "-" in record_date_str:
+            parts = record_date_str.split("-")
+            if len(parts) >= 3:
+              rec_day = int(parts[2][:2]) if parts[2][:2].isdigit() else None
+              if rec_day is not None:
+                return rec_day == int(raw)
+          return False
+        except:
+          return False
+      else:
+        # For other partial, check exact match only for that entity
+        return raw in str(record_date_str).lower()
+    
+    # Structured matching
+    rec_str = str(record_date_str).strip()
+    if not rec_str:
+      return False
+    # Parse record date
+    rec_day = None
+    rec_month = None
+    rec_year = None
+    try:
+      if "-" in rec_str:
+        rp = rec_str.split("-")
+        if len(rp) >= 3:
+          # Could be YYYY-MM-DD or DD-MM-YYYY - try YYYY first
+          if len(rp[0]) == 4 and rp[0].isdigit():
+            rec_year = int(rp[0]) if rp[0].isdigit() else None
+            rec_month = int(rp[1]) if rp[1].isdigit() else None
+            rec_day = int(rp[2][:2]) if rp[2][:2].isdigit() else None
+          else:
+            rec_day = int(rp[0]) if rp[0].isdigit() else None
+            rec_month = int(rp[1]) if rp[1].isdigit() else None
+            rec_year = int(rp[2][:4]) if len(rp[2])>=4 and rp[2][:4].isdigit() else None
+            if rec_year is None and rp[0].isdigit() and len(rp[0])==4:
+              rec_year = int(rp[0])
+    except:
+      pass
+
+    sd = search_parsed.get("day")
+    sm = search_parsed.get("month")
+    sy = search_parsed.get("year")
+
+    # If all three provided, exact match
+    if sd is not None and sm is not None and sy is not None:
+      return (rec_day == sd and rec_month == sm and rec_year == sy)
+    # If day and month provided
+    if sd is not None and sm is not None:
+      return (rec_day == sd and rec_month == sm)
+    # If day only
+    if sd is not None and sm is None and sy is None:
+      return rec_day == sd
+    # If month only
+    if sm is not None and sd is None and sy is None:
+      return rec_month == sm
+    # If year only
+    if sy is not None and sd is None and sm is None:
+      return rec_year == sy
+    # If month and year
+    if sm is not None and sy is not None and sd is None:
+      return (rec_month == sm and rec_year == sy)
+    return False
+  except:
+    return False
+
 def revisit_page():
   scroll_to_top()
   top_bar_inner_with_user()
   top_nav_inner()
   st.markdown("<div class='heading-h3'>Revisit - Search Patient</div>", unsafe_allow_html=True)
   st.markdown("<div class='heading-h5'>Search using any of these four fields: Patient Name, Date, Address, or Phone Number</div>", unsafe_allow_html=True)
+  st.markdown("<div style='background:#FFF9C4;border:1px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:12px;'><b>Date Search Guide:</b> Day only: <code>1</code> = only day 1 (not 11,21,31) | Month: <code>-05</code> or <code>1-05</code> = month 05 | Year: <code>--2026</code> or <code>1-05-2026</code> = year 2026 | Full: <code>2026-05-01</code> or <code>1-05-2026</code></div>", unsafe_allow_html=True)
   records = get_all_records_cached("New_patient")
   my = [r for r in records if str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
   c1,c2=st.columns(2)
   with c1:
-    s_name = st.text_input("Patient Name", key="rev_name_v172")
-    s_date = st.text_input("Date (YYYY-MM-DD)", key="rev_date_v172", placeholder="e.g., 2026-09-22")
+    s_name = st.text_input("Patient Name", key="rev_name_v172", placeholder="Full or partial - first/last name")
+    s_date = st.text_input("Date (YYYY-MM-DD)", key="rev_date_v172", placeholder="e.g., 1 or 1-05 or 1-05-2026 or 2026-05-01")
   with c2:
-    s_phone = st.text_input("Phone Number", key="rev_phone_v172")
-    s_address = st.text_input("Address", key="rev_address_v172")
+    s_phone = st.text_input("Phone Number", key="rev_phone_v172", placeholder="Full or partial")
+    s_address = st.text_input("Address", key="rev_address_v172", placeholder="Full address or city/village only")
   
   if s_name or s_phone or s_date or s_address:
     filt=[]
-    # V203 FIX 1e: If searching by date, show ALL visits on that date (not deduplicated) - Google Sheet has many patients on date 1 and 2
     is_date_search = bool(s_date and s_date.strip())
+    parsed_date = parse_date_search(s_date) if is_date_search else None
     seen_ids = set()
     for r in my:
       pid = str(r.get("PatientID","")).strip()
       match=False
-      if s_name and s_name.lower() in str(r.get("Name","")).lower():
-        match=True
-      if s_phone and s_phone.lower() in str(r.get("Phone","")).lower():
-        match=True
-      if s_date and s_date.lower() in str(r.get("Date","")).lower():
-        match=True
-      if s_address and s_address.lower() in str(r.get("Address","")).lower():
-        match=True
+      # Name: specific or partial (first/last name) - case insensitive
+      if s_name:
+        s_name_lower = str(s_name).strip().lower()
+        rec_name_lower = str(r.get("Name","")).lower()
+        # Specific: exact full match OR partial: substring (first/last name)
+        if s_name_lower == rec_name_lower or s_name_lower in rec_name_lower:
+          match=True
+      # Phone: specific or partial
+      if s_phone:
+        s_phone_clean = str(s_phone).strip().replace(" ","").replace("-","")
+        rec_phone_clean = str(r.get("Phone","")).replace(" ","").replace("-","")
+        if s_phone_clean in rec_phone_clean:
+          match=True
+      # Date: V204 specific logic with dash handling
+      if s_date:
+        rec_date = str(r.get("Date","")).strip()
+        if parsed_date:
+          if match_date_record(rec_date, parsed_date):
+            match=True
+        else:
+          # Fallback: exact substring but specific for day
+          if str(s_date).strip().lower() in rec_date.lower():
+            match=True
+      # Address: specific or partial (city/village)
+      if s_address:
+        s_addr_lower = str(s_address).strip().lower()
+        rec_addr_lower = str(r.get("Address","")).lower()
+        if s_addr_lower in rec_addr_lower:
+          match=True
       if match:
-        if is_date_search:
-          # For date search, show all records on that date - don't dedup by PatientID
+        if is_date_search and not s_name and not s_phone and not s_address:
+          # Date only search: show ALL visits on that date (not deduped) - specific entity
           filt.append(r)
         else:
-          # For name/phone/address search, show unique patients
+          # For name/phone/address: show unique patients (specific entity)
           if pid and pid not in seen_ids:
             filt.append(r)
             seen_ids.add(pid)
           elif not pid:
             filt.append(r)
-    if is_date_search:
-      st.write(f"Found {len(filt)} visits on date {s_date} (All visits shown - Google Sheet has many)")
+    if is_date_search and not s_name and not s_phone and not s_address:
+      # Show count for date search
+      day_info = ""
+      if parsed_date:
+        if parsed_date.get("day") is not None and parsed_date.get("month") is None and parsed_date.get("year") is None:
+          day_info = f"Day {parsed_date.get('day')}"
+        elif parsed_date.get("month") is not None and parsed_date.get("day") is None:
+          day_info = f"Month {parsed_date.get('month')}"
+        elif parsed_date.get("year") is not None:
+          day_info = f"Year {parsed_date.get('year')}"
+        else:
+          day_info = str(s_date)
+      else:
+        day_info = str(s_date)
+      st.write(f"Found {len(filt)} visits for {day_info} - Specific entity only (Day 1 shows only day 1, not 11/21/31)")
     else:
-      # Deduplicate by PatientID for non-date searches
+      # Deduplicate for non-date searches
       unique_by_id = {}
       for r in filt:
         pid = str(r.get("PatientID","")).strip()
         if pid not in unique_by_id:
           unique_by_id[pid] = r
       filt = list(unique_by_id.values())
-      st.write(f"Found {len(filt)} unique patients (Duplicate fixed - Same ID shown once)")
-    for idx, r in enumerate(filt[:15]):
+      st.write(f"Found {len(filt)} patients (Specific + partial match - Name/Address/Phone)")
+    for idx, r in enumerate(filt[:20]):
       with st.container(border=True):
         st.write(f"{r.get('Name','')} | Date: {r.get('Date','')} | Address: {r.get('Address','')} | Phone: {r.get('Phone','')} | ID: {r.get('PatientID','')} | Balance: Rs {r.get('Balance','0')}")
-        if st.button(f"Open {r.get('PatientID','')} - {r.get('Name','')}", key=f"rev_{r.get('PatientID','')}_{idx}_v200_20"):
+        if st.button(f"Open {r.get('PatientID','')} - {r.get('Name','')}", key=f"rev_{r.get('PatientID','')}_{idx}_v204"):
           st.session_state.revisit_data=r
+          # V204: Load full history chain for this patient for fallback
+          try:
+            pid = str(r.get("PatientID","")).strip()
+            chain = [rec for rec in my if str(rec.get("PatientID","")).strip() == pid]
+            # Sort by date descending
+            try:
+              from datetime import datetime
+              def parse_date_sort(rec):
+                try:
+                  d = str(rec.get("Date",""))
+                  return datetime.strptime(d, "%Y-%m-%d")
+                except:
+                  return datetime.min
+              chain = sorted(chain, key=parse_date_sort, reverse=True)
+            except:
+              pass
+            st.session_state.revisit_history_chain = chain
+          except:
+            st.session_state.revisit_history_chain = [r]
           try: st.session_state.prev_balance=float(str(r.get("Balance","0") or 0).replace(",","") or 0)
           except: st.session_state.prev_balance=0.0
           st.session_state.current_page="patient_revisit_form"
           st.rerun()
   else:
-    st.info("Enter any of the four fields: Patient Name, Date, Address, Phone Number to search")
+    st.info("Enter any field: Name (full/partial), Date (1 or 1-05 or 1-05-2026), Address (city/village or full), Phone")
   under_development_footer("Revisit")
   add_footer()
 
