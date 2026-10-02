@@ -22,30 +22,24 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V200.21 - 9 Tasks: 1-Admin tabs 2 lines readable, 2-Age/Gender History merged, 3-Current Qs single line text physician ref, 4-No bubbles popup success, 5-Prev Diseases single line, 6-Remove Google Sheet ref, 7-Prev Prescription single line [Haldi], 8-Added Diseases field names Body Part+ Disease+ Count+ etc, 9-EN very close to icon" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V202 - Fixes: 1a-Removed extra Format line from Diseases History, 1b-Removed Diseases/Medicines History from after Personal Info, 1c-Diseases inside Diseases section + Vital Signs history inside Vital section + Complaint history inside Complaint section, 1d-Previous record continues if no new change in any section (physician intent), 1e-No bubbles on tab click only OK popup at section end" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
 
 def show_success_bubble(count=1, message="Complete"):
-  """V200.21 FIX 4 - No bubbles, Success popup that auto closes"""
+  """V202 FIX 1e: No bubbles - only OK popup at section end"""
   try:
     import streamlit as st
-    st.success(f"✅ {message} - Success!")
-    st.toast(f"✅ {message}", icon="✅")
+    st.markdown(f"<div style='background:#E8F5E9;border:1px solid #2E7D5B;border-radius:8px;padding:8px;text-align:center;'><b>✅ {message} - OK</b></div>", unsafe_allow_html=True)
   except:
     pass
 
 def show_success_popup(message="Complete"):
-  """V200.21 FIX 4: Success popup"""
+  """V202 FIX 1e: OK popup at same place - temporary"""
   try:
     import streamlit as st
-    st.markdown(f"""
-    <div style='background:linear-gradient(135deg,#2E7D5B,#4CAF50);color:white;padding:16px;border-radius:12px;text-align:center;margin:10px 0;'>
-      <b>✅ {message} - Successfully Completed</b>
-    </div>
-    """, unsafe_allow_html=True)
-    st.toast(f"✅ {message}", icon="✅")
+    st.markdown(f"""<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:10px;text-align:center;margin:8px 0;'><b style='color:#2E7D5B;'>✅ {message} - OK</b></div>""", unsafe_allow_html=True)
   except:
     pass
 
@@ -174,9 +168,9 @@ def show_urdu_work_in_progress_note():
     """, unsafe_allow_html=True)
 
 def scroll_to_top():
-  """V201 FIX 5: Navigation click page opens at top - robust scroll"""
+  """V202 FIX 5: Navigation click page opens at top"""
   try:
-    st.markdown("""
+    st.markdown('''
     <script>
     window.scrollTo(0,0);
     document.documentElement.scrollTop = 0;
@@ -185,7 +179,7 @@ def scroll_to_top():
     if(main){ main.scrollTop = 0; }
     setTimeout(function(){ window.scrollTo(0,0); }, 100);
     </script>
-    """, unsafe_allow_html=True)
+    ''', unsafe_allow_html=True)
   except:
     pass
 
@@ -1733,7 +1727,7 @@ def section_close_button(key):
     st.rerun()
 
 def section_ok(key, is_revisit=False):
-  # V200.19 FIX 1,4: OK and Close side by side + bubble + mandatory only error with guide
+  # V202 FIX 1e: No bubbles on tab click - only OK popup at same place on Okay, Next
   c_ok, c_close = st.columns([2,1])
   with c_close:
     if st.button(f"Close {key}", key=f"close_btn_{key}_{st.session_state.form_version}_v200_19", type="secondary"):
@@ -1773,11 +1767,7 @@ def section_ok(key, is_revisit=False):
           missing.append("Address* - Full address required in Personal Info")
         if missing:
           for m in missing:
-            st.error(f"Please complete: {m.split(' - ')[0]} is mandatory - {m.split(' - ')[1] if ' - ' in m else ''}")
-          guide_html = ""
-          for m in missing:
-            guide_html += f"<div style='margin:4px 0;padding:6px 10px;background:#FFEBEE;border-left:4px solid #F44336;border-radius:6px;font-size:13px;'><b style='color:#C62828;'>{m.split(' - ')[0]}</b> <span style='color:#666;'>- {m.split(' - ')[1] if ' - ' in m else 'Missing'}</span></div>"
-          st.markdown(f"<div style='background:#FFFFFF;border:2px solid #F44336;border-radius:12px;padding:14px;margin:10px 0;'><div style='color:#C62828;font-weight:800;margin-bottom:8px;'>Missing Mandatory Fields in Personal Info:</div>{guide_html}<div style='margin-top:10px;padding:8px;background:#FFF3E0;border-radius:6px;font-size:12px;color:#E65100;'>Guide: Only * fields are mandatory - Optional fields have no error</div></div>", unsafe_allow_html=True)
+            st.error(f"Please complete: {m.split(' - ')[0]} is mandatory")
           return
       order=["personal","vital","diseases","assessment","complaint","history","prescription","billing"]
       if key not in order:
@@ -1788,15 +1778,10 @@ def section_ok(key, is_revisit=False):
           nxt=order[idx+1]
           st.session_state.section_opened[nxt]=False
           st.session_state.section_unlocked[nxt]=True
-      # V200.20 FIX 7: Success mark at same place that disappears immediately
-      st.markdown(f"<div style='background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border:2px solid #2E7D5B;border-radius:12px;padding:14px;text-align:center;margin:10px 0;'><b style='color:#2E7D5B;font-size:18px;'>✅ {key.title()} Complete - کامیاب مکمل ✓</b><br><span style='font-size:12px;color:#666;'>Successfully completed - This mark will disappear immediately</span></div>", unsafe_allow_html=True)
-      show_success_bubble(count=1, message=f"{key.title()} Complete - کامیاب")
-      try:
-        st.balloons()
-      except:
-        pass
+      st.markdown(f"<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:12px;text-align:center;margin:10px 0;'><b style='color:#2E7D5B;'>✅ {key.title()} Complete - OK</b></div>", unsafe_allow_html=True)
+      show_success_popup(message=f"{key.title()} Complete")
       import time
-      time.sleep(0.6)
+      time.sleep(0.5)
       st.rerun()
 
 
@@ -1945,13 +1930,6 @@ def validate_required_data_types(form_version):
 
 
 def render_patient_form(is_revisit=False):
-  # V201 FIX 6: New Patient form goes to top
-  if st.session_state.get("scroll_to_top_next"):
-    try:
-      st.markdown("<script>window.scrollTo(0,0);</script>", unsafe_allow_html=True)
-      st.session_state.scroll_to_top_next = False
-    except:
-      pass
   # V209 Fix 6: Ensure Added Diseases empty by default for each patient
   if not is_revisit and "patient_diseases" not in st.session_state:
     st.session_state.patient_diseases = []
@@ -2060,11 +2038,9 @@ def render_patient_form(is_revisit=False):
         st.rerun()
     section_ok("personal", is_revisit=is_revisit)
 
-  # V200.22 FIX 1a,1b,1c,1d: Selected Patient - Past History & Personal Info + Age/Gender Info BELOW Personal Info - continuous structure
+  # V202 FIX 1a,1b: Selected Patient - Personal Info Only - BELOW Personal Info
   if is_revisit and st.session_state.revisit_data:
     r = st.session_state.revisit_data
-    # V200.22 FIX 1b: Only show fields that physician fed - not empty
-    # Build continuous line: Name: Ahmad | Age: 6 | Gender: Male | Phone: 123 | Address: Lahore | CNIC: | Last Date: 2026-10-01 | Chief Complaint: | Past History:
     fields = []
     def add_field(label, key, alt_keys=[]):
       val = str(r.get(key,"") or "").strip()
@@ -2075,11 +2051,6 @@ def render_patient_form(is_revisit=False):
             break
       if val and val.lower() not in ['select','none','n/a','']:
         fields.append(f"{label}: {val}")
-      elif key in ['CNIC','ChiefComplaint','PastHistory','FamilyHistory','Occupation','MaritalStatus','BloodGroup','Height','Weight']: # Show even if empty for structure
-        # Only show if key exists in record (fed or empty placeholder) - check if key in r
-        if key in r or any(ak in r for ak in alt_keys):
-          fields.append(f"{label}: {val}")
-
     add_field("Name", "Name")
     add_field("Age", "Age")
     add_field("Gender", "Gender")
@@ -2093,54 +2064,25 @@ def render_patient_form(is_revisit=False):
     add_field("Occupation", "Occupation")
     add_field("Marital Status", "MaritalStatus")
     add_field("Blood Group", "BloodGroup", ["Blood"])
-    add_field("Height", "Height")
-    add_field("Weight", "Weight")
-    add_field("Allergy", "Allergy")
-    add_field("Habits", "Habits")
-    add_field("Sleep", "SleepPattern", ["Sleep"])
-    add_field("Appetite", "Appetite")
-    add_field("Bowel", "BowelMovement", ["Bowel"])
-    add_field("Temperament", "Temperament")
-    add_field("BP", "BP")
-    add_field("Pulse", "Pulse")
-    add_field("Temperature", "Temperature")
-    add_field("Balance", "Balance")
-    # Age/Gender related extra
-    extra_keys = ['Menarche','Cycle','Flow','Pregnancies','Miscarriage','Contraception','Leucorrhoea','Menopause','Puberty','VoiceChange','BeardGrowth','Nightfall','Prostate','UrineWeak']
-    for ek in extra_keys:
-      if ek in r and str(r.get(ek,"")).strip() and str(r.get(ek,"")).strip().lower() not in ['select','']:
-        fields.append(f"{ek}: {str(r.get(ek,'')).strip()}")
-
     continuous_line = " | ".join(fields) if fields else "No previous data"
-
     st.markdown("<div class='heading-h4'>Selected Patient - Past History & Personal Info + Age/Gender Info</div>", unsafe_allow_html=True)
     with st.container(border=True):
-      st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #2E7D5B;border-radius:10px;padding:12px;font-size:13px;line-height:1.6;'><b>Patient History (Continuous - Only Fed Fields):</b><br>{continuous_line}</div>", unsafe_allow_html=True)
-
-      # V200.22 FIX 1d: Same structure for Diseases and Medicines history
-      diseases_text = str(r.get("Diseases","") or "").strip()
-      single_text = str(r.get("SingleMedicines","") or "").strip()
-      formula_text = str(r.get("FormulaMedicines","") or "").strip()
-      presc_text = str(r.get("Prescription","") or "").strip()
-      
-      if diseases_text:
-        st.markdown(f"<div style='background:#FFFFFF;border:1.5px solid #2E7D5B;border-radius:10px;padding:10px;margin-top:8px;font-size:13px;'><b>Diseases History (with Titles):</b><br>{diseases_text}<br><span style='font-size:11px;color:#666;'><i>Format: Body Part: Eyes | Disease: Blurred Vision | Count: 2 | Duration: Day | Nature: Partial | Trigger: On Looking Up | Symptom: Watery</i></span></div>", unsafe_allow_html=True)
-      if single_text or formula_text or presc_text:
-        med_line = []
-        if single_text:
-          med_line.append(f"<b>Previous Single:</b> [{single_text}]")
-        if formula_text:
-          med_line.append(f"<b>Previous Formula:</b> [{formula_text}]")
-        if presc_text:
-          med_line.append(f"<b>Previous Full Prescription:</b> {presc_text}")
-        med_continuous = " | ".join(med_line)
-        st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #C8E6D5;border-radius:10px;padding:10px;margin-top:8px;font-size:13px;'><b>Medicines History (with Titles):</b><br>{med_continuous}</div>", unsafe_allow_html=True)
-
-  # V200.22 FIX 1d,e: Removed old separate Age/Gender History and Previous Diseases boxes - now merged above
+      st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #2E7D5B;border-radius:10px;padding:12px;font-size:13px;line-height:1.6;'><b>Patient History (Personal Info Only):</b><br>{continuous_line}</div>", unsafe_allow_html=True)
+  # V202 FIX 1b: Diseases/Medicines History removed from here
 
 
   with st.container(border=True):
     if section_heading_clickable("vital","Vital Signs"):
+      if is_revisit and st.session_state.revisit_data:
+        r = st.session_state.revisit_data
+        vital_fields = []
+        for label, key in [("BP","BP"),("Weight","Weight"),("Sleep","SleepPattern"),("Temperature","Temperature"),("Pulse","Pulse"),("Appetite","Appetite"),("Temperament","Temperament"),("Bowel","BowelMovement")]:
+          val = str(r.get(key,"") or "").strip()
+          if val and val.lower() not in ['select','']:
+            vital_fields.append(f"{label}: {val}")
+        if vital_fields:
+          vital_line = " | ".join(vital_fields)
+          st.markdown(f"<div style='background:#E8F5E9;border:1.5px solid #2E7D5B;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Previous Vital Signs - For Reference (Last Visit):</b><br>{vital_line}</div>", unsafe_allow_html=True)
       c1,c2,c3=st.columns(3)
       with c1:
         st.selectbox("BP", LISTS["bp"], key=f"v_bp_{fv}")
@@ -2165,9 +2107,15 @@ def render_patient_form(is_revisit=False):
       st.session_state.revisit_remaining_diseases = raw_list
 
 
-  # V197 Fix: Diseases No/Count Duration mandatory + fix Add Disease error
+  # V202 FIX 1c: Diseases History inside Diseases section
   with st.container(border=True):
     if section_heading_clickable("diseases","Diseases - Current"):
+      if is_revisit and st.session_state.revisit_data:
+        r = st.session_state.revisit_data
+        prev_diseases = str(r.get("Diseases","") or "").strip()
+        if prev_diseases:
+          st.markdown(f"<div style='background:#FFF9C4;border:1.5px solid #FFD700;border-radius:8px;padding:10px;margin-bottom:10px;font-size:13px;'><b>Previous Diseases - For Reference (Last Visit):</b><br>{prev_diseases}</div>", unsafe_allow_html=True)
+
 
       st.markdown("<div class='heading-h5'>Select Body Part and Disease - Patient Form V197 Fixed Mandatory</div>", unsafe_allow_html=True)
       c1,c2,c3,c4=st.columns([3,3,2,2])
@@ -2287,6 +2235,16 @@ def render_patient_form(is_revisit=False):
 
   with st.container(border=True):
     if section_heading_clickable("complaint","Chief Complaint & History"):
+      if is_revisit and st.session_state.revisit_data:
+        r = st.session_state.revisit_data
+        comp_fields = []
+        for label, key in [("Chief Complaint","ChiefComplaint"),("Past History","PastHistory"),("Family History","FamilyHistory")]:
+          val = str(r.get(key,"") or "").strip()
+          if val:
+            comp_fields.append(f"{label}: {val}")
+        if comp_fields:
+          comp_line = " | ".join(comp_fields)
+          st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #2E7D5B;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Previous Complaint & History - For Reference:</b><br>{comp_line}</div>", unsafe_allow_html=True)
       st.text_area("Chief Complaint", key=f"chief_complaint_{fv}", value=get_prefill("ChiefComplaint",""))
       st.text_area("Past History", key=f"past_history_{fv}", value=get_prefill("PastHistory",""))
       st.text_area("Family History", key=f"family_hist_{fv}")
@@ -2404,7 +2362,6 @@ def render_patient_form(is_revisit=False):
       balance = grand_total - p
       if balance<0: balance=0
       st.markdown("<div style='margin:10px 0;'></div>", unsafe_allow_html=True)
-      # V201 FIX 3: Grand Total - Billing Details Calculation section removed - Grand Total as text heading at end of Billing Details
       st.markdown(f"<div class='heading-h3'>Grand Total: Rs {grand_total:.0f} | Balance: Rs {balance:.0f}</div>", unsafe_allow_html=True)
       st.markdown(f"<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:10px;font-size:14px;'><b>Billing Summary:</b> Fee Rs {f:.0f} + Medicine Rs {m:.0f} {'+ Outstanding Rs '+str(int(prev_bal)) if prev_bal>0 else ''} = Grand Total Rs {grand_total:.0f} | Paid Rs {p:.0f} = Balance Rs {balance:.0f}</div>", unsafe_allow_html=True)
       st.session_state[f"calc_gt_{fv}"]=grand_total
@@ -2453,12 +2410,32 @@ def render_patient_form(is_revisit=False):
         except: age_val = ""
         diseases_list = st.session_state.get("patient_diseases", [])
         diseases_text = " + ".join([d.get("text","") for d in diseases_list]) if diseases_list else ""
+        # V202 FIX 1d: If no new change in Diseases, use previous Diseases as continue
+        if is_revisit and not diseases_text and st.session_state.get("revisit_data"):
+          diseases_text = str(st.session_state.revisit_data.get("Diseases","") or "").strip()
+
         chief_comp = str(st.session_state.get(f"chief_complaint_{fv}", "") or "")
         past_hist = str(st.session_state.get(f"past_history_{fv}", "") or "")
         family_hist = str(st.session_state.get(f"family_hist_{fv}", "") or "")
         bp_val = str(st.session_state.get(f"v_bp_{fv}", "") or "")
         temp_val = str(st.session_state.get(f"v_temp_{fv}", "") or "")
         weight_val = str(st.session_state.get(f"v_weight_{fv}", "") or st.session_state.get(f"p_weight_{fv}", "") or "")
+
+        # V202 FIX 1d: If no new change in any section, previous continues - fallback to previous record
+        if is_revisit and st.session_state.get("revisit_data"):
+          rd = st.session_state.revisit_data
+          if not chief_comp.strip():
+            chief_comp = str(rd.get("ChiefComplaint","") or "").strip()
+          if not past_hist.strip():
+            past_hist = str(rd.get("PastHistory","") or "").strip()
+          if not family_hist.strip():
+            family_hist = str(rd.get("FamilyHistory","") or "").strip()
+          if not bp_val or bp_val in ["Select",""]:
+            bp_val = str(rd.get("BP","") or "").strip()
+          if not temp_val or temp_val in ["Select",""]:
+            temp_val = str(rd.get("Temperature","") or "").strip()
+          if not weight_val or weight_val in ["Select",""]:
+            weight_val = str(rd.get("Weight","") or "").strip()
         data_dict={
           "PatientID": str(pid),
           "Date": str(__import__('datetime').date.today()),
@@ -2515,16 +2492,8 @@ def render_patient_form(is_revisit=False):
         # V200.20 FIX 8: Show Successfully saved at same place that disappears
         st.markdown("<div style='background:linear-gradient(135deg,#E8F5E9,#4CAF50);border:3px solid #2E7D5B;border-radius:15px;padding:16px;text-align:center;margin:12px 0;'><b style='color:#FFFFFF;font-size:20px;'>✅ Successfully Saved - کامیابی سے محفوظ ✓</b><br><span style='color:#E8F5E9;font-size:13px;'>Saving patient... This will disappear</span></div>", unsafe_allow_html=True)
         show_success_bubble(count=7, message="Successfully Saved - 7 Bubbles")
-        try:
-          st.balloons()
-        except:
-          pass
+        # V202 FIX 1e: No bubbles
         ok,msg=save_patient(data_dict)
-        # V201 FIX 6: After patient complete, next New Patient form goes to top
-        try:
-          st.session_state.scroll_to_top_next = True
-        except:
-          pass
         if is_revisit:
           try:
             prev_for_sheet = str(st.session_state.revisit_data.get("Diseases","") or "") if st.session_state.revisit_data else ""
@@ -2562,7 +2531,7 @@ def render_patient_form(is_revisit=False):
         if ok:
           msg_extra = " + Revisit sheet" if is_revisit else ""
           st.success(f"Saved - PatientID {pid} | Grand Total Rs {grand_total:.0f}{msg_extra} - Form cleared for new entry")
-          st.balloons()
+          # V202 FIX 1e: No bubbles removed
           st.session_state.form_version+=1
           st.session_state.prev_balance=0.0
           st.session_state.revisit_data=None
@@ -2720,10 +2689,7 @@ def render_auto_form(prefix, is_home=False):
           st.session_state[personal_ok_key] = True
           st.markdown("<div style='background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border:2px solid #2E7D5B;border-radius:12px;padding:12px;text-align:center;margin:8px 0;'><b style='color:#2E7D5B;font-size:16px;'>✅ Personal Complete - کامیاب مکمل ✓</b></div>", unsafe_allow_html=True)
           show_success_bubble(count=1, message="Personal Complete - کامیاب")
-          try:
-            st.balloons()
-          except:
-            pass
+        # V202 FIX 1e: No bubbles
           import time
           time.sleep(0.5)
           st.rerun()
@@ -2857,7 +2823,7 @@ def render_auto_form(prefix, is_home=False):
           st.session_state[diseases_ok_key] = True
           st.success("Diseases OK - Next section unlocked")
           show_success_bubble(count=1, message="Diseases Complete")
-          st.balloons()
+          # V202 FIX 1e: No bubbles removed
           st.rerun()
     else:
       st.success("Diseases Completed - OK - Next section open")
@@ -2916,7 +2882,7 @@ def render_auto_form(prefix, is_home=False):
           st.session_state[additional_ok_key] = True
           st.success("Additional Information OK - Proceed unlocked")
           show_success_bubble(count=1, message="Additional Complete")
-          st.balloons()
+          # V202 FIX 1e: No bubbles removed
           st.rerun()
     else:
       st.success("Additional Information Completed - OK - Proceed button below Additional Questions will be enabled")
@@ -3017,7 +2983,7 @@ def render_auto_form(prefix, is_home=False):
         ws.append_row([f"AUTO{new_id}", f"AUTO{new_id}", str(__import__('datetime').date.today()), p_name, p_father, p_age, p_phone, p_gender, p_address, diseases_str, extra_symptoms + f" | Sleep:{sleep_pat} Appetite:{appetite_pat} Bowel:{bowel} Temperament:{temperament}", "N/A", st.session_state.clinic_name, st.session_state.username, APP_VERSION, 0], value_input_option="RAW")
         get_all_records_cached.clear()
       st.success(f"Proceed completed for {p_name} - Temperament: {temperament} - ID AUTO{new_id}")
-      st.balloons()
+      # V202 FIX 1e: No bubbles removed
     except Exception as e:
       st.warning(f"Proceed saved locally - {e} - {str(e)[:200]}")
 
@@ -3235,13 +3201,10 @@ def home_user_page():
   add_footer()
 
 def patient_page():
-  # V201 FIX 5,6: Navigation and New Patient tab opens at top
   scroll_to_top()
   top_bar_inner_with_user()
   top_nav_inner()
   st.markdown("<div class='heading-h3'>New Patient</div>", unsafe_allow_html=True)
-  # V201 FIX 6: Force scroll to top when New Patient tab clicked for new entries
-  st.markdown("<script>window.scrollTo({top:0,behavior:'auto'}); document.documentElement.scrollTop=0; if(window.parent){ try{ window.parent.document.querySelector('section.main').scrollTop=0; }catch(e){} } </script>", unsafe_allow_html=True)
   render_patient_form(is_revisit=False)
   under_development_footer("New Patient")
   add_footer()
@@ -3692,7 +3655,7 @@ def clinic_admin_page():
         st.session_state.clinic_dashboard_settings = settings
         if st.button("Save Clinic Settings", type="primary", use_container_width=True, key="clinic_admin_save_v200_13"):
             st.success("Clinic Settings Saved!")
-            st.balloons()
+            # V202 FIX 1e: No bubbles removed
             try:
                 save_to_local_csv("AppSettings", {"Key": "ClinicDashboardSettings", "Value": str(settings), "Date": str(__import__('datetime').date.today()), "Description": "Clinic Dashboard Tabs Control"})
             except: pass
@@ -3741,7 +3704,7 @@ def clinic_admin_page():
                     except Exception as e:
                         st.warning(f"Sheet save: {e} - saved locally")
                     save_to_local_csv("Formulas", formula_dict)
-                    st.balloons()
+                    # V202 FIX 1e: No bubbles removed
                     for k in ["clinic_formula_name_v200_11","clinic_formula_ing_v200_11","clinic_formula_ind_v200_11","clinic_formula_dosage_v200_11"]:
                         if k in st.session_state: st.session_state[k] = ""
                     st.rerun()
@@ -3791,7 +3754,7 @@ def dashboard_welcome_page():
         total_patients = len(my_records)
         today_str = str(datetime.date.today())
         today_patients = len([r for r in my_records if today_str in str(r.get("Date",""))])
-        # V201 FIX 4: PENDING only today pending - if no appointment today shows 0
+        # V202 FIX 4: PENDING only today
         pending = len([r for r in my_records if str(r.get("Date","")).strip() == today_str and str(r.get("Balance","0")).strip() not in ["0","","0.0","0.00"]])
         total_income = 0
         for r in my_records[:500]: # Limit to 500 for income calc to prevent hang
@@ -4129,7 +4092,7 @@ def feedback_page():
           ws.append_row(row, value_input_option="RAW")
           get_all_records_cached.clear()
           st.success(f"Thank you! {fid} submitted - Full app services restored! (Saved to Sheet + Local)")
-          st.balloons()
+          # V202 FIX 1e: No bubbles removed
           # V197 - Requirement 6: After Submit, return to same page where user wanted to work (Requirement 5)
           get_all_records_cached.clear()
           return_page = st.session_state.get("feedback_return_page","")
@@ -5075,7 +5038,7 @@ def admin_page():
           except:
             pass
         st.success("Tab Control Settings Saved - Clinic and Home User visibility updated!")
-        st.balloons()
+        # V202 FIX 1e: No bubbles removed
         st.toast("Tab Control Saved", icon="✅")
       except Exception as e:
         st.success("Tab Control Settings Saved Locally!")
@@ -5212,7 +5175,7 @@ def temperament_quiz_page():
         result = "Moderate / Normal ()"
         diet = "Balanced diet"
       
-      st.balloons()
+      # V202 FIX 1e: No bubbles removed
       st.markdown(f"""
       <div style="background: linear-gradient(135deg,#2E7D5B,#4CAF50);color:white;padding:22px;border-radius:16px;text-align:center;margin-top:16px;box-shadow:0 8px 20px rgba(46,125,91,0.30);">
         <div style="font-size:28px;font-weight:900;">Your Temperament: {result}</div>
