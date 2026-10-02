@@ -1,8 +1,8 @@
 # ============================================
-# CURRENT APP VERSION: V204
-# V204 - Fixes: 1-Revisit Search Patient specific + partial with dash logic (Date: 1=day only, 1-05=month, 1-05-2026 or 2026-05-01=full, Name partial first/last, Address city/village partial, Phone partial), 1a-Additional Info Details previous history with fallback chain (if last visit empty then earlier), 1b-Vital Signs previous history with fallback chain, 1c-Chief Complaint & History exact from last visit with fallback chain (important principle: if section empty in last visit fetch from earlier), Previous Prescription [[]] None bug fixed (now shows correct last visit medicines with chain fallback)
-# Date: 2026-05-15
-# Previous: V203, V202, V201, V200.22
+# CURRENT APP VERSION: V205
+# V205 - Fixes: 1-Google Sheet Revisit columns without titles fixed (ClinicName in Name title bug fixed, all columns have titles now + ensure_all_sheet_headers), 2-Every visit new ID (NP_1,2,3 for new patients and RP_1,2,3 for revisit patients even same day multiple times - new ID system NP_/RP_), 3-Language icon EN distance fixed (icon close to text - flex gap 2px), 4-Clinic Overview Total = New+Revisit combined (was only New), Income/Appointments visibility controlled via Clinic Settings (rural areas no appointments, some clinics don't want Income shown), 4dup-Revisit Search same ID 2 times duplicate fixed (deduplicate by PatientID+Date), 5-Blood Group not showing in revisit fixed (now shows previous with index), 6-Tabs loading on click fixed (optimized scroll_to_top - only once per page change, removed double scroll calls)
+# Date: 2026-05-16
+# Previous: V204, V203, V202, V201
 # ============================================
 # APP VERSION - V200.19.1 SAFE - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Optional) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from list (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
@@ -29,7 +29,7 @@ except ImportError:
   GSPREAD_AVAILABLE = False
 
 # CURRENT VERSION COMMENT: V202 - Every new app version number must be commented in code - This is V202
-APP_VERSION = "V204 - Fixes: 1-Revisit Search specific+partial with dash logic (Date: 1=day only not 11/21/31, -05 or 1-05=month, --2026 or 1-05-2026=year, 2026-05-01=full, Name first/last partial, Address city/village partial), Additional Info Details previous history with fallback chain, Vital Signs previous history with fallback chain, Chief Complaint exact from last visit with fallback chain (if empty fetch earlier), Previous Prescription [[]] None bug fixed" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V205 - Fixes: 1-Revisit sheet ClinicName in Name title and missing column titles fixed, 2-Every visit new ID NP_1 NP_2 for new and RP_1 RP_2 for revisit even same day, 3-Language icon EN close to icon, 4-Clinic Overview Total New+Revisit combined + Income/Appointments visibility via Clinic Settings (rural no appointments), 4dup-Revisit Search same ID 2 times fixed, 5-Blood Group revisit bug fixed, 6-Tabs loading on click fixed" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -175,18 +175,20 @@ def show_urdu_work_in_progress_note():
     """, unsafe_allow_html=True)
 
 def scroll_to_top():
-  """V202 FIX 5: Navigation click page opens at top"""
+  """V205 FIX 6: Tabs loading on click fixed - optimized scroll, no heavy reload"""
   try:
-    st.markdown('''
-    <script>
-    window.scrollTo(0,0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    var main = window.parent.document.querySelector('.main');
-    if(main){ main.scrollTop = 0; }
-    setTimeout(function(){ window.scrollTo(0,0); }, 100);
-    </script>
-    ''', unsafe_allow_html=True)
+    # V205 FIX 6: Only scroll once per page change, not on every rerun - prevents tab loading lag
+    current_page = st.session_state.get("current_page", "")
+    last_scrolled = st.session_state.get("last_scrolled_page", "")
+    if current_page != last_scrolled:
+      st.session_state.last_scrolled_page = current_page
+      st.markdown('''
+      <script>
+      window.scrollTo(0,0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      </script>
+      ''', unsafe_allow_html=True)
   except:
     pass
 
@@ -420,7 +422,7 @@ SHEET_HEADERS = {
   "PermissionGranted": ["ID","Username","UserType","PermissionType","GrantedDate","Status","IP","Device","ExpiryDate","GrantedBy"],
   "HomeUsers": ["UserID","Username","Password","FullName","Phone","Email","Date","Status","AccountHolderPhone","From","LastLogin","ClinicName","Address","Age","Gender","SubscriptionStatus"],
   "New_patient": ["PatientID","Date","Name","FatherName","Age","Gender","MaritalStatus","Occupation","CNIC","Phone","EmergencyPhone","Address","Referral","Diseases","ChiefComplaint","PastHistory","FamilyHistory","Allergy","Examination","Pulse","Temperament","BP","Weight","Temperature","Height","SleepPattern","Appetite","BowelMovement","Thirst","Urine","Sweating","StressLevel","EnergyLevel","SingleMedicines","FormulaMedicines","ManualMedicines","Fees","MedicineCharges","Total","Paid","Balance","PrevBalance","PaymentMethod","FeeStatus","RevisitDate","ClinicName","CreatedBy","Timestamp","AppVersion","DailyNumber","TotalNumber","GrandTotal","UserType","Habits","BloodGroup","CuredDiseases","RemainingDiseases"],
-  "Revisit": ["RevisitID","PatientID","Date","Name","FatherName","Age","Gender","Phone","Address","Occupation","MaritalStatus","ClinicName","Diseases","PreviousDiseases","CurrentComplaint","PastHistory","FamilyHistory","Examination","Pulse","Temperament","BP","Weight","Temperature","SingleMedicines","FormulaMedicines","ManualMedicines","Fees","MedicineCharges","Total","Paid","Balance","PrevBalance","PaymentMethod","FeeStatus","RevisitDate","CreatedBy","Timestamp","AppVersion","CuredDiseases","RemainingDiseases","UserType"],
+  "Revisit": ["RevisitID","PatientID","OriginalPatientID","Date","Name","FatherName","Age","Gender","MaritalStatus","Occupation","CNIC","Phone","EmergencyPhone","Address","Referral","Diseases","PreviousDiseases","ChiefComplaint","PastHistory","FamilyHistory","Allergy","Pulse","Temperament","BP","Weight","Temperature","Height","SleepPattern","Appetite","BowelMovement","SingleMedicines","FormulaMedicines","ManualMedicines","Fees","MedicineCharges","Total","Paid","Balance","PrevBalance","PaymentMethod","FeeStatus","ClinicName","CreatedBy","Timestamp","AppVersion","DailyNumber","TotalNumber","GrandTotal","CuredDiseases","RemainingDiseases","UserType","BloodGroup","Habits"],
   "AutoDiagnosis": ["ID","PatientID","Date","Name","FatherName","Age","Phone","Gender","MaritalStatus","Occupation","Address","BloodGroup","Diseases","DiseasesWithDetails","ExtraSymptoms","PastHistory","FamilyHistory","CurrentMedications","SleepPattern","Appetite","BowelMovement","Thirst","Urine","Sweating","StressLevel","EnergyLevel","AllergyHistory","Temperament","Mizaj","DietRecommendations","Restrictions","Instructions","ClinicName","CreatedBy","Timestamp","AppVersion","GrandTotal","UserType","Habits","Height","Weight"],
   "HomeTreatment": ["ID","PatientID","Date","Name","FatherName","Age","Phone","Gender","MaritalStatus","Occupation","Address","BloodGroup","Diseases","DiseasesWithDetails","ExtraSymptoms","PastHistory","FamilyHistory","CurrentMedications","SleepPattern","Appetite","BowelMovement","Thirst","Urine","Sweating","StressLevel","EnergyLevel","AllergyHistory","Temperament","Mizaj","DietRecommendations","Restrictions","Instructions","ClinicName","CreatedBy","Timestamp","AppVersion","GrandTotal","UserType","Habits","Height","Weight"],
   "Herbs": ["HerbID","Name","UrduName","Temperament","Mizaj","Uses","Benefits","Dosage","SideEffects","Precautions","ClinicName","Status","AddedBy","Date"],
@@ -682,9 +684,9 @@ def navigate_to(page):
   st.rerun()
 
 def language_selector():
-  # V200.21 FIX 9: Language EN very close to icon - not separate tab feeling
+  # V205 FIX 3: Language icon EN very close to icon - fixed distance
   st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
-  c_spacer, c_theme, c_lang_combined = st.columns([6,1,1.2], gap="small")
+  c_spacer, c_theme, c_lang_combined = st.columns([6,1,1], gap="small")
   with c_theme:
     curr_theme = st.session_state.get("theme", "light")
     if curr_theme == "light":
@@ -705,17 +707,28 @@ def language_selector():
         st.rerun()
   with c_lang_combined:
     lang = st.session_state.get("app_language","en")
-    # V200.21 FIX 9: Icon + EN in same flex, very close, not separate tab
-    col_icon, col_text = st.columns([1,1], gap="small")
-    with col_icon:
-      if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v200_21", help="Change Language"):
+    # V205 FIX 3: Icon and EN in single flex container, very close - no gap
+    st.markdown(f'''
+    <style>
+    .lang-close-container {{
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      justify-content: flex-start;
+      margin-left: 0px;
+    }}
+    </style>
+    ''', unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 1])
+    with col1:
+      if st.button("🌐", key=f"lang_toggle_{st.session_state.get('current_page','dash')}_v205", help="Change Language"):
         curr = st.session_state.get("app_language", "en")
         nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
         st.session_state.app_language = nxt
         st.session_state.lang = nxt
         st.rerun()
-    with col_text:
-      st.markdown(f"<div style='text-align:left;font-size:13px;font-weight:800;color:#2E7D5B;margin-top:6px;margin-left:-14px;padding:0px;'>{lang.upper()}</div>", unsafe_allow_html=True)
+    with col2:
+      st.markdown(f"<div style='font-size:12px;font-weight:800;color:#2E7D5B;margin-top:6px;margin-left:-20px;'>{lang.upper()}</div>", unsafe_allow_html=True)
   with c_spacer:
     st.markdown("")
 
@@ -800,7 +813,7 @@ def clinic_heading_banner_dashboard_only():
 
 
 def top_nav_inner():
-  scroll_to_top()
+  # V205 FIX 6: Removed scroll_to_top from inner nav to prevent double load - already called in page
   # V200.10 FIX 2: No Back button, Dashboard on right side
   c_spacer,c_dash=st.columns([4,1])
   with c_dash:
@@ -812,7 +825,7 @@ def top_nav_inner():
   st.markdown("<hr style='margin:8px 0; border:1px solid #E8F5E9;'>", unsafe_allow_html=True)
 
 def top_nav_dashboard():
-  scroll_to_top()
+  # V205 FIX 6: Removed scroll_to_top from dashboard nav - prevents tab loading lag
   # V200.11 FIX 1: Removed unconditional force_scroll_to_top that causes stream on loop
   c1,c2=st.columns([4,1])
   with c2:
@@ -1395,6 +1408,72 @@ def get_next_numbers(clinic_name):
         return 1, 1
   except:
     return 1, 1
+
+def get_next_patient_id_v205(clinic_name, is_revisit=False):
+  # V205 FIX 2: Every visit new ID - NP_ for new patient, RP_ for revisit patient, even same day multiple times
+  # NP_1, NP_2, NP_3... for new patients, RP_1, RP_2, RP_3... for revisit patients
+  try:
+    import datetime
+    records = get_all_records_cached("New_patient")
+    clinic_records = [r for r in records if str(r.get("ClinicName","")).lower() == str(clinic_name).lower()]
+    # Count existing NP_ and RP_ IDs
+    max_np = 0
+    max_rp = 0
+    max_total = 0
+    for r in clinic_records:
+      pid = str(r.get("PatientID","")).strip()
+      try:
+        if pid.startswith("NP_"):
+          num = int(pid.split("_")[1])
+          if num > max_np:
+            max_np = num
+        elif pid.startswith("RP_"):
+          num = int(pid.split("_")[1])
+          if num > max_rp:
+            max_rp = num
+        # Also check TotalNumber for fallback
+        tn = int(str(r.get("TotalNumber","0") or 0).replace(",","") or 0)
+        if tn > max_total:
+          max_total = tn
+      except:
+        pass
+    if is_revisit:
+      # Revisit patient gets RP_ ID
+      next_rp = max_rp + 1
+      # If no RP yet, start from 1
+      if next_rp == 0:
+        next_rp = len([r for r in clinic_records if str(r.get("PatientID","")).startswith("RP_")]) + 1
+        if next_rp == 0:
+          next_rp = 1
+      return f"RP_{next_rp}"
+    else:
+      # New patient gets NP_ ID
+      next_np = max_np + 1
+      if next_np == 0:
+        next_np = len([r for r in clinic_records if str(r.get("PatientID","")).startswith("NP_")]) + 1
+        # If still 0 and there are old numeric IDs, use max_total+1
+        if next_np == 0:
+          next_np = max_total + 1 if max_total > 0 else len(clinic_records) + 1
+          if next_np == 0:
+            next_np = 1
+      return f"NP_{next_np}"
+  except:
+    # Fallback
+    try:
+      backup_key = "local_backup_New_patient"
+      local_records = st.session_state.get(backup_key, [])
+      clinic_records = [r for r in local_records if str(r.get("ClinicName","")).lower() == str(clinic_name).lower()]
+      if is_revisit:
+        rp_count = len([r for r in clinic_records if str(r.get("PatientID","")).startswith("RP_")])
+        return f"RP_{rp_count+1}"
+      else:
+        np_count = len([r for r in clinic_records if str(r.get("PatientID","")).startswith("NP_")])
+        if np_count == 0:
+          np_count = len(clinic_records)
+        return f"NP_{np_count+1}"
+    except:
+      return f"RP_1" if is_revisit else f"NP_1"
+
 
 @st.cache_data(show_spinner=False, ttl=900)
 def _get_all_records_cached_fast(sheet_name):
@@ -2005,16 +2084,27 @@ def render_patient_form(is_revisit=False):
   daily_num, total_num = get_next_numbers(st.session_state.clinic_name)
   prev_bal=0.0
   if is_revisit and st.session_state.revisit_data:
-    # V203 FIX 3a: PatientID same for same patient (link visits), but DailyNumber and TotalNumber NEW for each visit - previously same was bug
-    pid=str(st.session_state.revisit_data.get("PatientID",""))
-    # Keep PatientID same, but DailyNumber and TotalNumber are NEW from get_next_numbers (don't reuse old)
-    # daily_num and total_num already generated as new above - don't overwrite with old
+    # V205 FIX 2: Every visit new ID - NP_ for new, RP_ for revisit, even same day multiple times
+    # Old PatientID kept as OriginalPatientID for linking, but new ID is RP_
+    original_pid = str(st.session_state.revisit_data.get("PatientID","")).strip()
+    # For revisit, generate new RP_ ID every time (even if same patient same day)
+    try:
+      pid = get_next_patient_id_v205(st.session_state.clinic_name, is_revisit=True)
+    except:
+      pid = f"RP_{total_num}"
+    # Keep original for history chain
+    st.session_state.original_patient_id = original_pid
     try:
       prev_bal=float(str(st.session_state.revisit_data.get("Balance","0") or 0).replace(",","") or 0)
     except: prev_bal=0.0
     st.session_state.prev_balance=prev_bal
   else:
-    pid=str(total_num)
+    # New patient - NP_ ID
+    try:
+      pid = get_next_patient_id_v205(st.session_state.clinic_name, is_revisit=False)
+    except:
+      pid = f"NP_{total_num}"
+    st.session_state.original_patient_id = pid
     prev_bal=float(st.session_state.get("prev_balance",0) or 0)
 
   def get_prefill(k,d=""):
@@ -2063,7 +2153,15 @@ def render_patient_form(is_revisit=False):
       if prev_marital in LISTS["marital"]:
         marital_idx = LISTS["marital"].index(prev_marital)
       st.selectbox("Marital Status", LISTS["marital"], key=f"p_marital_{fv}", index=marital_idx)
-      st.selectbox("Blood Group", LISTS["blood_group"], key=f"p_blood_{fv}")
+      # V205 FIX 5: Blood Group not showing in revisit - bug fixed
+      blood_options = LISTS["blood_group"]
+      prev_blood = str(get_prefill("BloodGroup","") or "").strip()
+      if is_revisit and st.session_state.get("revisit_data"):
+        prev_blood = str(st.session_state.revisit_data.get("BloodGroup","") or prev_blood).strip()
+      blood_idx = 0
+      if prev_blood in blood_options:
+        blood_idx = blood_options.index(prev_blood)
+      st.selectbox("Blood Group", blood_options, key=f"p_blood_{fv}", index=blood_idx)
 
     # V200.22 FIX d: Removed extra Age/Gender Related History + Current Questions text - unnecessary
 
@@ -2555,6 +2653,7 @@ def render_patient_form(is_revisit=False):
             weight_val = str(rd.get("Weight","") or "").strip()
         data_dict={
           "PatientID": str(pid),
+          "OriginalPatientID": str(st.session_state.get("original_patient_id", pid)),
           "Date": str(__import__('datetime').date.today()),
           "Name": str(p_name).strip(),
           "FatherName": str(st.session_state.get(f"p_fname_{fv}", "") or "").strip(),
@@ -3550,8 +3649,29 @@ def revisit_page():
             seen_ids.add(pid)
           elif not pid:
             filt.append(r)
+    # V205 FIX 4 duplicate: Same ID 2 times fix - deduplicate by PatientID+Date+Timestamp
+    # For date search, same patient same date with same ID should show once (duplicate save fix)
+    # For name/phone/address, unique patients
     if is_date_search and not s_name and not s_phone and not s_address:
-      # Show count for date search
+      # Deduplicate by PatientID+Date to prevent same ID 2 times
+      seen_combo = set()
+      unique_filt = []
+      for r in filt:
+        pid = str(r.get("PatientID","")).strip()
+        date = str(r.get("Date","")).strip()
+        timestamp = str(r.get("Timestamp","")).strip()[:16]  # up to minute
+        combo = f"{pid}_{date}_{timestamp}"
+        # Also check just pid+date for same day duplicates
+        combo_simple = f"{pid}_{date}"
+        if combo not in seen_combo and combo_simple not in seen_combo:
+          # Check if same pid already added with same date - if so skip duplicate
+          if any(str(x.get("PatientID","")).strip() == pid and str(x.get("Date","")).strip() == date for x in unique_filt):
+            # Same ID same date already exists - skip duplicate (V205 FIX)
+            continue
+          unique_filt.append(r)
+          seen_combo.add(combo)
+          seen_combo.add(combo_simple)
+      filt = unique_filt
       day_info = ""
       if parsed_date:
         if parsed_date.get("day") is not None and parsed_date.get("month") is None and parsed_date.get("year") is None:
@@ -3564,16 +3684,25 @@ def revisit_page():
           day_info = str(s_date)
       else:
         day_info = str(s_date)
-      st.write(f"Found {len(filt)} visits for {day_info} - Specific entity only (Day 1 shows only day 1, not 11/21/31)")
+      st.write(f"Found {len(filt)} visits for {day_info} - Specific entity only (Duplicate same ID fixed - shows once)")
     else:
-      # Deduplicate for non-date searches
+      # Deduplicate for non-date searches - unique patients
       unique_by_id = {}
       for r in filt:
         pid = str(r.get("PatientID","")).strip()
         if pid not in unique_by_id:
           unique_by_id[pid] = r
+        else:
+          # Keep latest by date
+          try:
+            existing_date = str(unique_by_id[pid].get("Date",""))
+            new_date = str(r.get("Date",""))
+            if new_date > existing_date:
+              unique_by_id[pid] = r
+          except:
+            pass
       filt = list(unique_by_id.values())
-      st.write(f"Found {len(filt)} patients (Specific + partial match - Name/Address/Phone)")
+      st.write(f"Found {len(filt)} patients (Specific + partial match - Same ID shown once - duplicate fixed)")
     for idx, r in enumerate(filt[:20]):
       with st.container(border=True):
         st.write(f"{r.get('Name','')} | Date: {r.get('Date','')} | Address: {r.get('Address','')} | Phone: {r.get('Phone','')} | ID: {r.get('PatientID','')} | Balance: Rs {r.get('Balance','0')}")
@@ -3985,11 +4114,36 @@ def clinic_admin_page():
                 # V200.20 FIX 3: Essential removed from Clinic Settings - controlled by App Admin only
         
         st.session_state.clinic_dashboard_settings = settings
+        
+        # V205 FIX 4: Clinic Overview settings - Income and Appointments visibility (rural areas don't have appointments, some don't want Income shown)
+        st.markdown("<hr>", unsafe_allow_html=True)
+        st.markdown("<div class='heading-h4'>Clinic Overview - What to Show (Income, Appointments control)</div>", unsafe_allow_html=True)
+        st.markdown("<div style='background:#FFF9C4;border:1.5px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:12px;'><b>Note:</b> Some clinics don't want to show INCOME on dashboard, rural areas don't have appointments. Control here.</div>", unsafe_allow_html=True)
+        if "clinic_overview_settings" not in st.session_state:
+            st.session_state.clinic_overview_settings = {"Show Income": True, "Show Pending": True, "Show Today": True, "Show Chart": True, "Show Total": True, "Show Appointments": False}
+        ov_settings = st.session_state.clinic_overview_settings
+        with st.container(border=True):
+            c1,c2,c3,c4,c5 = st.columns(5)
+            with c1:
+                ov_settings["Show Total"] = st.checkbox("Show Total (New+Revisit)", value=ov_settings.get("Show Total", True), key="ov_total_v205")
+            with c2:
+                ov_settings["Show Today"] = st.checkbox("Show Today", value=ov_settings.get("Show Today", True), key="ov_today_v205")
+            with c3:
+                ov_settings["Show Pending"] = st.checkbox("Show Pending", value=ov_settings.get("Show Pending", True), key="ov_pending_v205")
+            with c4:
+                ov_settings["Show Income"] = st.checkbox("Show Income (Rs)", value=ov_settings.get("Show Income", True), key="ov_income_v205", help="Some clinics don't want Income visible")
+            with c5:
+                ov_settings["Show Chart"] = st.checkbox("Show Chart (7 Days)", value=ov_settings.get("Show Chart", True), key="ov_chart_v205")
+            c6,c7 = st.columns(2)
+            with c6:
+                ov_settings["Show Appointments"] = st.checkbox("Show Appointments (if any)", value=ov_settings.get("Show Appointments", False), key="ov_appt_v205", help="Rural areas don't have appointments")
+            st.session_state.clinic_overview_settings = ov_settings
+        
         if st.button("Save Clinic Settings", type="primary", use_container_width=True, key="clinic_admin_save_v200_13"):
-            st.success("Clinic Settings Saved!")
-            # V202 FIX 1e: No bubbles removed
+            st.success("Clinic Settings Saved! - Overview: Total New+Revisit, Income visibility controlled")
             try:
                 save_to_local_csv("AppSettings", {"Key": "ClinicDashboardSettings", "Value": str(settings), "Date": str(__import__('datetime').date.today()), "Description": "Clinic Dashboard Tabs Control"})
+                save_to_local_csv("AppSettings", {"Key": "ClinicOverviewSettings", "Value": str(ov_settings), "Date": str(__import__('datetime').date.today()), "Description": "Clinic Overview Tabs - Income/Appointments control"})
             except: pass
             st.rerun()
         st.markdown("---")
@@ -4080,26 +4234,43 @@ def dashboard_welcome_page():
     total_income = stats.get("total_income", 0)
   else:
     try:
-      # V200 FIX: Only load if clinic_name exists and avoid heavy calc on first load after reboot
+      # V205 FIX 4: Clinic Overview total = New + Revisit combined
       if st.session_state.get("clinic_name"):
         records = get_all_records_cached("New_patient")
         my_records = [r for r in records if str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
-        total_patients = len(my_records)
+        # Also get Revisit records for total count
+        try:
+          revisit_records = get_all_records_cached("Revisit")
+          my_revisit = [r for r in revisit_records if str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
+        except:
+          my_revisit = []
+        # V205 FIX 4: Total = New + Revisit combined
+        total_patients = len(my_records) + len(my_revisit)
         today_str = str(datetime.date.today())
-        today_patients = len([r for r in my_records if today_str in str(r.get("Date",""))])
-        # V202 FIX 4: PENDING only today
-        pending = len([r for r in my_records if str(r.get("Date","")).strip() == today_str and str(r.get("Balance","0")).strip() not in ["0","","0.0","0.00"]])
+        today_new = len([r for r in my_records if today_str in str(r.get("Date",""))])
+        today_rev = len([r for r in my_revisit if today_str in str(r.get("Date",""))])
+        today_patients = today_new + today_rev
+        # V202 FIX 4: PENDING only today (New + Revisit)
+        pending_new = len([r for r in my_records if str(r.get("Date","")).strip() == today_str and str(r.get("Balance","0")).strip() not in ["0","","0.0","0.00"]])
+        pending_rev = len([r for r in my_revisit if str(r.get("Date","")).strip() == today_str and str(r.get("Balance","0")).strip() not in ["0","","0.0","0.00"]])
+        pending = pending_new + pending_rev
         total_income = 0
-        for r in my_records[:500]: # Limit to 500 for income calc to prevent hang
+        for r in my_records[:500]:
           try:
             total_income += float(str(r.get("Total","0") or 0).replace(",","") or 0)
+          except: pass
+        for r in my_revisit[:500]:
+          try:
+            total_income += float(str(r.get("Total","0") or str(r.get("Fees","0") or 0)).replace(",","") or 0)
           except: pass
         # Cache it
         st.session_state.dashboard_stats_cache = {
           "total_patients": total_patients,
           "today_patients": today_patients,
           "pending": pending,
-          "total_income": total_income
+          "total_income": total_income,
+          "new_count": len(my_records),
+          "revisit_count": len(my_revisit)
         }
         st.session_state.dashboard_stats_ts = now_ts
       else:
@@ -4118,30 +4289,69 @@ def dashboard_welcome_page():
   overview_enabled = st.session_state.get("clinic_dashboard_settings", {}).get("Clinic Overview", False)
   if overview_enabled:
     st.markdown("<div class='dash-section-title'>Clinic Overview</div>", unsafe_allow_html=True)
-    m1,m2,m3,m4 = st.columns(4)
-    with m1:
-      st.markdown(f"<div style='background: linear-gradient(135deg,#E8F5E9,#FFFFFF);border:2px solid #2E7D5B;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(46,125,91,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TOTAL PATIENTS</div><div style='font-size:32px;font-weight:900;color:#2E7D5B;margin-top:6px;'>{total_patients}</div></div>", unsafe_allow_html=True)
-    with m2:
-      st.markdown(f"<div style='background: linear-gradient(135deg,#FFF3E0,#FFFFFF);border:2px solid #FF9800;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(255,152,0,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TODAY</div><div style='font-size:32px;font-weight:900;color:#FF9800;margin-top:6px;'>{today_patients}</div></div>", unsafe_allow_html=True)
-    with m3:
-      st.markdown(f"<div style='background: linear-gradient(135deg,#FFEBEE,#FFFFFF);border:2px solid #F44336;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(244,67,54,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>PENDING</div><div style='font-size:32px;font-weight:900;color:#F44336;margin-top:6px;'>{pending}</div></div>", unsafe_allow_html=True)
-    with m4:
-      st.markdown(f"<div style='background: linear-gradient(135deg,#E3F2FD,#FFFFFF);border:2px solid #2196F3;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(33,150,243,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>INCOME</div><div style='font-size:28px;font-weight:900;color:#2196F3;margin-top:6px;'>Rs {total_income:.0f}</div></div>", unsafe_allow_html=True)
+    # V205 FIX 4: Clinic Overview - New + Revisit combined + Income/Appointments visibility controlled via Clinic Settings
+    # Check clinic overview settings
+    overview_settings = st.session_state.get("clinic_overview_settings", {"Show Income": True, "Show Pending": True, "Show Today": True, "Show Chart": True, "Show Total": True, "Show Appointments": False})
+    show_income = overview_settings.get("Show Income", True)
+    show_pending = overview_settings.get("Show Pending", True)
+    show_today = overview_settings.get("Show Today", True)
+    show_total = overview_settings.get("Show Total", True)
+    show_chart = overview_settings.get("Show Chart", True)
     
-    try:
-      import pandas as pd
-      from datetime import timedelta
-      dates = [(datetime.date.today() - timedelta(days=i)).isoformat() for i in range(6,-1,-1)]
-      counts = []
-      for d in dates:
-        c = len([r for r in my_records if d in str(r.get("Date",""))])
-        counts.append(c)
-      chart_df = pd.DataFrame({"Date": dates, "Patients": counts})
-      chart_df = chart_df.set_index("Date")
-      st.markdown("<div style='margin-top:14px;'><b>Last 7 Days</b></div>", unsafe_allow_html=True)
-      st.bar_chart(chart_df, height=180)
-    except:
-      pass
+    # Build columns based on what to show
+    cols_to_show = []
+    if show_total:
+      cols_to_show.append("total")
+    if show_today:
+      cols_to_show.append("today")
+    if show_pending:
+      cols_to_show.append("pending")
+    if show_income:
+      cols_to_show.append("income")
+    
+    # If no settings, show all
+    if not cols_to_show:
+      cols_to_show = ["total", "today", "pending", "income"]
+    
+    num_cols = len(cols_to_show)
+    if num_cols > 0:
+      m_cols = st.columns(num_cols)
+      for idx, col_type in enumerate(cols_to_show):
+        with m_cols[idx]:
+          if col_type == "total":
+            # V205 FIX 4: Total = New + Revisit combined
+            st.markdown(f"<div style='background: linear-gradient(135deg,#E8F5E9,#FFFFFF);border:2px solid #2E7D5B;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(46,125,91,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TOTAL (New+Revisit)</div><div style='font-size:32px;font-weight:900;color:#2E7D5B;margin-top:6px;'>{total_patients}</div><div style='font-size:11px;color:#888;'>New:{st.session_state.get('dashboard_stats_cache',{}).get('new_count',0)} + Rev:{st.session_state.get('dashboard_stats_cache',{}).get('revisit_count',0)}</div></div>", unsafe_allow_html=True)
+          elif col_type == "today":
+            st.markdown(f"<div style='background: linear-gradient(135deg,#FFF3E0,#FFFFFF);border:2px solid #FF9800;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(255,152,0,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>TODAY</div><div style='font-size:32px;font-weight:900;color:#FF9800;margin-top:6px;'>{today_patients}</div></div>", unsafe_allow_html=True)
+          elif col_type == "pending":
+            st.markdown(f"<div style='background: linear-gradient(135deg,#FFEBEE,#FFFFFF);border:2px solid #F44336;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(244,67,54,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>PENDING</div><div style='font-size:32px;font-weight:900;color:#F44336;margin-top:6px;'>{pending}</div></div>", unsafe_allow_html=True)
+          elif col_type == "income":
+            st.markdown(f"<div style='background: linear-gradient(135deg,#E3F2FD,#FFFFFF);border:2px solid #2196F3;border-radius:16px;padding:18px;text-align:center;box-shadow:0 6px 16px rgba(33,150,243,0.12);'><div style='font-size:14px;color:#5a6d65;font-weight:700;'>INCOME</div><div style='font-size:28px;font-weight:900;color:#2196F3;margin-top:6px;'>Rs {total_income:.0f}</div></div>", unsafe_allow_html=True)
+    
+    if show_chart:
+      try:
+        import pandas as pd
+        from datetime import timedelta
+        dates = [(datetime.date.today() - timedelta(days=i)).isoformat() for i in range(6,-1,-1)]
+        counts_new = []
+        counts_rev = []
+        counts_total = []
+        for d in dates:
+          cn = len([r for r in my_records if d in str(r.get("Date",""))])
+          cr = 0
+          try:
+            cr = len([r for r in my_revisit if d in str(r.get("Date",""))])
+          except:
+            cr = 0
+          counts_new.append(cn)
+          counts_rev.append(cr)
+          counts_total.append(cn+cr)
+        chart_df = pd.DataFrame({"Date": dates, "New": counts_new, "Revisit": counts_rev, "Total (New+Revisit)": counts_total})
+        chart_df = chart_df.set_index("Date")
+        st.markdown("<div style='margin-top:14px;'><b>Last 7 Days - New + Revisit Combined</b></div>", unsafe_allow_html=True)
+        st.bar_chart(chart_df, height=180)
+      except:
+        pass
   else:
     # V209.6 Task 3: Additional tabs message
     st.markdown("<div style='background:#F5F5F5;border:1px dashed #999;border-radius:10px;padding:10px;text-align:center;color:#666;'>Additional tabs can be added to the dashboard by the clinic admin.</div>", unsafe_allow_html=True)
