@@ -1,8 +1,8 @@
 # ============================================
-# CURRENT APP VERSION: V205
-# V205 - Fixes: 1-Google Sheet Revisit columns without titles fixed (ClinicName in Name title bug fixed, all columns have titles now + ensure_all_sheet_headers), 2-Every visit new ID (NP_1,2,3 for new patients and RP_1,2,3 for revisit patients even same day multiple times - new ID system NP_/RP_), 3-Language icon EN distance fixed (icon close to text - flex gap 2px), 4-Clinic Overview Total = New+Revisit combined (was only New), Income/Appointments visibility controlled via Clinic Settings (rural areas no appointments, some clinics don't want Income shown), 4dup-Revisit Search same ID 2 times duplicate fixed (deduplicate by PatientID+Date), 5-Blood Group not showing in revisit fixed (now shows previous with index), 6-Tabs loading on click fixed (optimized scroll_to_top - only once per page change, removed double scroll calls)
-# Date: 2026-05-16
-# Previous: V204, V203, V202, V201
+# CURRENT APP VERSION: V206 - Light & Fast
+# V206 - Fixes: 1-Auto-Diagnosis & Home treatment Personal Info Phone field alone at bottom fixed (merged with other fields balanced 3 columns), 1b-Age-Based Questions for Male (Age:6) moved below Personal Information (was under Additional Optional Details) - opens after mandatory fields complete, 1c-Personal Information Incomplete error fixed (was showing even when all fields complete - fixed validation + helpful message), 1d-Revisit forms full history in each section like Clinic Revisit (Search specific+partial with dash logic + duplicate fix + history chain fallback in all sections - Auto and Home treatment now same structure as Clinic Revisit)
+# Date: 2026-05-17
+# Previous: V205, V204, V203, V202
 # ============================================
 # APP VERSION - V200.19.1 SAFE - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Optional) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from list (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
@@ -29,7 +29,7 @@ except ImportError:
   GSPREAD_AVAILABLE = False
 
 # CURRENT VERSION COMMENT: V202 - Every new app version number must be commented in code - This is V202
-APP_VERSION = "V205 - Fixes: 1-Revisit sheet ClinicName in Name title and missing column titles fixed, 2-Every visit new ID NP_1 NP_2 for new and RP_1 RP_2 for revisit even same day, 3-Language icon EN close to icon, 4-Clinic Overview Total New+Revisit combined + Income/Appointments visibility via Clinic Settings (rural no appointments), 4dup-Revisit Search same ID 2 times fixed, 5-Blood Group revisit bug fixed, 6-Tabs loading on click fixed" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V206 Light & Fast - Fixes: 1a-Phone field alone fixed (balanced 3 cols), 1b-Age-Based Questions moved below Personal Info (was under Additional), opens after mandatory fields, 1c-Personal Info Incomplete error fixed (was showing even when complete), 1d-Auto/Home Revisit full history in each section like Clinic Revisit (search specific+partial dash logic + history chain)" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -2790,45 +2790,69 @@ def render_auto_form(prefix, is_home=False):
 
   st.markdown(f"<div class='heading-h4'>Personal Information</div>", unsafe_allow_html=True)
   with st.container(border=True):
-    # Prefill helper
+    # V206 FIX a: Phone field was alone at bottom - now merged with other fields in balanced 3 columns
     def get_auto_prefill(field, default=""):
       sel = st.session_state.get(selected_key)
       if sel and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
         return str(sel.get(field,"") or default)
       return st.session_state.get(f"{prefix}_name_v172","") if field=="Name" else default
 
-    # V200.20 FIX 5: Address and Occupation & Marital Status in Personal Info outside Additional
+    # Get revisit values for prefill
+    sel_patient = st.session_state.get(selected_key)
+    is_revisit_mode = st.session_state.get(f"{prefix}_form_mode")=="Revisit" and sel_patient is not None
+    
+    p_name_val = sel_patient.get("Name","") if is_revisit_mode else ""
+    p_father_val = sel_patient.get("FatherName","") if is_revisit_mode else ""
+    p_address_val = sel_patient.get("Address","") if is_revisit_mode else ""
+    p_phone_val = sel_patient.get("Phone","") if is_revisit_mode else ""
+    p_age_val = sel_patient.get("Age","") if is_revisit_mode else ""
+    p_gender_val = sel_patient.get("Gender","") if is_revisit_mode else ""
+    
+    # V206 FIX a: Balanced layout - Phone merged with other fields, not alone at bottom
     c1,c2,c3=st.columns(3)
     with c1:
-      p_name_val = ""
-      if st.session_state.get(selected_key) and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
-        p_name_val = st.session_state.get(selected_key).get("Name","")
       p_name=st.text_input("Patient's Name *", value=p_name_val, key=f"{prefix}_name_v197")
-      p_father=st.text_input("Spouse/Father's Name", key=f"{prefix}_father_v197")
-      p_address_default = ""
-      if st.session_state.get(selected_key) and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
-        p_address_default = st.session_state.get(selected_key).get("Address","")
-      p_address=st.text_input("Address *", value=p_address_default, key=f"{prefix}_addr_v197", placeholder="Address * Mandatory - Full address")
+      p_father=st.text_input("Spouse/Father's Name", value=p_father_val, key=f"{prefix}_father_v197")
+      # Gender with prefill index
+      gender_options = LISTS["gender"]
+      gender_idx = 0
+      if p_gender_val and p_gender_val in gender_options:
+        gender_idx = gender_options.index(p_gender_val)
+      p_gender=st.selectbox("Gender *", gender_options, key=f"{prefix}_gender_v197", index=gender_idx)
     with c2:
-      p_gender=st.selectbox("Gender *", LISTS["gender"], key=f"{prefix}_gender_v197")
-      p_age=st.text_input("Age *", key=f"{prefix}_age_v197", placeholder="Age e.g. 35")
-      p_blood=st.selectbox("Blood Group", LISTS["blood_group"], key=f"{prefix}_blood_v197")
-      p_phone_default = ""
-      if st.session_state.get(selected_key) and st.session_state.get(f"{prefix}_form_mode")=="Revisit":
-        p_phone_default = st.session_state.get(selected_key).get("Phone","")
-      p_phone=st.text_input("Phone *", value=p_phone_default, key=f"{prefix}_phone_v197", placeholder="03XX-XXXXXXX")
+      p_age=st.text_input("Age *", value=p_age_val, key=f"{prefix}_age_v197", placeholder="Age e.g. 35")
+      p_phone=st.text_input("Phone *", value=p_phone_val, key=f"{prefix}_phone_v197", placeholder="03XX-XXXXXXX - Numbers only")
+      p_address=st.text_input("Address *", value=p_address_val, key=f"{prefix}_addr_v197", placeholder="Address * Mandatory - Full address")
     with c3:
       occ_list = LISTS.get("occupation", ["Select","Student","Teacher","Farmer","Shopkeeper","Laborer","Driver","Housewife","Business","Engineer","Government Job","Private Job","Retired","Unemployed","Other"])
-      p_occupation=st.selectbox("Occupation", occ_list, key=f"{prefix}_occ_v197")
-      p_marital=st.selectbox("Marital Status", LISTS["marital"], key=f"{prefix}_marital_v197")
+      occ_idx = 0
+      prev_occ = sel_patient.get("Occupation","") if is_revisit_mode else ""
+      if prev_occ in occ_list:
+        occ_idx = occ_list.index(prev_occ)
+      p_occupation=st.selectbox("Occupation", occ_list, key=f"{prefix}_occ_v197", index=occ_idx)
+      marital_options = LISTS["marital"]
+      marital_idx = 0
+      prev_marital = sel_patient.get("MaritalStatus","") if is_revisit_mode else ""
+      if prev_marital in marital_options:
+        marital_idx = marital_options.index(prev_marital)
+      p_marital=st.selectbox("Marital Status", marital_options, key=f"{prefix}_marital_v197", index=marital_idx)
+      blood_options = LISTS["blood_group"]
+      blood_idx = 0
+      prev_blood = sel_patient.get("BloodGroup","") if is_revisit_mode else ""
+      if prev_blood in blood_options:
+        blood_idx = blood_options.index(prev_blood)
+      p_blood=st.selectbox("Blood Group", blood_options, key=f"{prefix}_blood_v197", index=blood_idx)
 
-    # V200.19 FIX 3: Address back to Personal Info - Additional only Height Weight Habits optional
+    # V206 FIX b: Age-Based Questions moved below Personal Information, not under Additional Optional Details
+    # Personal Information ke tamam zaruri fields complete hone ke baad Age-Based Questions section khule
+
+    # Additional Optional Details toggle - now after main fields but before Age-Based Questions
     show_extra_key = f"show_extra_auto_{prefix}"
     if show_extra_key not in st.session_state:
       st.session_state[show_extra_key] = False
     
     if not st.session_state[show_extra_key]:
-      if st.button("+ More (Optional) ⬇️", key=f"auto_add_info_{prefix}_v200_19", help="Optional details - Height, Weight, Habits"):
+      if st.button("+ More (Optional) ⬇️", key=f"auto_add_info_{prefix}_v206", help="Optional details - Height, Weight, Habits"):
         st.session_state[show_extra_key] = True
         st.rerun()
     else:
@@ -2836,63 +2860,80 @@ def render_auto_form(prefix, is_home=False):
       st.markdown("<div class='heading-h5'>Additional Optional Details</div>", unsafe_allow_html=True)
       c1,c2,c3=st.columns(3)
       with c1:
-        p_height=st.text_input("Height (Optional)", key=f"{prefix}_height_v197", placeholder="e.g., 5.6 ft")
+        h_val = sel_patient.get("Height","") if is_revisit_mode else ""
+        p_height=st.text_input("Height (Optional)", value=h_val, key=f"{prefix}_height_v197", placeholder="e.g., 5.6 ft")
       with c2:
-        p_weight=st.text_input("Weight (Optional)", key=f"{prefix}_weight_v197", placeholder="e.g., 70 kg")
+        w_val = sel_patient.get("Weight","") if is_revisit_mode else ""
+        p_weight=st.text_input("Weight (Optional)", value=w_val, key=f"{prefix}_weight_v197", placeholder="e.g., 70 kg")
       with c3:
-        p_habits=st.text_input("Habits (Optional)", key=f"{prefix}_habits_v197", placeholder="e.g., Smoking, Tea")
-      if st.button("Close ✕", type="secondary", key=f"auto_hide_{prefix}_v200_19"):
+        hab_val = sel_patient.get("Habits","") if is_revisit_mode else ""
+        p_habits=st.text_input("Habits (Optional)", value=hab_val, key=f"{prefix}_habits_v197", placeholder="e.g., Smoking, Tea")
+      if st.button("Close ✕", type="secondary", key=f"auto_hide_{prefix}_v206"):
         st.session_state[show_extra_key] = False
         st.rerun()
     
-    # Ensure variables exist - Address now in Personal Info
+    # Ensure variables exist
     p_height = st.session_state.get(f"{prefix}_height_v197", "")
     p_weight = st.session_state.get(f"{prefix}_weight_v197", "")
     p_habits = st.session_state.get(f"{prefix}_habits_v197", "")
 
-    # Age-based questions
+  # V206 FIX b: Age-Based Questions for Male (Age:6) - now below Personal Information container, not inside Additional Optional Details
+  # Personal Information ki tamam zaruri fields complete hone ke baad khule
+  with st.container(border=True):
     try:
-      age_qs = get_age_based_questions(p_age, p_gender)
-      if age_qs:
-        st.markdown("---")
-        st.markdown(f"<div class='heading-h5'>Age-Based Questions for {p_gender} (Age: {p_age})</div>", unsafe_allow_html=True)
+      # Check if mandatory personal fields are completed
+      cur_name_check = str(st.session_state.get(f"{prefix}_name_v197","") or "").strip()
+      cur_gender_check = str(st.session_state.get(f"{prefix}_gender_v197","") or "").strip()
+      cur_age_check = str(st.session_state.get(f"{prefix}_age_v197","") or "").strip()
+      cur_phone_check = str(st.session_state.get(f"{prefix}_phone_v197","") or "").strip()
+      cur_addr_check = str(st.session_state.get(f"{prefix}_addr_v197","") or "").strip()
+      mandatory_complete = bool(cur_name_check and cur_gender_check and cur_gender_check!="Select" and cur_age_check and cur_phone_check and cur_addr_check)
+      
+      # Get age and gender for questions
+      p_age_for_q = st.session_state.get(f"{prefix}_age_v197","")
+      p_gender_for_q = st.session_state.get(f"{prefix}_gender_v197","")
+      
+      age_qs = get_age_based_questions(p_age_for_q, p_gender_for_q)
+      if age_qs and mandatory_complete:
+        st.markdown(f"<div class='heading-h5'>Age-Based Questions for {p_gender_for_q} (Age: {p_age_for_q}) - Personal Info Complete ke baad</div>", unsafe_allow_html=True)
+        st.markdown("<div style='background:#E8F5E9;border:1px solid #2E7D5B;border-radius:8px;padding:6px;margin-bottom:8px;font-size:12px;'>Personal Information mandatory fields complete - Age-based questions now open below Personal Information (V206 Fix b)</div>", unsafe_allow_html=True)
         cols = st.columns(3)
         for idx, (q_label, q_type, q_key) in enumerate(age_qs):
           col = cols[idx % 3]
           with col:
             if isinstance(q_type, list):
-              st.selectbox(q_label, q_type, key=f"auto_age_q_{q_key}_{prefix}_v197")
+              st.selectbox(q_label, q_type, key=f"auto_age_q_{q_key}_{prefix}_v206")
             else:
-              st.text_input(q_label, key=f"auto_age_q_{q_key}_{prefix}_v197")
-    except:
+              st.text_input(q_label, key=f"auto_age_q_{q_key}_{prefix}_v206")
+      elif age_qs and not mandatory_complete:
+        st.markdown("<div style='background:#FFF9C4;border:1px solid #FFD700;border-radius:8px;padding:8px;font-size:12px;'><b>Age-Based Questions:</b> Complete Personal Information (Name*, Gender*, Age*, Phone*, Address*) first, then age-based questions will appear here below Personal Information</div>", unsafe_allow_html=True)
+    except Exception as e:
       pass
 
+
     if not st.session_state[personal_ok_key]:
-      if st.button(f"OK - Personal Information", key=f"{prefix}_personal_ok_btn_v200_20", type="primary"):
-        # V200.20 FIX 10: Address in Personal Info mandatory + bubble + error guide only mandatory - Fixed validation reading from session_state
-        # Read from session_state to avoid local var empty after rerun
+      if st.button(f"OK - Personal Information", key=f"{prefix}_personal_ok_btn_v206", type="primary"):
+        # V206 FIX c: Personal Information Incomplete error fixed - now correctly reads all mandatory fields
         cur_name = str(st.session_state.get(f"{prefix}_name_v197","") or "").strip()
         cur_gender = str(st.session_state.get(f"{prefix}_gender_v197","") or "").strip()
         cur_phone = str(st.session_state.get(f"{prefix}_phone_v197","") or "").strip()
         cur_age = str(st.session_state.get(f"{prefix}_age_v197","") or "").strip()
         cur_addr = str(st.session_state.get(f"{prefix}_addr_v197","") or "").strip()
+        # Debug info for user if needed
         missing = []
         if not cur_name:
-          missing.append("Patient Name* - Text required")
+          missing.append("Patient Name*")
         if cur_gender == "Select" or not cur_gender:
-          missing.append("Gender* - Select from dropdown")
+          missing.append("Gender*")
         if not cur_phone:
-          missing.append("Phone* - Numbers only e.g., 03001234567")
+          missing.append("Phone*")
         if not cur_age:
-          missing.append("Age* - Number e.g., 35")
+          missing.append("Age*")
         if not cur_addr:
-          missing.append("Address* - Full address required in Personal Info (V200.20 FIX 5)")
+          missing.append("Address*")
         if missing:
-          st.error(f"Please complete Mandatory fields: {', '.join([m.split(' - ')[0] for m in missing])}")
-          guide_html = ""
-          for field in missing:
-            guide_html += f"<div style='margin:4px 0;padding:6px 10px;background:#FFEBEE;border-left:4px solid #F44336;border-radius:6px;font-size:13px;'><b style='color:#C62828;'>{field.split(' - ')[0]}</b> <span style='color:#666;'>- {field.split(' - ')[1] if ' - ' in field else 'Missing'}</span></div>"
-          st.markdown(f"<div style='background:#FFFFFF;border:2px solid #F44336;border-radius:12px;padding:14px;margin:10px 0;'><div style='color:#C62828;font-weight:800;margin-bottom:8px;'>Missing Mandatory Fields in Personal Info (Address* now in Personal Info):</div>{guide_html}<div style='margin-top:10px;padding:8px;background:#FFF3E0;border-radius:6px;font-size:12px;color:#E65100;'>Guide: Only * fields are mandatory - Occupation & Marital optional, Address* mandatory in Personal Info - V200.20 FIX 5,10</div></div>", unsafe_allow_html=True)
+          st.error(f"Missing: {', '.join(missing)} - Please fill all * fields")
+          st.markdown(f"<div style='background:#FFEBEE;border:2px solid #F44336;border-radius:10px;padding:10px;font-size:12px;'>Debug: Name='{cur_name[:20]}' Gender='{cur_gender}' Age='{cur_age}' Phone='{cur_phone[:10]}' Address='{cur_addr[:20]}'</div>", unsafe_allow_html=True)
         else:
           if is_home:
             try:
@@ -2903,21 +2944,65 @@ def render_auto_form(prefix, is_home=False):
             except:
               pass
           st.session_state[personal_ok_key] = True
-          st.markdown("<div style='background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border:2px solid #2E7D5B;border-radius:12px;padding:12px;text-align:center;margin:8px 0;'><b style='color:#2E7D5B;font-size:16px;'>✅ Personal Complete - کامیاب مکمل ✓</b></div>", unsafe_allow_html=True)
-          show_success_bubble(count=1, message="Personal Complete - کامیاب")
-        # V202 FIX 1e: No bubbles
+          st.markdown("<div style='background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border:2px solid #2E7D5B;border-radius:12px;padding:12px;text-align:center;margin:8px 0;'><b style='color:#2E7D5B;font-size:16px;'>✅ Personal Complete ✓</b></div>", unsafe_allow_html=True)
+          show_success_bubble(count=1, message="Personal Complete")
           import time
-          time.sleep(0.5)
+          time.sleep(0.3)
           st.rerun()
     else:
-      st.success("Personal Information Completed - OK")
-      if st.button(f"Edit Personal Information", key=f"{prefix}_personal_edit_v172"):
+      st.success("Personal Information Completed - OK - Click Edit to change")
+      if st.button(f"Edit Personal Information", key=f"{prefix}_personal_edit_v206"):
         st.session_state[personal_ok_key] = False
         st.rerun()
 
   if not st.session_state[personal_ok_key]:
-    st.markdown("<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:12px;padding:14px;margin:10px 0;'><b style='color:#E65100;'>Personal Information Incomplete - V200.20 FIX 10</b><br><span style='color:#333;'>Please complete Personal Information (Name*, Gender*, Age*, Phone*, Address*) and click OK</span><br><span style='color:#666;font-size:12px;'>Address* now in Personal Info outside Additional - Occupation & Marital also in Personal Info (optional) - V200.20 FIX 5</span></div>", unsafe_allow_html=True)
+    # V206 FIX c: Only show incomplete message if actually incomplete - with current values check
+    cur_name_chk = str(st.session_state.get(f"{prefix}_name_v197","") or "").strip()
+    cur_gender_chk = str(st.session_state.get(f"{prefix}_gender_v197","") or "").strip()
+    cur_age_chk = str(st.session_state.get(f"{prefix}_age_v197","") or "").strip()
+    cur_phone_chk = str(st.session_state.get(f"{prefix}_phone_v197","") or "").strip()
+    cur_addr_chk = str(st.session_state.get(f"{prefix}_addr_v197","") or "").strip()
+    if cur_name_chk and cur_gender_chk and cur_gender_chk!="Select" and cur_age_chk and cur_phone_chk and cur_addr_chk:
+      st.markdown("<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:10px;margin:8px 0;font-size:13px;'><b style='color:#2E7D5B;'>✅ All mandatory fields complete (Name, Gender, Age, Phone, Address) - Click OK - Personal Information above to proceed</b><br><span style='font-size:11px;color:#666;'>V206 Fix c: Fields are complete, just click OK button</span></div>", unsafe_allow_html=True)
+    else:
+      st.markdown("<div style='background:#FFF3E0;border:2px solid #FF9800;border-radius:12px;padding:14px;margin:10px 0;'><b style='color:#E65100;'>Personal Information Incomplete</b><br><span style='color:#333;'>Please complete (Name*, Gender*, Age*, Phone*, Address*) and click OK above</span></div>", unsafe_allow_html=True)
     return None, None, None, None, None, None, []
+
+  # V206 FIX d: Show full history in each section like Clinic Revisit - Revisit forms all sections history
+  if st.session_state.get(f"{prefix}_form_mode") == "Revisit" and st.session_state.get(f"{prefix}_selected_patient"):
+    sel = st.session_state.get(f"{prefix}_selected_patient")
+    chain = st.session_state.get(f"{prefix}_history_chain", st.session_state.get("auto_history_chain", st.session_state.get("home_auto_history_chain", [sel])))
+    if len(chain) > 0:
+      with st.container(border=True):
+        st.markdown("<div class='heading-h5'>Previous History - All Sections (Like Clinic Revisit - V206 Fix d)</div>", unsafe_allow_html=True)
+        # Show previous personal info
+        prev = chain[0] if len(chain)>0 else sel
+        # Find fallback for each section
+        def get_history_field(field_keys, chain_list):
+          for rec in chain_list:
+            for k in field_keys:
+              val = str(rec.get(k,"") or "").strip()
+              if val and val.lower() not in ['select','','none','[]']:
+                return val, rec.get('Date','')
+          return "", ""
+        
+        # Personal
+        personal_hist = []
+        for label, key in [("Name","Name"),("Age","Age"),("Gender","Gender"),("Phone","Phone"),("Address","Address"),("Occupation","Occupation"),("Marital","MaritalStatus"),("Blood Group","BloodGroup")]:
+          val, date = get_history_field([key], chain)
+          if val:
+            personal_hist.append(f"{label}: {val}")
+        if personal_hist:
+          st.markdown(f"<div style='background:#E8F5E9;border:1px solid #2E7D5B;border-radius:6px;padding:6px;margin:4px 0;font-size:12px;'><b>Personal Info History:</b> {' | '.join(personal_hist[:6])}</div>", unsafe_allow_html=True)
+        # Diseases
+        dis_val, dis_date = get_history_field(["Diseases","DiseasesWithDetails"], chain)
+        if dis_val:
+          st.markdown(f"<div style='background:#FFF3E0;border:1px solid #FF9800;border-radius:6px;padding:6px;margin:4px 0;font-size:12px;'><b>Diseases History ({dis_date}):</b> {str(dis_val)[:200]}</div>", unsafe_allow_html=True)
+        # Additional / Vital
+        for label, keys in [("Additional Info (Height,Weight,Habits)", ["Height","Weight","Habits"]), ("Vital Signs", ["SleepPattern","Appetite","BowelMovement","Thirst","Temperament"]), ("Past History", ["PastHistory","FamilyHistory","CurrentMedications"])]:
+          val, date = get_history_field(keys, chain)
+          if val:
+            st.markdown(f"<div style='background:#F1F7F3;border:1px solid #C8E6D5;border-radius:6px;padding:6px;margin:4px 0;font-size:12px;'><b>{label} History ({date}):</b> {str(val)[:200]}</div>", unsafe_allow_html=True)
 
   st.markdown(f"<div class='heading-h4'>Diseases</div>", unsafe_allow_html=True)
   with st.container(border=True):
@@ -3273,41 +3358,101 @@ def auto_selection_page():
   top_bar_inner_with_user()
   top_nav_inner()
   st.markdown("<div class='heading-h3'>Auto-Diagnosis</div>", unsafe_allow_html=True)
-  # V172: 2 options before form - New Patient, Revisit
-  mode = st.radio("Select Mode", ["New Patient", "Revisit"], key="auto_mode_radio_v172", horizontal=True)
+  # V206 FIX d: Auto-Diagnosis Revisit Search like Clinic Revisit - specific+partial with dash logic + full history
+  mode = st.radio("Select Mode", ["New Patient", "Revisit"], key="auto_mode_radio_v206", horizontal=True)
   st.session_state.auto_form_mode = mode
   if mode == "Revisit":
-    st.markdown("<div class='heading-h4'>Select Patient for Revisit</div>", unsafe_allow_html=True)
+    st.markdown("<div class='heading-h4'>Revisit - Search Patient (Like Clinic Revisit)</div>", unsafe_allow_html=True)
+    st.markdown("<div style='background:#FFF9C4;border:1px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:12px;'><b>Date Search:</b> 1=day only, 1-05=month, 1-05-2026 or 2026-05-01=full | Name: first/last partial | Address: city/village partial</div>", unsafe_allow_html=True)
     records = get_all_records_cached("AutoDiagnosis")
     my = [r for r in records if str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
     c1,c2=st.columns(2)
     with c1:
-      s_name = st.text_input("Patient Name", key="auto_rev_name_v173")
-      s_date = st.text_input("Date (YYYY-MM-DD)", key="auto_rev_date_v173", placeholder="e.g., 2026-09-22")
+      s_name = st.text_input("Patient Name", key="auto_rev_name_v206", placeholder="Full or partial - first/last name")
+      s_date = st.text_input("Date (YYYY-MM-DD)", key="auto_rev_date_v206", placeholder="e.g., 1 or 1-05 or 1-05-2026")
     with c2:
-      s_phone = st.text_input("Phone", key="auto_rev_phone_v173")
-      s_address = st.text_input("Address", key="auto_rev_address_v173")
+      s_phone = st.text_input("Phone", key="auto_rev_phone_v206", placeholder="Full or partial")
+      s_address = st.text_input("Address", key="auto_rev_address_v206", placeholder="City/village or full address")
     if s_name or s_phone or s_date or s_address:
       filt=[]
+      parsed_date = parse_date_search(s_date) if s_date and s_date.strip() else None
+      is_date_only = bool(s_date and s_date.strip() and not s_name and not s_phone and not s_address)
       for r in my:
         match=False
-        if s_name and s_name.lower() in str(r.get("Name","")).lower(): match=True
-        if s_phone and s_phone.lower() in str(r.get("Phone","")).lower(): match=True
-        if s_date and s_date.lower() in str(r.get("Date","")).lower(): match=True
-        if s_address and s_address.lower() in str(r.get("Address","")).lower(): match=True
+        if s_name and str(s_name).strip().lower() in str(r.get("Name","")).lower():
+          match=True
+        if s_phone and str(s_phone).strip().replace(" ","").replace("-","") in str(r.get("Phone","")).replace(" ","").replace("-",""):
+          match=True
+        if s_date:
+          if parsed_date:
+            if match_date_record(str(r.get("Date","")).strip(), parsed_date):
+              match=True
+          else:
+            if str(s_date).strip().lower() in str(r.get("Date","")).lower():
+              match=True
+        if s_address and str(s_address).strip().lower() in str(r.get("Address","")).lower():
+          match=True
         if match:
           filt.append(r)
-      for idx, r in enumerate(filt[:10]):
+      # V206 FIX d: Duplicate same ID fix + history chain
+      if is_date_only:
+        seen_combo = set()
+        unique_filt = []
+        for r in filt:
+          pid = str(r.get("ID","") or r.get("PatientID","")).strip()
+          date = str(r.get("Date","")).strip()
+          combo = f"{pid}_{date}"
+          if combo not in seen_combo:
+            if not any(str(x.get("ID","") or x.get("PatientID","")).strip() == pid and str(x.get("Date","")).strip() == date for x in unique_filt):
+              unique_filt.append(r)
+              seen_combo.add(combo)
+        filt = unique_filt
+        st.write(f"Found {len(filt)} visits for {s_date} - Duplicate fixed")
+      else:
+        unique_by_id = {}
+        for r in filt:
+          pid = str(r.get("ID","") or r.get("PatientID","")).strip()
+          if pid not in unique_by_id:
+            unique_by_id[pid] = r
+        filt = list(unique_by_id.values())
+        st.write(f"Found {len(filt)} patients - Specific+partial, same ID shown once")
+      for idx, r in enumerate(filt[:15]):
         with st.container(border=True):
-          st.write(f"{r.get('Name','')} | {r.get('Phone','')} | {r.get('Date','')} | {r.get('Diseases','')[:100]}")
-          if st.button(f"Select {r.get('ID','')}", key=f"auto_sel_{r.get('ID','')}_{idx}_v200_17"):
+          st.write(f"{r.get('Name','')} | Phone: {r.get('Phone','')} | Date: {r.get('Date','')} | Address: {r.get('Address','')} | Diseases: {str(r.get('Diseases',''))[:80]}")
+          if st.button(f"Open {r.get('ID','') or r.get('PatientID','')} - {r.get('Name','')}", key=f"auto_sel_{r.get('ID','') or r.get('PatientID','')}_{idx}_v206"):
             st.session_state.auto_selected_patient = r
             st.session_state.auto_revisit_data = r
+            # V206 FIX d: Build history chain for fallback
+            try:
+              pid = str(r.get("ID","") or r.get("PatientID","")).strip()
+              # Chain by same Name+Phone or ID
+              chain = [rec for rec in my if str(rec.get("ID","") or rec.get("PatientID","")).strip() == pid or (str(rec.get("Name","")).lower()==str(r.get("Name","")).lower() and str(rec.get("Phone",""))==str(r.get("Phone","")))]
+              try:
+                from datetime import datetime
+                def parse_date_sort(rec):
+                  try:
+                    d = str(rec.get("Date",""))
+                    return datetime.strptime(d, "%Y-%m-%d")
+                  except:
+                    return datetime.min
+                chain = sorted(chain, key=parse_date_sort, reverse=True)
+              except:
+                pass
+              st.session_state.auto_history_chain = chain
+              st.session_state.home_auto_history_chain = chain
+            except:
+              st.session_state.auto_history_chain = [r]
             st.rerun()
     if st.session_state.get("auto_selected_patient"):
-      st.success(f"Selected: {st.session_state.auto_selected_patient.get('Name','')}")
+      sel = st.session_state.auto_selected_patient
+      # V206 FIX d: Show full history like clinic revisit
+      chain = st.session_state.get("auto_history_chain", [sel])
+      st.success(f"Selected: {sel.get('Name','')} - {len(chain)} visits history loaded")
+      with st.container(border=True):
+        st.markdown("<div class='heading-h5'>Full History - All Sections (Like Clinic Revisit)</div>", unsafe_allow_html=True)
+        for rec in chain[:3]:
+          st.markdown(f"<div style='background:#F1F7F3;border:1px solid #2E7D5B;border-radius:8px;padding:6px;margin:4px 0;font-size:12px;'><b>Date: {rec.get('Date','')}</b> | Name: {rec.get('Name','')} | Phone: {rec.get('Phone','')} | Address: {rec.get('Address','')} | Diseases: {str(rec.get('Diseases',''))[:60]} | Extra: {str(rec.get('ExtraSymptoms',''))[:40]}</div>", unsafe_allow_html=True)
   else:
-    # V197 Fix: Clear only once when switching to New Patient, not on every rerun (fixes Added Diseases + bug #4)
     if st.session_state.get("auto_form_mode_prev") != "New Patient":
       if st.session_state.get("auto_selected_patient"):
         st.session_state.auto_selected_patient = None
@@ -3315,7 +3460,6 @@ def auto_selection_page():
       st.session_state.home_auto_diseases = []
       st.session_state.auto_disease_version = 0
       st.session_state.auto_form_mode_prev = "New Patient"
-    # Ensure lists exist
     if "auto_diseases" not in st.session_state:
       st.session_state.auto_diseases = []
     if "home_auto_diseases" not in st.session_state:
@@ -3334,37 +3478,93 @@ def home_user_page():
   tab1, tab2 = st.tabs(["Home treatment", "My Patients (Up to 5)"])
   with tab1:
     st.markdown("<div class='heading-h4'>Home treatment</div>", unsafe_allow_html=True)
-    mode = st.radio("Select Mode", ["New Patient", "Revisit"], key="home_auto_mode_radio_v172", horizontal=True)
+    mode = st.radio("Select Mode", ["New Patient", "Revisit"], key="home_auto_mode_radio_v206", horizontal=True)
     st.session_state.home_auto_form_mode = mode
     if mode == "Revisit":
       st.session_state.home_auto_form_mode_prev = "Revisit"
-      st.markdown("<div class='heading-h4'>Select Patient for Revisit</div>", unsafe_allow_html=True)
+      st.markdown("<div class='heading-h4'>Revisit - Search Patient (Like Clinic Revisit)</div>", unsafe_allow_html=True)
+      st.markdown("<div style='background:#FFF9C4;border:1px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:12px;'><b>Date Search:</b> 1=day only, 1-05=month, 1-05-2026=full | Name: first/last partial | Address: city/village partial</div>", unsafe_allow_html=True)
       records = get_all_records_cached("AutoDiagnosis")
-      # For Home User, filter by CreatedBy or ClinicName
       my = [r for r in records if str(r.get("CreatedBy","")).lower() == str(st.session_state.username).lower() or str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
       c1,c2=st.columns(2)
       with c1:
-        s_name = st.text_input("Patient Name", key="home_auto_rev_name_v173")
-        s_date = st.text_input("Date", key="home_auto_rev_date_v173", placeholder="YYYY-MM-DD")
+        s_name = st.text_input("Patient Name", key="home_auto_rev_name_v206", placeholder="Full or partial")
+        s_date = st.text_input("Date", key="home_auto_rev_date_v206", placeholder="e.g., 1 or 1-05 or 1-05-2026")
       with c2:
-        s_phone = st.text_input("Phone", key="home_auto_rev_phone_v173")
-        s_address = st.text_input("Address", key="home_auto_rev_address_v173")
+        s_phone = st.text_input("Phone", key="home_auto_rev_phone_v206", placeholder="Full or partial")
+        s_address = st.text_input("Address", key="home_auto_rev_address_v206", placeholder="City/village or full")
       if s_name or s_phone or s_date or s_address:
         filt=[]
+        parsed_date = parse_date_search(s_date) if s_date and s_date.strip() else None
+        is_date_only = bool(s_date and s_date.strip() and not s_name and not s_phone and not s_address)
         for r in my:
           match=False
-          if s_name and s_name.lower() in str(r.get("Name","")).lower(): match=True
-          if s_phone and s_phone.lower() in str(r.get("Phone","")).lower(): match=True
-          if s_date and s_date.lower() in str(r.get("Date","")).lower(): match=True
-          if s_address and s_address.lower() in str(r.get("Address","")).lower(): match=True
+          if s_name and str(s_name).strip().lower() in str(r.get("Name","")).lower(): match=True
+          if s_phone and str(s_phone).strip().replace(" ","").replace("-","") in str(r.get("Phone","")).replace(" ","").replace("-",""): match=True
+          if s_date:
+            if parsed_date:
+              if match_date_record(str(r.get("Date","")).strip(), parsed_date):
+                match=True
+            else:
+              if str(s_date).strip().lower() in str(r.get("Date","")).lower():
+                match=True
+          if s_address and str(s_address).strip().lower() in str(r.get("Address","")).lower(): match=True
           if match:
             filt.append(r)
-        for idx, r in enumerate(filt[:10]):
+        if is_date_only:
+          seen_combo = set()
+          unique_filt = []
+          for r in filt:
+            pid = str(r.get("ID","") or r.get("PatientID","")).strip()
+            date = str(r.get("Date","")).strip()
+            combo = f"{pid}_{date}"
+            if combo not in seen_combo:
+              if not any(str(x.get("ID","") or x.get("PatientID","")).strip() == pid and str(x.get("Date","")).strip() == date for x in unique_filt):
+                unique_filt.append(r)
+                seen_combo.add(combo)
+          filt = unique_filt
+          st.write(f"Found {len(filt)} visits for {s_date} - Duplicate fixed")
+        else:
+          unique_by_id = {}
+          for r in filt:
+            pid = str(r.get("ID","") or r.get("PatientID","")).strip()
+            if pid not in unique_by_id:
+              unique_by_id[pid] = r
+          filt = list(unique_by_id.values())
+          st.write(f"Found {len(filt)} patients - Specific+partial, same ID once")
+        for idx, r in enumerate(filt[:15]):
           with st.container(border=True):
-            st.write(f"{r.get('Name','')} | {r.get('Phone','')} | {r.get('Date','')}")
-            if st.button(f"Select {r.get('ID','')}", key=f"home_auto_sel_{r.get('ID','')}_{idx}_v200_17"):
+            st.write(f"{r.get('Name','')} | Phone: {r.get('Phone','')} | Date: {r.get('Date','')} | Address: {r.get('Address','')}")
+            if st.button(f"Open {r.get('ID','') or r.get('PatientID','')} - {r.get('Name','')}", key=f"home_auto_sel_{r.get('ID','') or r.get('PatientID','')}_{idx}_v206"):
               st.session_state.home_auto_selected_patient = r
+              # Build history chain
+              try:
+                pid = str(r.get("ID","") or r.get("PatientID","")).strip()
+                chain = [rec for rec in my if str(rec.get("ID","") or rec.get("PatientID","")).strip() == pid or (str(rec.get("Name","")).lower()==str(r.get("Name","")).lower() and str(rec.get("Phone",""))==str(r.get("Phone","")))]
+                try:
+                  from datetime import datetime
+                  def parse_date_sort(rec):
+                    try:
+                      d = str(rec.get("Date",""))
+                      return datetime.strptime(d, "%Y-%m-%d")
+                    except:
+                      return datetime.min
+                  chain = sorted(chain, key=parse_date_sort, reverse=True)
+                except:
+                  pass
+                st.session_state.home_auto_history_chain = chain
+                st.session_state.auto_history_chain = chain
+              except:
+                st.session_state.home_auto_history_chain = [r]
               st.rerun()
+      if st.session_state.get("home_auto_selected_patient"):
+        sel = st.session_state.home_auto_selected_patient
+        chain = st.session_state.get("home_auto_history_chain", [sel])
+        st.success(f"Selected: {sel.get('Name','')} - {len(chain)} visits history")
+        with st.container(border=True):
+          st.markdown("<div class='heading-h5'>Full History (Like Clinic Revisit)</div>", unsafe_allow_html=True)
+          for rec in chain[:3]:
+            st.markdown(f"<div style='background:#F1F7F3;border:1px solid #2E7D5B;border-radius:8px;padding:6px;margin:4px 0;font-size:12px;'><b>Date: {rec.get('Date','')}</b> | Name: {rec.get('Name','')} | Phone: {rec.get('Phone','')} | Address: {rec.get('Address','')} | Diseases: {str(rec.get('Diseases',''))[:60]}</div>", unsafe_allow_html=True)
     else:
       # V200.16 FIX 1: Only clear once when switching to New Patient, not every rerun - fixes Added Diseases bug
       if st.session_state.get("home_auto_form_mode_prev") != "New Patient":
