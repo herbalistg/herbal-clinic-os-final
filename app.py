@@ -1,3 +1,9 @@
+# ============================================
+# CURRENT APP VERSION: V203
+# V203 - Fixes: 1a-OK-Next 2 popups -> 1 popup only, 1b-Selected Patient - Past History & Personal Info + Age/Gender Info removed (extra - already in Personal Information), 1c-Additional Info Details previous history now shown inside section, 1d-Vital Signs previous history now shown inside section, 1e-Revisit date 1 and 2 shows all patients (Google Sheet has many but app showed 1 - fixed dedup logic + increased max_rows 200->1000), 2-Clinic Overview Last 7 Days TOTAL PATIENTS 2 bug fixed (sheet has more - fixed max_rows + cache 15min->60sec), 3a-Google Sheet PatientID same but DailyNumber/TotalNumber same bug fixed (now PatientID same for same patient but Daily/Total NEW for each visit), 3b-Google Sheet column titles missing in many sheets fixed (ensure headers + added missing sheets)
+# Date: 2026-05-14
+# Previous: V202, V201, V200.22, V200.21
+# ============================================
 # APP VERSION - V200.19.1 SAFE - FIX 1 Each section OK beautiful bubble 1 disappears + error guide which field missing, FIX 2 Save/Proceed 7 bubbles, FIX 3 Address back to Personal Info outside, FIX 4 Only mandatory error not optional + guide, FIX 5a Revisit Search duplicate fix (1 patient 2 times same ID), FIX 5b Age/Gender Related History after Personal Info, FIX 5c Remove Age/Gender Related - Part of Personal Info heading, FIX 5d Previous entries in related section + single row/line with cure/undo per disease, FIX 6 Auto/Home forms Please complete Personal Information error fix - FIX 1 Address in Additional and Mandatory (+ More section), FIX 2 V200.18 Cleanup: No/Count dropdown 1-10+Other, + More (Optional) button, unified white cards, sequential reminder - FIX 1 Throat Sore Throat dropdowns + all Related Questions dropdowns, FIX 2 All forms dropdowns where possible (BP, Pulse, Temp etc), FIX 3 Related Questions after all disease fields complete (Body Part, Disease, No/Count, Duration), FIX 4 Home treatment Personal Info complete but says incomplete fixed + sequential forms reminder, FIX 5 DuplicateElementKey auto_sel_AUTO3 fixed with index - FIX 1 Home treatment Added Diseases functional (clear once not every rerun), FIX 2 Time Out - cache 900s, max_rows 200/50, local first instant, dashboard stats 900s - FIX 1a Phone Blood Marital visible not hidden, 1b Address Height Weight Habits to Additional hidden, 1c Proceed below Additional Questions, 1d Note visible white/yellow text not black on black, 1e Proceed extracts temperament Diet Restrictions Instructions locked, 2 Home treatment Added Diseases functional - Fix NameError get_next_feedback_id, 2a Remove Add buttons, 2b Manual field bigger text_area 150 height, 2c Labels Single Medicines/Formula Medicines only, 3a Revisit Age/Gender previous data visible - V200.4 Structure - 1a Close button below same section, 1b Prescription searchable, 1c Physician manual medicine field, 1d No section opens until Open clicked, 2 Clinic Admin Settings/Formulas, 3 Doctor moved from patient form to App Admin Doctor performance monitor - Fix UnboundLocalError at line 2403 PaymentMethod pay_method undefined - Stream On fix - English only - Close buttons - Prescription sheet searchable + manual - No Final Step - Clinic Settings/Formulas - 2026-09-29 - BASED ON V200.4 STRUCTURE - Fixes: 1- Stream On bug fixed (removed unconditional force_scroll_to_top, pure cached function no session_state access, local-first 600s, max_rows 300/100), 2- Urdu/Roman Urdu text removed (all English only), 3a- Forms next field open option now has Close button below same field to close section (prevent expanded form), 3b- Prescription single and formula medicines from list (Herbs, Pharmacopoeia/Formulas/Medicine sheets) with searchable select + Add button, 3c- Prescription physician manual medicine field, 3d- Save Patient - Final Step section removed (save buttons directly below Billing, no diagnosis banners), 4- Clinic Admin 2 options Settings (clinic dashboard tabs control) and Formulas (add clinic formulas to sheet) - Previous: V200.10, V200.4
 # V200.11 - V200.4 Structure preserved - All 4 tasks fixed
 # Previous: V200.10, V200.9, V200.8, V200.4
@@ -22,7 +28,8 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V202 - Fixes: 1a-Removed extra Format line from Diseases History, 1b-Removed Diseases/Medicines History from after Personal Info, 1c-Diseases inside Diseases section + Vital Signs history inside Vital section + Complaint history inside Complaint section, 1d-Previous record continues if no new change in any section (physician intent), 1e-No bubbles on tab click only OK popup at section end" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+# CURRENT VERSION COMMENT: V202 - Every new app version number must be commented in code - This is V202
+APP_VERSION = "V203 - Fixes: 1a-Only 1 popup on OK-Next (was 2), 1b-Selected Patient Past History block removed (extra), 1c-Additional Info Details previous history now shown, 1d-Vital Signs previous history now shown, 1e-Revisit date search shows all visits (Google Sheet date 1 and 2 has many but app showed 1 - fixed), 2-Clinic Overview Last 7 Days TOTAL PATIENTS count fixed (was 2 but sheet has more - max_rows 200->1000 + cache fix), 3a-PatientID same but DailyNumber TotalNumber same bug fixed (now Daily/Total NEW for each revisit), 3b-Sheet column titles missing fixed" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -424,6 +431,13 @@ SHEET_HEADERS = {
   "AppSettings": ["Key","Value","Date","Status","Description","Category","UpdatedBy"],
   "TabPermissions": ["ID","TabName","PageName","ShowToClinicUser","ShowToHomeUser","Status","UpdatedBy","Date"],
   "UserTabPermissions": ["ID","TabName","PageName","ShowToClinicUser","ShowToHomeUser","Description","Status","Date"],
+  "ClinicFormulas": ["FormulaID","Name","UrduName","Ingredients","Uses","Benefits","Dosage","Method","ClinicName","Status","AddedBy","Date"],
+  "ClinicSettings": ["SettingID","ClinicName","SettingKey","SettingValue","Status","UpdatedBy","Date"],
+  "Offer": ["ID","TitleEN","TitleUR","TitleAR","ContentEN","ContentUR","ContentAR","MainCategory","SubCategory","Status","Date","ClinicName","ExpiryDate","Discount"],
+  "Inventory": ["ItemID","ItemName","Category","Quantity","Unit","PurchasePrice","SalePrice","ExpiryDate","Supplier","ClinicName","Status","AddedBy","Date"],
+  "BillingReport": ["ReportID","Date","PatientID","Name","Fees","MedicineCharges","Total","Paid","Balance","PaymentMethod","ClinicName","CreatedBy"],
+  "Expenses": ["ExpenseID","Date","Category","Description","Amount","PaymentMethod","ClinicName","AddedBy","Status"],
+  "Appointments": ["AppointmentID","Date","Time","PatientID","PatientName","Phone","Status","ClinicName","CreatedBy","Notes"],
 }
 ALL_SHEETS = list(SHEET_HEADERS.keys())
 # Section division for App Admin
@@ -1208,17 +1222,61 @@ def get_spreadsheet_cached():
     return None
 
 def get_sheet_safe(name):
+  # V203 FIX 3b: Ensure column titles exist in all sheets - if sheet missing or headers missing, create them
   try:
     sh=get_spreadsheet_cached()
-    if not sh: return None
-    try: return sh.worksheet(name)
+    if not sh: 
+      return None
+    try: 
+      ws = sh.worksheet(name)
+      # Check if headers missing
+      try:
+        hdr = ws.row_values(1)
+        expected = SHEET_HEADERS.get(name, [])
+        if not hdr or len(hdr) < 3:
+          if expected:
+            ws.clear()
+            ws.append_row(expected)
+      except:
+        pass
+      return ws
     except:
       try:
         hdr=SHEET_HEADERS.get(name, ["ID"])
         ws=sh.add_worksheet(title=name, rows=1000, cols=len(hdr)+5)
-        ws.append_row(hdr); return ws
-      except: return None
-  except: return None
+        ws.append_row(hdr)
+        return ws
+      except: 
+        return None
+  except: 
+    return None
+
+def ensure_all_sheet_headers():
+  # V203 FIX 3b: Ensure all sheets have column titles - call on startup
+  try:
+    sh=get_spreadsheet_cached()
+    if not sh:
+      return
+    for sheet_name, headers in SHEET_HEADERS.items():
+      try:
+        try:
+          ws = sh.worksheet(sheet_name)
+        except:
+          ws = sh.add_worksheet(title=sheet_name, rows=1000, cols=len(headers)+5)
+          ws.append_row(headers)
+          continue
+        try:
+          existing = ws.row_values(1)
+          if not existing or len(existing) < 3:
+            ws.clear()
+            ws.append_row(headers)
+        except:
+          pass
+      except:
+        pass
+  except:
+    pass
+
 
 def save_to_local_csv(sheet_name, data_dict):
   """V209.6.5 - Ultra simple local save - always succeeds"""
@@ -1356,8 +1414,8 @@ def _get_all_records_cached_fast(sheet_name):
     if not vals or len(vals) < 2:
       return []
     headers = vals[0]
-    # V200.16: Further reduced to prevent Time Out message
-    max_rows = 200 if sheet_name == "New_patient" else 50
+    # V203 FIX 2 & 1e: Increased to 1000 for New_patient to show all patients on date 1 and 2 - previously 200 caused missing patients
+    max_rows = 1000 if sheet_name == "New_patient" else 200
     records = []
     for row in vals[1:max_rows+1]:
       if not any(row):
@@ -1727,7 +1785,7 @@ def section_close_button(key):
     st.rerun()
 
 def section_ok(key, is_revisit=False):
-  # V202 FIX 1e: No bubbles on tab click - only OK popup at same place on Okay, Next
+  # V203 FIX 1a: Only 1 popup on OK-Next click - no double popup - UI good
   c_ok, c_close = st.columns([2,1])
   with c_close:
     if st.button(f"Close {key}", key=f"close_btn_{key}_{st.session_state.form_version}_v200_19", type="secondary"):
@@ -1778,7 +1836,6 @@ def section_ok(key, is_revisit=False):
           nxt=order[idx+1]
           st.session_state.section_opened[nxt]=False
           st.session_state.section_unlocked[nxt]=True
-      st.markdown(f"<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:10px;padding:12px;text-align:center;margin:10px 0;'><b style='color:#2E7D5B;'>✅ {key.title()} Complete - OK</b></div>", unsafe_allow_html=True)
       show_success_popup(message=f"{key.title()} Complete")
       import time
       time.sleep(0.5)
@@ -1948,9 +2005,10 @@ def render_patient_form(is_revisit=False):
   daily_num, total_num = get_next_numbers(st.session_state.clinic_name)
   prev_bal=0.0
   if is_revisit and st.session_state.revisit_data:
+    # V203 FIX 3a: PatientID same for same patient (link visits), but DailyNumber and TotalNumber NEW for each visit - previously same was bug
     pid=str(st.session_state.revisit_data.get("PatientID",""))
-    daily_num=st.session_state.revisit_data.get("DailyNumber", daily_num)
-    total_num=st.session_state.revisit_data.get("TotalNumber", total_num)
+    # Keep PatientID same, but DailyNumber and TotalNumber are NEW from get_next_numbers (don't reuse old)
+    # daily_num and total_num already generated as new above - don't overwrite with old
     try:
       prev_bal=float(str(st.session_state.revisit_data.get("Balance","0") or 0).replace(",","") or 0)
     except: prev_bal=0.0
@@ -2021,68 +2079,52 @@ def render_patient_form(is_revisit=False):
         st.rerun()
     else:
       st.markdown("<div class='heading-h5'>Additional Info Details</div>", unsafe_allow_html=True)
+      # V203 FIX 1c: Additional Info Details previous history show
+      if is_revisit and st.session_state.revisit_data:
+        r = st.session_state.revisit_data
+        add_fields = []
+        for label, key in [("Height","Height"),("Weight","Weight"),("CNIC","CNIC"),("Emergency Phone","EmergencyPhone"),("Referral","Referral"),("Allergy","Allergy"),("Habits","Habits"),("Blood Group","BloodGroup")]:
+          val = str(r.get(key,"") or "").strip()
+          if val and val.lower() not in ['select','']:
+            add_fields.append(f"{label}: {val}")
+        if add_fields:
+          add_line = " | ".join(add_fields)
+          st.markdown(f"<div style='background:#E8F5E9;border:1.5px solid #2E7D5B;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Previous Additional Info - For Reference (Last Visit):</b><br>{add_line}</div>", unsafe_allow_html=True)
       st.markdown("<div style='background:#FFF9C4;border:1.5px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Note:</b> Optional details - Address, Occupation, Marital already filled in Personal Info above</div>", unsafe_allow_html=True)
       c1,c2,c3=st.columns(3)
       with c1:
-        # V200.21 FIX: Address, Occupation, Marital, Blood now in Personal Info - not duplicate here
-        st.text_input("Height (Optional)", key=f"p_height_{fv}", placeholder="e.g., 5.6 ft")
-        st.text_input("Weight (Optional)", key=f"p_weight_{fv}", placeholder="e.g., 70 kg")
+        st.text_input("Height (Optional)", key=f"p_height_{fv}", value=get_prefill("Height",""), placeholder="e.g., 5.6 ft")
+        st.text_input("Weight (Optional)", key=f"p_weight_{fv}", value=get_prefill("Weight",""), placeholder="e.g., 70 kg")
       with c2:
         st.text_input("CNIC (Optional)", key=f"p_cnic_{fv}", value=get_prefill("CNIC",""), placeholder="CNIC - Number")
-        st.text_input("Emergency Phone (Optional)", key=f"p_emergency_{fv}", placeholder="Emergency Phone")
+        st.text_input("Emergency Phone (Optional)", key=f"p_emergency_{fv}", value=get_prefill("EmergencyPhone",""), placeholder="Emergency Phone")
       with c3:
-        st.text_input("Referral (Optional)", key=f"p_referral_{fv}", placeholder="Referral - Text")
+        st.text_input("Referral (Optional)", key=f"p_referral_{fv}", value=get_prefill("Referral",""), placeholder="Referral - Text")
         st.selectbox("Allergy (Optional)", LISTS["allergy"], key=f"p_allergy_{fv}")
       if st.button("Close ✕", key=f"hide_extra_{fv}_v200_19"):
         st.session_state[show_extra_key] = False
         st.rerun()
     section_ok("personal", is_revisit=is_revisit)
 
-  # V202 FIX 1a,1b: Selected Patient - Personal Info Only - BELOW Personal Info
-  if is_revisit and st.session_state.revisit_data:
-    r = st.session_state.revisit_data
-    fields = []
-    def add_field(label, key, alt_keys=[]):
-      val = str(r.get(key,"") or "").strip()
-      if not val:
-        for ak in alt_keys:
-          val = str(r.get(ak,"") or "").strip()
-          if val:
-            break
-      if val and val.lower() not in ['select','none','n/a','']:
-        fields.append(f"{label}: {val}")
-    add_field("Name", "Name")
-    add_field("Age", "Age")
-    add_field("Gender", "Gender")
-    add_field("Phone", "Phone")
-    add_field("Address", "Address")
-    add_field("CNIC", "CNIC")
-    add_field("Last Date", "Date")
-    add_field("Chief Complaint", "ChiefComplaint")
-    add_field("Past History", "PastHistory")
-    add_field("Family History", "FamilyHistory")
-    add_field("Occupation", "Occupation")
-    add_field("Marital Status", "MaritalStatus")
-    add_field("Blood Group", "BloodGroup", ["Blood"])
-    continuous_line = " | ".join(fields) if fields else "No previous data"
-    st.markdown("<div class='heading-h4'>Selected Patient - Past History & Personal Info + Age/Gender Info</div>", unsafe_allow_html=True)
-    with st.container(border=True):
-      st.markdown(f"<div style='background:#F1F7F3;border:1.5px solid #2E7D5B;border-radius:10px;padding:12px;font-size:13px;line-height:1.6;'><b>Patient History (Personal Info Only):</b><br>{continuous_line}</div>", unsafe_allow_html=True)
-  # V202 FIX 1b: Diseases/Medicines History removed from here
+  # V203 FIX 1b: Selected Patient - Past History & Personal Info + Age/Gender Info removed - extra because Personal Information section already shows same info
+  # This section is removed - no display here as per user request
 
 
   with st.container(border=True):
     if section_heading_clickable("vital","Vital Signs"):
+      # V203 FIX 1d: Vital Signs previous history - always show inside section
       if is_revisit and st.session_state.revisit_data:
         r = st.session_state.revisit_data
         vital_fields = []
         for label, key in [("BP","BP"),("Weight","Weight"),("Sleep","SleepPattern"),("Temperature","Temperature"),("Pulse","Pulse"),("Appetite","Appetite"),("Temperament","Temperament"),("Bowel","BowelMovement")]:
           val = str(r.get(key,"") or "").strip()
-          if val and val.lower() not in ['select','']:
+          if val and val.lower() not in ['select','', 'none']:
             vital_fields.append(f"{label}: {val}")
         if vital_fields:
           vital_line = " | ".join(vital_fields)
-          st.markdown(f"<div style='background:#E8F5E9;border:1.5px solid #2E7D5B;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Previous Vital Signs - For Reference (Last Visit):</b><br>{vital_line}</div>", unsafe_allow_html=True)
+          st.markdown(f"<div style='background:#E8F5E9;border:1.5px solid #2E7D5B;border-radius:8px;padding:8px;margin-bottom:8px;font-size:13px;'><b>Previous Vital Signs - For Reference (Last Visit - If no new change, previous continues):</b><br>{vital_line}</div>", unsafe_allow_html=True)
+        else:
+          st.caption("No previous vital signs - Enter new")
       c1,c2,c3=st.columns(3)
       with c1:
         st.selectbox("BP", LISTS["bp"], key=f"v_bp_{fv}")
@@ -3236,11 +3278,11 @@ def revisit_page():
   
   if s_name or s_phone or s_date or s_address:
     filt=[]
+    # V203 FIX 1e: If searching by date, show ALL visits on that date (not deduplicated) - Google Sheet has many patients on date 1 and 2
+    is_date_search = bool(s_date and s_date.strip())
     seen_ids = set()
     for r in my:
       pid = str(r.get("PatientID","")).strip()
-      if not pid or pid in seen_ids:
-        continue
       match=False
       if s_name and s_name.lower() in str(r.get("Name","")).lower():
         match=True
@@ -3251,16 +3293,27 @@ def revisit_page():
       if s_address and s_address.lower() in str(r.get("Address","")).lower():
         match=True
       if match:
-        filt.append(r)
-        seen_ids.add(pid)
-    # V200.20 FIX 9a: Deduplicate by PatientID - 1 patient 2 times same ID fix
-    unique_by_id = {}
-    for r in filt:
-      pid = str(r.get("PatientID","")).strip()
-      if pid not in unique_by_id:
-        unique_by_id[pid] = r
-    filt = list(unique_by_id.values())
-    st.write(f"Found {len(filt)} unique patients (Duplicate fixed - Same ID shown once)")
+        if is_date_search:
+          # For date search, show all records on that date - don't dedup by PatientID
+          filt.append(r)
+        else:
+          # For name/phone/address search, show unique patients
+          if pid and pid not in seen_ids:
+            filt.append(r)
+            seen_ids.add(pid)
+          elif not pid:
+            filt.append(r)
+    if is_date_search:
+      st.write(f"Found {len(filt)} visits on date {s_date} (All visits shown - Google Sheet has many)")
+    else:
+      # Deduplicate by PatientID for non-date searches
+      unique_by_id = {}
+      for r in filt:
+        pid = str(r.get("PatientID","")).strip()
+        if pid not in unique_by_id:
+          unique_by_id[pid] = r
+      filt = list(unique_by_id.values())
+      st.write(f"Found {len(filt)} unique patients (Duplicate fixed - Same ID shown once)")
     for idx, r in enumerate(filt[:15]):
       with st.container(border=True):
         st.write(f"{r.get('Name','')} | Date: {r.get('Date','')} | Address: {r.get('Address','')} | Phone: {r.get('Phone','')} | ID: {r.get('PatientID','')} | Balance: Rs {r.get('Balance','0')}")
@@ -3735,11 +3788,12 @@ def dashboard_welcome_page():
   clinic_heading_banner_dashboard_only()
   top_nav_dashboard()
   
-  # V200.16 FIX 2: Time Out fix - Cache dashboard stats for 15 minutes to prevent heavy sheet read
+  # V203 FIX 2: Clinic Overview Last 7 Days - fix cache and show all patients (Google Sheet has more than 2)
+  # Reduced cache to 60 sec and use full records (1000 rows) to show accurate TOTAL PATIENTS
   import time
   now_ts = time.time()
   last_ts = st.session_state.get("dashboard_stats_ts", 0)
-  if now_ts - last_ts < 900 and "dashboard_stats_cache" in st.session_state:
+  if now_ts - last_ts < 60 and "dashboard_stats_cache" in st.session_state:
     stats = st.session_state.dashboard_stats_cache
     total_patients = stats.get("total_patients", 0)
     today_patients = stats.get("today_patients", 0)
