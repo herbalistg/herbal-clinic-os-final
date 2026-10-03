@@ -1,11 +1,13 @@
 # ============================================
 # Herbal Clinic OS
-# VERSION: V1.5 - Complete V1 Step - Create Missing Sheets
+# VERSION: V1.6 - Mute Signup/Signin + Robust Sheet Creator
 # Date: 2026-10-03
-# Base: V1.4 (13/20 exist - reported by user)
-# Goal: Make it 20/20 in one click, then V1 step complete -> Move to V2
-# Same Sheet ID & secrets.toml - No change
-# Login Free for testing
+# Base: V1.5 (13/20 exist)
+# Fixes in V1.6:
+#  - Signup/Signin MUTED - No login screen at all until V2.5
+#  - Login Free 100% - Testing mode only
+#  - Robust Create Missing Sheets - shows exact error if fails
+#  - Same Sheet ID & secrets.toml
 # ============================================
 
 import streamlit as st
@@ -20,7 +22,7 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V1.5 - Complete V1 (20/20)"
+APP_VERSION = "V1.6 - Muted Auth + Sheet Fix"
 
 st.set_page_config(page_title=APP_VERSION, page_icon="🌿", layout="wide", initial_sidebar_state="collapsed")
 
@@ -92,78 +94,144 @@ def get_gspread_client():
   except Exception as e:
     return None, str(e)
 
+# ---------- SESSION - MUTED AUTH ----------
+if "lang" not in st.session_state: st.session_state.lang="en"
+# MUTED: No login needed at all
+st.session_state.logged_in=True
+st.session_state.username="Testing Hakeem - Auth Muted"
+st.session_state.testing_mode=True
+
 def main():
+  st.markdown(f"""
+  <style>
+  .card{{background:white;border:1px solid #e0e0e0;border-radius:14px;padding:14px;margin-bottom:10px;}}
+  .test-banner{{background:#e8f5e9;border:2px solid #4caf50;border-radius:10px;padding:12px;text-align:center;font-weight:bold;color:#2e7d32;}}
+  .muted-banner{{background:#e3f2fd;border:2px solid #1976d2;border-radius:10px;padding:10px;text-align:center;}}
+  </style>
+  <div class='test-banner'>🧪 V1.6 - TESTING MODE | Signup / Signin MUTED | سائن اپ / سائن ان بند ہے</div>
+  <div class='muted-banner'>🔇 Auth Muted Till V2.5 | No Login Required | جب تک چیکنگ کی باری نہیں آتی</div>
+  """, unsafe_allow_html=True)
+  
   st.markdown(f"### 🌿 Herbal Clinic OS | {APP_VERSION}")
-  st.markdown("<div style='background:#fff3e0;border:2px dashed #ff9800;border-radius:10px;padding:10px;text-align:center;'>🧪 TESTING MODE - Login Free | V1 Step Final</div>", unsafe_allow_html=True)
   
   sid=get_spreadsheet_id()
   client,msg=get_gspread_client()
   
-  c1,c2=st.columns(2)
-  with c1: st.info(f"Sheet ID: {sid[:30]+'...' if sid else 'Missing'}")
-  with c2: st.info(f"Client: {msg}")
+  col1,col2=st.columns(2)
+  with col1: st.success(f"Sheet ID: {sid[:30]+'...' if sid else 'Missing'}") if sid else st.error("Sheet ID Missing")
+  with col2: st.success(f"Client: {msg}") if client else st.error(f"Client: {msg}")
 
   st.markdown("---")
-  st.markdown("#### V1 Step Result: 13/20 -> 20/20 Karna hai")
+  tab1,tab2=st.tabs(["📊 13/20 -> 20/20 Fix","ℹ️ Info"])
 
-  if st.button("✅ Check Current Status (13/20)", key="check_v15"):
-    if not client or not sid:
-      st.error("Sheet not connected")
-    else:
-      sh=client.open_by_key(sid)
-      existing=[ws.title for ws in sh.worksheets()]
-      results=[]
-      for s in ALL_SHEETS:
-        results.append({"Sheet": s, "Exists": "Yes" if s in existing else "No"})
-      df=pd.DataFrame(results)
-      st.dataframe(df, use_container_width=True)
-      yes_count=len([r for r in results if r["Exists"]=="Yes"])
-      st.metric("Existing Sheets", f"{yes_count} / {len(results)}")
-      st.session_state["existing"] = existing
-
-  if st.button("🚀 Create Missing 7 Sheets Now (One Click)", type="primary", key="create_missing_v15"):
-    if not client or not sid:
-      st.error("Cannot create - Sheet not connected")
-    else:
-      sh=client.open_by_key(sid)
-      existing=[ws.title for ws in sh.worksheets()]
-      missing=[s for s in ALL_SHEETS if s not in existing]
-      st.write(f"Missing: {missing}")
-      progress=st.progress(0)
-      for i, sheet_name in enumerate(missing):
+  with tab1:
+    st.markdown("#### Current: 13 / 20 - Ab 20/20 karte hain")
+    
+    if st.button("Check Konsi 7 Sheets Missing Hain?", key="check_missing_v16"):
+      if not client or not sid:
+        st.error("Sheet not connected")
+      else:
         try:
-          headers=SHEET_HEADERS[sheet_name]
-          ws=sh.add_worksheet(title=sheet_name, rows=1000, cols=len(headers)+5)
-          ws.append_row(headers)
-          st.write(f"✅ Created: {sheet_name}")
+          sh=client.open_by_key(sid)
+          existing=[ws.title for ws in sh.worksheets()]
+          missing=[s for s in ALL_SHEETS if s not in existing]
+          present=[s for s in ALL_SHEETS if s in existing]
+          st.write(f"**Present ({len(present)}):** {present}")
+          st.write(f"**Missing ({len(missing)}):** {missing}")
+          st.session_state["missing"] = missing
+          df=pd.DataFrame([{"Sheet": s, "Exists": "Yes" if s in existing else "No"} for s in ALL_SHEETS])
+          st.dataframe(df, use_container_width=True)
+          st.metric("Status", f"{len(present)} / {len(ALL_SHEETS)}")
         except Exception as e:
-          st.write(f"❌ Failed {sheet_name}: {e}")
-        progress.progress((i+1)/len(missing))
-        time.sleep(0.5)
-      st.success(f"Done! Created {len(missing)} sheets. Now you have 20/20")
+          st.error(f"Error: {e}")
+
+    st.markdown("---")
+    st.markdown("#### One By One Banao (Zyada Safe)")
+    
+    missing = st.session_state.get("missing", [s for s in ALL_SHEETS if s not in []]) # placeholder
+    # Get missing again
+    if client and sid:
+      try:
+        sh=client.open_by_key(sid)
+        existing=[ws.title for ws in sh.worksheets()]
+        missing=[s for s in ALL_SHEETS if s not in existing]
+      except:
+        missing=[]
+
+    if missing:
+      st.warning(f"Missing {len(missing)} sheets - Neeche har sheet ka alag button hai, ek ek karke banao")
+      for sheet_name in missing:
+        colA,colB=st.columns([3,1])
+        with colA: st.write(f"• {sheet_name} - Headers: {len(SHEET_HEADERS[sheet_name])} cols")
+        with colB:
+          if st.button(f"Create {sheet_name}", key=f"create_{sheet_name}_v16"):
+            try:
+              sh=client.open_by_key(sid)
+              headers=SHEET_HEADERS[sheet_name]
+              # Check if already exists (race)
+              existing_titles=[ws.title for ws in sh.worksheets()]
+              if sheet_name in existing_titles:
+                st.success(f"{sheet_name} already exists!")
+              else:
+                ws=sh.add_worksheet(title=sheet_name, rows=1000, cols=len(headers)+2)
+                ws.append_row(headers)
+                st.success(f"✅ Created: {sheet_name}")
+                time.sleep(0.5)
+                st.rerun()
+            except Exception as e:
+              st.error(f"❌ Failed {sheet_name}: {e}")
+              st.write("Error details:", str(e))
+              # Common error: permission
+              if "permission" in str(e).lower() or "403" in str(e):
+                st.error("Permission Error: Google Sheet ko Service Account Email par Editor banana hoga!")
+                try:
+                  creds_email = dict(st.secrets["gcp_service_account"])["client_email"] if "gcp_service_account" in st.secrets else "service account"
+                  st.code(f"Sheet -> Share -> Add {creds_email} as Editor")
+                except: pass
+    else:
+      st.success("All 20 sheets exist! V1 Complete ✅")
       st.balloons()
-      # Recheck
-      sh=client.open_by_key(sid)
-      existing2=[ws.title for ws in sh.worksheets()]
-      yes2=len([s for s in ALL_SHEETS if s in existing2])
-      st.metric("New Status", f"{yes2} / {len(ALL_SHEETS)}")
 
-  st.markdown("---")
-  st.markdown("""
-  **V1 Step - Summary:**
-  - V1 = Clean Base ✅
-  - V1.1 = 22 Sheets Check - 13/20 mila ✅
-  - V1.2 = Login (ab free) ✅
-  - V1.3 = Login Free ✅
-  - V1.4 = AttrDict Fix - 13/20 fix hua ✅
-  - **V1.5 = 20/20 Complete** <- Ab is par hain
-  
-  **Iske baad V1 Step Complete!**
-  Phir **V2** shuru karenge:
-  - V2 = Initial Page Final + Dashboard + Patient Entry Basic
-  """)
+    st.markdown("---")
+    if st.button("🚀 Try Create All Missing Together (One Click)", type="primary", key="create_all_v16"):
+      if not client or not sid:
+        st.error("Sheet not connected")
+      else:
+        try:
+          sh=client.open_by_key(sid)
+          existing=[ws.title for ws in sh.worksheets()]
+          missing=[s for s in ALL_SHEETS if s not in existing]
+          if not missing:
+            st.success("Already 20/20!")
+          else:
+            for sheet_name in missing:
+              try:
+                headers=SHEET_HEADERS[sheet_name]
+                ws=sh.add_worksheet(title=sheet_name, rows=1000, cols=len(headers)+2)
+                ws.append_row(headers)
+                st.write(f"✅ {sheet_name}")
+              except Exception as e:
+                st.write(f"❌ {sheet_name}: {e}")
+            st.success(f"Done! Try checking again")
+            time.sleep(1)
+            st.rerun()
+        except Exception as e:
+          st.error(f"Error: {e}")
 
-  if st.button("Next -> V2 Start Karna Hai?", key="next_v2"):
-    st.info("V1 Complete! Ab V2 = Patient Basic Form + Knowledge Base Start karenge. Aap bolein to V2 bana dun.")
+  with tab2:
+    st.markdown("""
+    **V1.6 me kya kiya:**
+    - Signup / Signin 100% Muted - Koi login screen nahi
+    - Direct Dashboard - Testing ke liye
+    - Har missing sheet ka alag button - ek ek karke banao, safe hai
+    - Permission error ka hal bhi dikhayega
+    
+    **Agar ab bhi 13/20 rahe to:**
+    1. Google Sheet kholen -> Share button -> Service Account email ko Editor banayen
+    2. Service Account email aapke secrets.toml me `client_email` me hai
+    3. Uske baad Create button dabayen
+    
+    **Next V2 = Jab 20/20 ho jaye to Initial Page + Patient Basic**
+    """)
 
 if __name__=="__main__": main()
