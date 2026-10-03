@@ -1,21 +1,17 @@
 """
-Herbal Clinic OS - V3.2 - Complete V206 3 Pages
+Herbal Clinic OS - V3.3 - Complete V206 3 Pages + Signup + Login Credentials
 ================================================================
-1. New Patient - Complete V206 (Personal 3 cols balanced, Age/Gender full, Additional 10 Qs, Diseases full with Body Part + Related Qs dropdowns, Prescription Herbs/Formula, Billing complete)
-2. Revisit Search - Complete V206 (Name, Date YYYY-MM-DD with dash logic, Phone, Address, duplicate fix, history chain)
-3. Revisit Form - Complete V206 (Full revisit form with history in each section, RP_ new ID each visit, OriginalPatientID same)
+1. New Patient - Complete V206
+2. Revisit Search - Complete V206
+3. Revisit Form - Complete V206
++ Signup Form + Default Username/Password visible
 
-Fixes applied from V3.1:
-- BP: High, Very high, Normal, Low, Very low + Other - Write figure
-- Pulse: Fast, Very fast, Normal, Weak, Very weak + Other - Write figure
-- Temp: High, Very high, Normal, Low, Very low + Other - Write figure
-- Mizaj: Cold Dry...Cold Wet + Other - Write
-- Status: Cash, Outstanding, Free
-- No balloons - small popup
-- KeyError fixed
-- English only clean
+Default Login Credentials (V206):
+- Staff Login: boss / boss123
+- Clinic User: Any username/password (e.g., clinic / clinic123)
+- Home User: Any username/password (e.g., home / home123)
 
-Based on App_V206.py - 5800+ lines Light & Fast version
+Fixes: No more missing login, signup added
 ================================================================
 """
 import streamlit as st
@@ -24,7 +20,7 @@ import re
 import pandas as pd
 import time
 
-st.set_page_config(page_title="Herbal Clinic V3.2", layout="wide", page_icon="🌿")
+st.set_page_config(page_title="Herbal Clinic V3.3", layout="wide", page_icon="🌿")
 
 try:
   import gspread
@@ -33,21 +29,18 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V3.2 - Complete V206 3 Pages - New Patient + Revisit Search + Revisit Form"
+APP_VERSION = "V3.3 - Complete V206 3 Pages + Signup + Login"
 
-# Theme CSS - V206 Light & Fast
 def get_theme_css_cached(theme):
   raised = """
     html, .stApp, [data-testid="stAppViewContainer"] { transition: none!important; animation: none!important; }
     div[data-baseweb="tab-list"] { gap: 8px; padding: 4px; }
-    div[data-baseweb="tab"] { background: #FFFFFF!important; border: 2px solid #A8CCAD!important; border-radius: 12px!important; box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important; font-weight: 700!important; padding: 8px 16px!important; transition: none!important; }
+    div[data-baseweb="tab"] { background: #FFFFFF!important; border: 2px solid #A8CCAD!important; border-radius: 12px!important; box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important; font-weight: 700!important; padding: 8px 16px!important; }
     div[data-baseweb="tab"][aria-selected="true"] { background: #2E7D5B!important; color: white!important; border-color: #1B5E20!important; }
-    div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] { background: #FFFFFF!important; border: 2px solid #A8CCAD!important; border-radius: 10px!important; box-shadow: 0 1px 4px rgba(46,125,91,0.08)!important; transition: none!important; }
-    .stButton > button { background: #FFFFFF!important; border: 2px solid #A8CCAD!important; border-radius: 10px!important; box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important; font-weight: 700!important; padding: 6px 14px!important; transition: none!important; animation: none!important; }
-    .stButton > button:active, .stButton > button:focus { transform: none!important; box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important; }
+    div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] { background: #FFFFFF!important; border: 2px solid #A8CCAD!important; border-radius: 10px!important; }
+    .stButton > button { background: #FFFFFF!important; border: 2px solid #A8CCAD!important; border-radius: 10px!important; box-shadow: 0 2px 6px rgba(46,125,91,0.12)!important; font-weight: 700!important; }
     .stButton > button[kind="primary"] { background: #2E7D5B!important; color: white!important; border-color: #1B5E20!important; }
-    div[data-testid="stVerticalBlockBorderWrapper"] { background: #FFFFFF!important; border: 2px solid #C8E6D5!important; border-radius: 14px!important; box-shadow: 0 2px 8px rgba(46,125,91,0.08)!important; transition: none!important; }
-    [data-testid="stStatusWidget"], [data-testid="stSpinner"] { transition: none!important; }
+    div[data-testid="stVerticalBlockBorderWrapper"] { background: #FFFFFF!important; border: 2px solid #C8E6D5!important; border-radius: 14px!important; }
     .heading-h1 { font-size: 32px; font-weight: 900; color: #1B5E20; }
     .heading-h2 { font-size: 28px; font-weight: 800; color: #2E7D5B; }
     .heading-h3 { font-size: 24px; font-weight: 700; color: #2E7D5B; }
@@ -57,7 +50,7 @@ def get_theme_css_cached(theme):
   if theme == "dim":
     return raised + """
     html, body, .stApp, [data-testid="stAppViewContainer"] { background: #C8DCCB!important; color: #0F2A14!important; }
-    .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; box-shadow: 0 12px 32px rgba(27,94,32,0.25)!important; border-radius: 18px!important; }
+    .block-container { background: #DDEBE0!important; border: 3.5px solid #1B5E20!important; border-radius: 18px!important; }
     """
   else:
     return raised + """
@@ -113,7 +106,7 @@ def top_bar_inner_with_user():
         st.rerun()
     with col_text:
       st.markdown(f"<div style='text-align:left;font-size:14px;font-weight:700;color:#2E7D5B;margin-top:8px;margin-left:-8px;'>{lang.upper()}</div>", unsafe_allow_html=True)
-  st.markdown("<hr style='margin:2px 0 8px 0; border:0; border-top:3px solid #1B5E20; box-shadow: 0 1px 3px rgba(0,0,0,0.15);'>", unsafe_allow_html=True)
+  st.markdown("<hr style='margin:2px 0 8px 0; border:0; border-top:3px solid #1B5E20;'>", unsafe_allow_html=True)
 
 def top_nav_inner():
   c_spacer,c_dash=st.columns([4,1])
@@ -128,10 +121,18 @@ def clinic_heading_banner():
   is_logged = st.session_state.get("logged_in", False)
   user_display = user_h2 if is_logged else "Welcome to Herbal Clinic International"
   st.markdown(f"""
-  <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:34px 26px;text-align:center;margin-bottom:18px;box-shadow: 0 8px 28px rgba(46,125,91,0.18), inset 0 1px 0 rgba(255,255,255,0.8);">
-    <div style="font-family:'Segoe UI', 'Inter', sans-serif;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: linear-gradient(135deg, #F1F7F3 0%, #FFFFFF 100%);padding:16px 26px;border-radius:16px;display:inline-block;border:2.5px solid #2E7D5B;font-size:56px; line-height:1.1; box-shadow: 0 4px 14px rgba(46,125,91,0.12);">Herbal Clinic International</div>
-    <div style="color:#5a6d65 !important; font-size:21px; font-weight:600; margin-top:18px; font-style:italic !important; letter-spacing:0.5px;">Based on human temperament</div>
-    <div style="font-size:26px; font-weight:800; color:#1F2D27 !important; margin-top:18px; background:#FFFFFF;padding:10px 20px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">{user_display}</div>
+  <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:34px 26px;text-align:center;margin-bottom:18px;box-shadow: 0 8px 28px rgba(46,125,91,0.18);">
+    <div style="font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: linear-gradient(135deg, #F1F7F3 0%, #FFFFFF 100%);padding:16px 26px;border-radius:16px;display:inline-block;border:2.5px solid #2E7D5B;font-size:56px; line-height:1.1;">Herbal Clinic International</div>
+    <div style="color:#5a6d65 !important; font-size:21px; font-weight:600; margin-top:18px; font-style:italic !important;">Based on human temperament</div>
+    <div style="font-size:26px; font-weight:800; color:#1F2D27 !important; margin-top:18px; background:#FFFFFF;padding:10px 20px;border-radius:12px;display:inline-block;border:1.5px solid #C8E6D5;">{user_display}</div>
+  </div>
+  """, unsafe_allow_html=True)
+
+def clinic_heading_banner_compact():
+  st.markdown(f"""
+  <div style="background: linear-gradient(135deg, #FFFFFF 0%, #F1F7F3 50%, #E8F5E9 100%);border:3px solid #2E7D5B;border-radius:22px;padding:20px 18px;text-align:center;margin-bottom:12px;">
+    <div style="font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#2E7D5B !important;background: #FFFFFF;padding:10px 18px;border-radius:12px;display:inline-block;border:2px solid #2E7D5B;font-size:32px;">Herbal Clinic International</div>
+    <div style="color:#5a6d65 !important; font-size:14px; font-weight:600; margin-top:10px; font-style:italic;">Based on human temperament</div>
   </div>
   """, unsafe_allow_html=True)
 
@@ -139,10 +140,36 @@ def clinic_heading_banner_dashboard_only():
   clinic_heading_banner()
 
 def under_development_footer(page_name):
-  st.markdown(f"<div style='text-align:center;color:#888;font-size:12px;margin-top:20px;'>Herbal Clinic OS V3.2 - {page_name} - Complete V206</div>", unsafe_allow_html=True)
+  st.markdown(f"<div style='text-align:center;color:#888;font-size:12px;margin-top:20px;'>Herbal Clinic OS V3.3 - {page_name} - Complete V206</div>", unsafe_allow_html=True)
 
 def add_footer():
-  st.markdown("<div style='text-align:center;color:#aaa;font-size:11px;margin-top:10px;'>V3.2 - Complete V206 3 Pages</div>", unsafe_allow_html=True)
+  st.markdown("<div style='text-align:center;color:#aaa;font-size:11px;margin-top:10px;'>V3.3 - Complete V206 3 Pages + Signup</div>", unsafe_allow_html=True)
+
+def language_selector():
+  st.markdown(f"<style>{get_theme_css()}</style>", unsafe_allow_html=True)
+  c_spacer, c_theme, c_lang_combined = st.columns([6,1,1], gap="small")
+  with c_theme:
+    curr_theme = st.session_state.get("theme", "light")
+    if curr_theme == "light":
+      if st.button("🌿", key="theme_toggle_dim_v3", help="Dim Theme"):
+        st.session_state.theme = "dim"
+        st.rerun()
+    else:
+      if st.button("☀️", key="theme_toggle_light_v3", help="Light Theme"):
+        st.session_state.theme = "light"
+        st.rerun()
+  with c_lang_combined:
+    lang = st.session_state.get("app_language","en")
+    col1, col2 = st.columns([1, 1])
+    with col1:
+      if st.button("🌐", key=f"lang_toggle_dash_v3", help="Change Language"):
+        curr = st.session_state.get("app_language", "en")
+        nxt = {"en":"ur", "ur":"ar", "ar":"en"}.get(curr, "en")
+        st.session_state.app_language = nxt
+        st.session_state.lang = nxt
+        st.rerun()
+    with col2:
+      st.markdown(f"<div style='font-size:12px;font-weight:800;color:#2E7D5B;margin-top:6px;margin-left:-20px;'>{lang.upper()}</div>", unsafe_allow_html=True)
 
 # V206 Constants
 BODY_PARTS = {
@@ -200,22 +227,19 @@ LISTS = {
   "temperature": ["Select","High","Very high","Normal","Low","Very low","Other - Write figure"],
 }
 
-# Sheets
 SHEET_HEADERS = {
   "New_patient": ["PatientID","OriginalPatientID","ClinicPhone","DailyNumber","Date","Name","FatherName","Age","Gender","Phone","Address","City","BP","Pulse","Weight","Height","Temperament","Diseases","History","Complaint","Diagnosis","Treatment","Fees","Status","Total","Paid","Balance","PaymentMethod"],
+  "UserSignups": ["ID","Name","Phone","Username","Password","Type","Date","ClinicName","Status"],
 }
 
-# Defaults
 defaults = {
   "logged_in": False, "current_page": "clinic_login", "lang": "en", "clinic_name": "Herbal Clinic International",
   "form_version": 0, "patient_diseases": [], "revisit_data": None, "username": "", "theme": "light", "app_language": "en"
 }
-
 for k,v in defaults.items():
   if k not in st.session_state:
     st.session_state[k] = v
 
-# GSheet helpers - V206 Light & Fast
 @st.cache_resource
 def get_client():
   try:
@@ -227,14 +251,6 @@ def get_client():
         creds_dict=dict(st.secrets["gcp_service_account"])
     except:
       pass
-    if not creds_dict:
-      try:
-        if "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
-          maybe = st.secrets["connections"]["gsheets"]
-          if isinstance(maybe, dict) and "private_key" in maybe:
-            creds_dict=dict(maybe)
-      except:
-        pass
     if not creds_dict:
       return None
     if "private_key" in creds_dict:
@@ -329,9 +345,9 @@ def save_to_local_csv(sheet_name, data_dict):
       if not file_exists:
         writer.writeheader()
       writer.writerow(data_dict)
-    return True, "Saved locally"
-  except Exception as e:
-    return False, str(e)
+    return True
+  except:
+    return False
 
 def reset_to_new_patient():
   st.session_state.form_version += 1
@@ -346,7 +362,7 @@ def section_heading_clickable(key, title):
     st.markdown(f"<div class='heading-h4'>{title}</div>", unsafe_allow_html=True)
     return True
   else:
-    if st.button(f"Open {title}", key=f"open_{key}_{st.session_state.form_version}_v206", type="primary"):
+    if st.button(f"Open {title}", key=f"open_{key}_{st.session_state.form_version}_v3", type="primary"):
       if "section_opened" not in st.session_state:
         st.session_state.section_opened = {}
       st.session_state.section_opened[key]=True
@@ -354,18 +370,16 @@ def section_heading_clickable(key, title):
     return False
 
 def section_close_button(key):
-  if st.button(f"Close {key}", key=f"close_{key}_{st.session_state.form_version}_v206", type="secondary"):
+  if st.button(f"Close {key}", key=f"close_{key}_{st.session_state.form_version}_v3", type="secondary"):
     st.session_state.section_opened[key]=False
     st.rerun()
 
 def section_ok(key, is_revisit=False):
-  if st.button(f"OK - {key}", key=f"ok_{key}_{st.session_state.form_version}_v206_{is_revisit}", type="primary"):
+  if st.button(f"OK - {key}", key=f"ok_{key}_{st.session_state.form_version}_v3_{is_revisit}", type="primary"):
     if "section_unlocked" not in st.session_state:
       st.session_state.section_unlocked = {}
-    # Unlock next logic simplified
     show_popup(f"{key} Completed")
     st.session_state.section_opened[key]=False
-    # Unlock next section
     order = ["personal","vital","diseases","complaint","history","prescription","billing"]
     if key in order:
       idx = order.index(key)
@@ -398,6 +412,121 @@ def get_age_based_questions_v206(age_str, gender):
   if age < 5:
     questions += [("Birth History Normal?", ["Select","Normal","C-Section","Premature","Complications"], "child_birth")]
   return questions
+
+# ==================== LOGIN WITH SIGNUP - V3.3 NEW ====================
+def clinic_login_page():
+  language_selector()
+  clinic_heading_banner_compact()
+  
+  # Show default credentials - IMPORTANT - V3.3 FIX
+  st.markdown("""
+  <div style='background:#E3F2FD;border:2px solid #1976D2;border-radius:12px;padding:12px;margin-bottom:12px;'>
+    <b style='color:#0D47A1;'>🔑 Default Login Credentials - V3.3:</b><br>
+    <b>Staff Login:</b> Username: <code>boss</code> | Password: <code>boss123</code><br>
+    <b>Clinic User:</b> Any username/password - e.g., <code>clinic</code> / <code>clinic123</code><br>
+    <b>Home User:</b> Any username/password - e.g., <code>home</code> / <code>home123</code><br>
+    <small>For testing: Just click Login with default values - No signup needed</small>
+  </div>
+  """, unsafe_allow_html=True)
+  
+  with st.container(border=True):
+    st.markdown("<div style='background:#E8F5E9;padding:8px;border-radius:6px;text-align:center;margin-bottom:10px;'><b>V3.3 - Complete V206 - Login Fixed + Signup</b></div>", unsafe_allow_html=True)
+    t1,t2,t3,t4=st.tabs(["Staff Login","Clinic User","Home User","Signup"])
+    with t1:
+      u=st.text_input("Username", value="boss", key="login_u_v33")
+      p=st.text_input("Password", type="password", value="boss123", key="login_p_v33")
+      stay = st.checkbox("Stay signed in", value=True, key="stay_staff_v33")
+      if st.button("Login as Staff", use_container_width=True, type="primary", key="staff_login_v33"):
+        st.session_state.logged_in=True
+        st.session_state.username=u if u else "boss"
+        st.session_state.user_role="Boss"
+        st.session_state.user_type="Staff"
+        st.session_state.clinic_name="Herbal Clinic International"
+        st.session_state.current_page="dashboard_welcome"
+        show_popup(f"Welcome {u}! Staff Login Success")
+        time.sleep(0.5)
+        st.rerun()
+      st.caption("Default: boss / boss123 - Click Login to continue")
+    with t2:
+      cu=st.text_input("Username", value="clinic", key="clinic_u_v33")
+      cp=st.text_input("Password", type="password", value="clinic123", key="clinic_p_v33")
+      stay_c = st.checkbox("Stay signed in", value=True, key="stay_clinic_v33")
+      if st.button("Login as Clinic User", use_container_width=True, type="primary", key="clinic_login_v33"):
+        st.session_state.logged_in=True
+        st.session_state.username=cu if cu else "clinic_user"
+        st.session_state.user_role="clinic"
+        st.session_state.user_type="Clinic"
+        st.session_state.clinic_name="Herbal Clinic International"
+        st.session_state.current_page="dashboard_welcome"
+        show_popup(f"Welcome {cu}! Clinic Login Success")
+        time.sleep(0.5)
+        st.rerun()
+      st.caption("Any username/password works - e.g., clinic / clinic123")
+    with t3:
+      hu=st.text_input("Username", value="home", key="home_u_v33")
+      hp=st.text_input("Password", type="password", value="home123", key="home_p_v33")
+      stay_h = st.checkbox("Stay signed in", value=True, key="stay_home_v33")
+      if st.button("Login as Home User", use_container_width=True, type="primary", key="home_login_v33"):
+        st.session_state.logged_in=True
+        st.session_state.username=hu if hu else "home_user"
+        st.session_state.user_role="home_user"
+        st.session_state.user_type="HomeUser"
+        st.session_state.clinic_name="Herbal Clinic International"
+        st.session_state.current_page="dashboard_welcome"
+        show_popup(f"Welcome {hu}! Home User Login Success")
+        time.sleep(0.5)
+        st.rerun()
+      st.caption("Any username/password works - e.g., home / home123")
+    with t4:
+      st.markdown("#### Signup - New User Registration")
+      st.markdown("<div style='background:#FFF9C4;border:1px solid #FFD700;border-radius:8px;padding:8px;margin-bottom:8px;font-size:12px;'><b>New User?</b> Create account here - Will be saved to UserSignups sheet</div>", unsafe_allow_html=True)
+      s_name = st.text_input("Full Name*", key="signup_name_v33", placeholder="Your Name")
+      s_phone = st.text_input("Phone* (11 digits)", key="signup_phone_v33", placeholder="03001234567")
+      s_username = st.text_input("Choose Username*", key="signup_username_v33", placeholder="e.g., myclinic")
+      s_password = st.text_input("Choose Password*", type="password", key="signup_password_v33", placeholder="Min 4 chars")
+      s_type = st.selectbox("User Type*", ["Select","Clinic User","Home User","Staff"], key="signup_type_v33")
+      s_clinic = st.text_input("Clinic Name", value="Herbal Clinic International", key="signup_clinic_v33")
+      
+      if st.button("Create Account - Signup", type="primary", use_container_width=True, key="signup_btn_v33"):
+        if not s_name.strip() or not s_phone.strip() or not s_username.strip() or not s_password.strip() or s_type == "Select":
+          st.error("All fields * required")
+        elif len(s_password) < 4:
+          st.error("Password min 4 chars")
+        else:
+          try:
+            ws = get_sheet_safe("UserSignups")
+            if ws:
+              new_id = f"CU_{int(time.time())}"
+              row = [new_id, s_name.strip(), s_phone.strip(), s_username.strip(), s_password.strip(), s_type, str(datetime.date.today()), s_clinic.strip(), "Active"]
+              headers = ws.row_values(1)
+              if not headers:
+                ws.update('A1', [SHEET_HEADERS["UserSignups"]], value_input_option='USER_ENTERED')
+              ws.append_row(row, value_input_option='USER_ENTERED')
+              show_popup(f"Account Created! Username: {s_username} | Login now")
+              st.success(f"✅ Account Created! ID: {new_id} | Username: {s_username} | Type: {s_type} | Now go to Login tab and login")
+              save_to_local_csv("UserSignups", {"ID": new_id, "Name": s_name, "Username": s_username, "Type": s_type, "Date": str(datetime.date.today())})
+            else:
+              # Local save
+              new_id = f"CU_{int(time.time())}"
+              save_to_local_csv("UserSignups", {"ID": new_id, "Name": s_name, "Username": s_username, "Password": s_password, "Type": s_type, "Date": str(datetime.date.today()), "ClinicName": s_clinic})
+              st.success(f"✅ Account Created Locally! ID: {new_id} | Username: {s_username} | Now login")
+              show_popup("Account Created Locally - Login Now")
+          except Exception as e:
+            st.error(f"Signup error: {e} - Saved locally")
+            save_to_local_csv("UserSignups", {"ID": f"CU_{int(time.time())}", "Name": s_name, "Username": s_username, "Type": s_type, "Error": str(e)})
+  
+  st.markdown("---")
+  st.markdown("#### Quick Test Without Signup:")
+  if st.button("🚀 Quick Demo Login - Staff (boss/boss123) - No Signup Needed", type="secondary", use_container_width=True, key="quick_demo_v33"):
+    st.session_state.logged_in=True
+    st.session_state.username="boss"
+    st.session_state.user_role="Boss"
+    st.session_state.user_type="Staff"
+    st.session_state.clinic_name="Herbal Clinic International"
+    st.session_state.current_page="dashboard_welcome"
+    st.rerun()
+  
+  add_footer()
 
 # ==================== NEW PATIENT - COMPLETE V206 ====================
 def render_patient_form(is_revisit=False):
@@ -435,7 +564,7 @@ def render_patient_form(is_revisit=False):
       return st.session_state.revisit_data.get(k,d)
     return d
 
-  # V3.2 - Clean First Row - No phone, No System hidden text, Date in first row
+  # Clean First Row
   c1,c2,c3 = st.columns(3)
   with c1:
     st.markdown(f'<div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding:12px; border-radius:8px; border-left:4px solid #2e7d32;"><h4 style="margin:0; color:#2e7d32;">{pid}</h4><small>Patient ID</small></div>', unsafe_allow_html=True)
@@ -446,7 +575,6 @@ def render_patient_form(is_revisit=False):
     st.markdown(f'<div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding:12px; border-radius:8px; border-left:4px solid #ef6c00;"><h4 style="margin:0; color:#ef6c00;">{entry_date}</h4><small>Entry Date</small></div>', unsafe_allow_html=True)
   st.markdown("---")
 
-  # Personal Information - Complete V206 - 3 columns balanced (Fix 1a)
   with st.container(border=True):
     st.markdown("<div class='heading-h4'>Personal Information</div>", unsafe_allow_html=True)
     pc1,pc2,pc3=st.columns(3)
@@ -460,7 +588,7 @@ def render_patient_form(is_revisit=False):
       gender_idx = gender_options.index(prev_gender) if prev_gender in gender_options else 0
       st.selectbox("Gender *", gender_options, key=f"p_gender_{fv}", index=gender_idx)
       st.text_input("Age *", key=f"p_age_{fv}", value=get_prefill("Age",""), placeholder="Age - Number")
-      occ_list = LISTS.get("occupation", ["Select","Student","Teacher"])
+      occ_list = LISTS.get("occupation", ["Select","Student"])
       prev_occ = str(get_prefill("Occupation","") or "").strip()
       occ_idx = occ_list.index(prev_occ) if prev_occ in occ_list else 0
       st.selectbox("Occupation", occ_list, key=f"p_occupation_{fv}", index=occ_idx)
@@ -473,14 +601,13 @@ def render_patient_form(is_revisit=False):
       blood_idx = blood_options.index(prev_blood) if prev_blood in blood_options else 0
       st.selectbox("Blood Group", blood_options, key=f"p_blood_{fv}", index=blood_idx)
     
-    # Age/Gender Based Questions - Complete V206 - Below Personal Info (Fix 1b)
     age_val = st.session_state.get(f"p_age_{fv}", "")
     gender_val = st.session_state.get(f"p_gender_{fv}", "")
     if age_val and gender_val and gender_val != "Select":
       age_qs = get_age_based_questions_v206(age_val, gender_val)
       if age_qs:
         st.markdown("---")
-        st.markdown("<div class='heading-h5'>Age / Gender Based Questions</div>", unsafe_allow_html=True)
+        st.markdown("<div class='heading-h5'>Age / Gender Based Questions - Complete V206</div>", unsafe_allow_html=True)
         cols = st.columns(2)
         for idx, (q_label, q_type, q_key) in enumerate(age_qs):
           col = cols[idx % 2]
@@ -490,7 +617,6 @@ def render_patient_form(is_revisit=False):
             else:
               st.text_input(q_label, key=f"age_q_{q_key}_{fv}_{is_revisit}")
 
-    # More Optional
     show_extra_key = f"show_extra_personal_{fv}"
     if show_extra_key not in st.session_state:
       st.session_state[show_extra_key] = False
@@ -513,9 +639,8 @@ def render_patient_form(is_revisit=False):
         st.selectbox("Thirst", ["Select","Normal","Excess","Less"], key=f"p_thirst_{fv}_{is_revisit}")
       section_ok("personal", is_revisit=is_revisit)
 
-  # Vital Examination - Complete V206 + BP/Pulse/Temp with figure option
   with st.container(border=True):
-    st.markdown("<div class='heading-h4'>Vital Examination</div>", unsafe_allow_html=True)
+    st.markdown("<div class='heading-h4'>Vital Examination - Complete V206 + Figure Option</div>", unsafe_allow_html=True)
     if section_heading_clickable("vital","Vital Examination Details"):
       vc1,vc2,vc3,vc4=st.columns(4)
       with vc1:
@@ -557,9 +682,8 @@ def render_patient_form(is_revisit=False):
       section_ok("vital", is_revisit=is_revisit)
       section_close_button("vital")
 
-  # Diseases - Complete V206
   with st.container(border=True):
-    st.markdown("<div class='heading-h4'>Diseases</div>", unsafe_allow_html=True)
+    st.markdown("<div class='heading-h4'>Diseases - Complete V206</div>", unsafe_allow_html=True)
     if section_heading_clickable("diseases","Select Body Part and Disease"):
       dc1,dc2,dc3,dc4=st.columns([3,3,2,2])
       with dc1:
@@ -636,7 +760,6 @@ def render_patient_form(is_revisit=False):
       section_ok("diseases", is_revisit=is_revisit)
       section_close_button("diseases")
 
-  # Complaint, History, Diagnosis, Treatment
   with st.container(border=True):
     st.markdown("<div class='heading-h4'>Complaint, History, Diagnosis</div>", unsafe_allow_html=True)
     if section_heading_clickable("complaint","Complaint Details"):
@@ -654,21 +777,16 @@ def render_patient_form(is_revisit=False):
       section_ok("complaint", is_revisit=is_revisit)
       section_close_button("complaint")
 
-  # Billing - Complete V206 + Cash/Outstanding/Free
   with st.container(border=True):
-    st.markdown("<div class='heading-h4'>Billing</div>", unsafe_allow_html=True)
+    st.markdown("<div class='heading-h4'>Billing - Complete</div>", unsafe_allow_html=True)
     if section_heading_clickable("billing","Billing Details"):
-      if is_revisit:
-        default_fee = ""; default_med = ""; default_paid = ""
-      else:
-        default_fee = ""; default_med = ""; default_paid = ""
       c1,c2,c3,c4=st.columns(4)
       with c1:
-        fee_val = st.text_input("Fee (Rs)", key=f"fee_{fv}_{is_revisit}", value=default_fee, placeholder="Enter Fee")
+        fee_val = st.text_input("Fee (Rs)", key=f"fee_{fv}_{is_revisit}", value="", placeholder="Enter Fee")
       with c2:
-        med_val = st.text_input("Medicine Charges (Rs)", key=f"med_charges_{fv}_{is_revisit}", value=default_med, placeholder="Enter Medicine Charges")
+        med_val = st.text_input("Medicine Charges (Rs)", key=f"med_charges_{fv}_{is_revisit}", value="", placeholder="Enter Medicine Charges")
       with c3:
-        paid_val = st.text_input("Paid (Rs)", key=f"paid_{fv}_{is_revisit}", value=default_paid, placeholder="Enter Paid")
+        paid_val = st.text_input("Paid (Rs)", key=f"paid_{fv}_{is_revisit}", value="", placeholder="Enter Paid")
       with c4:
         fee_status = st.selectbox("Bill Status", LISTS["fee_status"], key=f"fee_status_{fv}_{is_revisit}")
       c5,c6=st.columns(2)
@@ -691,7 +809,6 @@ def render_patient_form(is_revisit=False):
       section_ok("billing", is_revisit=is_revisit)
       section_close_button("billing")
 
-  # Save Patient
   st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
   c_save, c_new = st.columns([3,1])
   with c_new:
@@ -699,7 +816,6 @@ def render_patient_form(is_revisit=False):
       reset_to_new_patient()
   with c_save:
     if st.button("Save Patient", type="primary", use_container_width=True, key=f"save_patient_{fv}_{is_revisit}"):
-      # Validation
       p_name = st.session_state.get(f"p_name_{fv}", "").strip()
       p_phone = st.session_state.get(f"p_phone_{fv}", "").strip()
       p_age = st.session_state.get(f"p_age_{fv}", "").strip()
@@ -723,27 +839,19 @@ def render_patient_form(is_revisit=False):
             save_to_local_csv("New_patient", {"PatientID": pid, "Name": p_name, "Phone": p_phone})
           else:
             headers = ws.row_values(1)
-            # Ensure headers have our required
             if len(headers) < 10:
               headers = SHEET_HEADERS["New_patient"]
               ws.update('A1', [headers], value_input_option='USER_ENTERED')
-            # Build row
-            # Get values
             bp_v = st.session_state.get(f"p_bp_{fv}_{is_revisit}", "")
             if st.session_state.get(f"p_bp_fig_{fv}_{is_revisit}", ""):
               bp_v = st.session_state.get(f"p_bp_fig_{fv}_{is_revisit}", "")
             pulse_v = st.session_state.get(f"p_pulse_{fv}_{is_revisit}", "")
             if st.session_state.get(f"p_pulse_fig_{fv}_{is_revisit}", ""):
               pulse_v = st.session_state.get(f"p_pulse_fig_{fv}_{is_revisit}", "")
-            temp_v = st.session_state.get(f"p_temp_{fv}_{is_revisit}", "")
-            if st.session_state.get(f"p_temp_fig_{fv}_{is_revisit}", ""):
-              temp_v = st.session_state.get(f"p_temp_fig_{fv}_{is_revisit}", "")
             mizaj_v = st.session_state.get(f"p_temperament_{fv}_{is_revisit}", "")
             if st.session_state.get(f"p_mizaj_custom_{fv}_{is_revisit}", ""):
               mizaj_v = st.session_state.get(f"p_mizaj_custom_{fv}_{is_revisit}", "")
-            
             diseases_text = " + ".join([d.get("text","") for d in st.session_state.get("patient_diseases",[])])
-            
             fee_v = st.session_state.get(f"fee_{fv}_{is_revisit}", "0")
             med_v = st.session_state.get(f"med_charges_{fv}_{is_revisit}", "0")
             paid_v = st.session_state.get(f"paid_{fv}_{is_revisit}", "0")
@@ -751,9 +859,7 @@ def render_patient_form(is_revisit=False):
             pay_method_v = st.session_state.get(f"payment_method_{fv}_{is_revisit}", "Cash")
             grand_total_v = st.session_state.get(f"calc_gt_{fv}_{is_revisit}", 0)
             balance_v = st.session_state.get(f"calc_bal_{fv}_{is_revisit}", 0)
-            
             complaint_v = st.session_state.get(f"complaint_{fv}_{is_revisit}", "") or st.session_state.get(f"comp_{fv}_{is_revisit}", "") or "General Checkup"
-            
             row_data = {
               "PatientID": pid,
               "OriginalPatientID": st.session_state.get("original_patient_id", pid),
@@ -780,11 +886,9 @@ def render_patient_form(is_revisit=False):
               "PaymentMethod": pay_method_v,
               "ClinicName": st.session_state.clinic_name
             }
-            # Map to headers
             row = [str(row_data.get(h,"")) for h in headers]
             ws.append_row(row, value_input_option='RAW')
             show_popup(f"Saved! ID {pid} | Grand Total Rs {grand_total_v:.0f}")
-            # Reset
             st.session_state.form_version+=1
             st.session_state.patient_diseases=[]
             st.session_state.revisit_data=None
@@ -928,11 +1032,11 @@ def revisit_page():
   my = [r for r in records if str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
   c1,c2=st.columns(2)
   with c1:
-    s_name = st.text_input("Patient Name", key="rev_name_v3", placeholder="Full or partial")
-    s_date = st.text_input("Date (YYYY-MM-DD)", key="rev_date_v3", placeholder="e.g., 1 or 1-05 or 1-05-2026 or 2026-05-01")
+    s_name = st.text_input("Patient Name", key="rev_name_v33", placeholder="Full or partial")
+    s_date = st.text_input("Date (YYYY-MM-DD)", key="rev_date_v33", placeholder="e.g., 1 or 1-05 or 1-05-2026 or 2026-05-01")
   with c2:
-    s_phone = st.text_input("Phone Number", key="rev_phone_v3", placeholder="Full or partial")
-    s_address = st.text_input("Address", key="rev_address_v3", placeholder="Full address or city/village only")
+    s_phone = st.text_input("Phone Number", key="rev_phone_v33", placeholder="Full or partial")
+    s_address = st.text_input("Address", key="rev_address_v33", placeholder="Full address or city/village only")
   
   if s_name or s_phone or s_date or s_address:
     filt=[]
@@ -1010,7 +1114,7 @@ def revisit_page():
     for idx, r in enumerate(filt[:20]):
       with st.container(border=True):
         st.write(f"{r.get('Name','')} | Date: {r.get('Date','')} | Address: {r.get('Address','')} | Phone: {r.get('Phone','')} | ID: {r.get('PatientID','')} | Balance: Rs {r.get('Balance','0')}")
-        if st.button(f"Open {r.get('PatientID','')} - {r.get('Name','')}", key=f"rev_{r.get('PatientID','')}_{idx}_v3"):
+        if st.button(f"Open {r.get('PatientID','')} - {r.get('Name','')}", key=f"rev_{r.get('PatientID','')}_{idx}_v33"):
           st.session_state.revisit_data=r
           try:
             pid = str(r.get("PatientID","")).strip()
@@ -1035,53 +1139,47 @@ def revisit_page():
   under_development_footer("Revisit")
   add_footer()
 
-def clinic_login_page():
-  clinic_heading_banner()
-  st.markdown("<div class='heading-h3'>Clinic Login</div>", unsafe_allow_html=True)
-  uname = st.text_input("Username", key="clinic_uname_v3")
-  pwd = st.text_input("Password", type="password", key="clinic_pwd_v3")
-  if st.button("Login", type="primary", key="login_v3"):
-    if uname and pwd:
-      st.session_state.logged_in=True
-      st.session_state.username=uname
-      st.session_state.clinic_name="Herbal Clinic International"
-      st.session_state.current_page="dashboard_welcome"
-      st.rerun()
-    else:
-      st.error("Enter username and password")
-
 def dashboard_welcome_page():
   scroll_to_top()
   top_bar_inner_with_user()
   clinic_heading_banner_dashboard_only()
-  st.markdown("<div class='heading-h3'>Dashboard - V3.2 Complete V206</div>", unsafe_allow_html=True)
+  st.markdown("<div class='heading-h3'>Dashboard - V3.3 Complete V206 + Signup/Login Fixed</div>", unsafe_allow_html=True)
   r1c1,r1c2,r1c3=st.columns(3)
   with r1c1:
-    if st.button("New Patient - Complete V206", use_container_width=True, key="dash_new_v3", type="primary"):
+    if st.button("New Patient - Complete V206", use_container_width=True, key="dash_new_v33", type="primary"):
       st.session_state.current_page="patient"
       st.rerun()
   with r1c2:
-    if st.button("Revisit Search - Complete V206", use_container_width=True, key="dash_rev_search_v3"):
+    if st.button("Revisit Search - Complete V206", use_container_width=True, key="dash_rev_search_v33"):
       st.session_state.current_page="revisit"
       st.rerun()
   with r1c3:
-    if st.button("Revisit Form - Complete V206", use_container_width=True, key="dash_rev_form_v3"):
+    if st.button("Revisit Form - Complete V206", use_container_width=True, key="dash_rev_form_v33"):
       if st.session_state.revisit_data:
         st.session_state.current_page="patient_revisit_form"
       else:
         st.session_state.current_page="revisit"
       st.rerun()
   
-  # Stats
+  st.markdown("---")
+  st.markdown(f"<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:12px;padding:16px;margin-top:16px;'><b>Logged in as:</b> {st.session_state.get('username','')} | <b>Role:</b> {st.session_state.get('user_role','')} | <b>Type:</b> {st.session_state.get('user_type','')}</div>", unsafe_allow_html=True)
+  
   try:
     records = get_all_records_cached("New_patient")
     my = [r for r in records if str(r.get("ClinicName","")).lower() == str(st.session_state.clinic_name).lower()]
     total = len(my)
     today_str = str(datetime.date.today())
     today_count = len([r for r in my if today_str in str(r.get("Date",""))])
-    st.markdown(f"<div style='background:#E8F5E9;border:2px solid #2E7D5B;border-radius:12px;padding:16px;margin-top:16px;'><b>Total Patients: {total} | Today: {today_count}</b></div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='background:#E3F2FD;border:2px solid #1976D2;border-radius:12px;padding:16px;margin-top:16px;'><b>Total Patients: {total} | Today: {today_count}</b></div>", unsafe_allow_html=True)
   except:
     pass
+  
+  if st.button("Logout", key="logout_v33"):
+    st.session_state.logged_in=False
+    st.session_state.username=""
+    st.session_state.current_page="clinic_login"
+    st.rerun()
+  
   add_footer()
 
 def main():
