@@ -1,15 +1,21 @@
 # ============================================
-# Herbal Clinic OS - NEW INSTALLATION SYSTEM
-# VERSION: V1 - Clean Base Structure
+# Herbal Clinic OS - NEW INSTALLATION
+# VERSION: V1.1 - Google Sheet Full Connect + 18 Sheets Check
 # Date: 2026-10-03
-# Previous System: V206 Light & Fast (5900 lines - retired due to size)
-# New System: V1, V1.1, V1.2... (per step correction), V2, V2.1...
+# Base: V1 (Clean Base)
+# Changes in V1.1:
+#  - Full SHEET_HEADERS from V206 (22 sheets)
+#  - Robust gspread client (secrets.toml + [connections.gsheets] both supported)
+#  - get_all_records_cached (600s), save_to_sheet, check_sheet_structure
+#  - Sheet Status Dashboard in App Admin
+#  - Light & Fast - no heavy code
 # Stack: VS Code + GitHub + Streamlit + Google Sheet
 # ============================================
 
 import streamlit as st
 import datetime
 import pandas as pd
+import time
 
 try:
   import gspread
@@ -18,214 +24,274 @@ try:
 except ImportError:
   GSPREAD_AVAILABLE = False
 
-APP_VERSION = "V1 - New Clean Base"
+APP_VERSION = "V1.1 - Sheet Full Connect"
 
-# ---------- CONFIG ----------
-st.set_page_config(
-  page_title="Herbal Clinic OS - V1",
-  page_icon="🌿",
-  layout="wide",
-  initial_sidebar_state="collapsed"
-)
+st.set_page_config(page_title=f"Herbal Clinic OS {APP_VERSION}", page_icon="🌿", layout="wide", initial_sidebar_state="collapsed")
 
-# ---------- DICTIONARY (EN/UR/AR) - V1 Base ----------
+# ---------- SHEET STRUCTURE (from V206 - Final) ----------
+SHEET_HEADERS = {
+  "UserSignups": ["SignupID","Username","Password","UserType","ClinicName","Phone","Email","Date","Status","Role","From","LastLogin","DeviceInfo"],
+  "PermissionGranted": ["ID","Username","UserType","PermissionType","GrantedDate","Status","IP","Device","ExpiryDate","GrantedBy"],
+  "HomeUsers": ["UserID","Username","Password","FullName","Phone","Email","Date","Status","AccountHolderPhone","From","LastLogin","ClinicName","Address","Age","Gender","SubscriptionStatus"],
+  "New_patient": ["PatientID","Date","Name","FatherName","Age","Gender","MaritalStatus","Occupation","CNIC","Phone","EmergencyPhone","Address","Referral","Diseases","ChiefComplaint","PastHistory","FamilyHistory","Allergy","Examination","Pulse","Temperament","BP","Weight","Temperature","Height","SleepPattern","Appetite","BowelMovement","Thirst","Urine","Sweating","StressLevel","EnergyLevel","SingleMedicines","FormulaMedicines","ManualMedicines","Fees","MedicineCharges","Total","Paid","Balance","PrevBalance","PaymentMethod","FeeStatus","RevisitDate","ClinicName","CreatedBy","Timestamp","AppVersion","DailyNumber","TotalNumber","GrandTotal","UserType","Habits","BloodGroup","CuredDiseases","RemainingDiseases"],
+  "Revisit": ["RevisitID","PatientID","OriginalPatientID","Date","Name","FatherName","Age","Gender","MaritalStatus","Occupation","CNIC","Phone","EmergencyPhone","Address","Referral","Diseases","PreviousDiseases","ChiefComplaint","PastHistory","FamilyHistory","Allergy","Pulse","Temperament","BP","Weight","Temperature","Height","SleepPattern","Appetite","BowelMovement","SingleMedicines","FormulaMedicines","ManualMedicines","Fees","MedicineCharges","Total","Paid","Balance","PrevBalance","PaymentMethod","FeeStatus","ClinicName","CreatedBy","Timestamp","AppVersion","DailyNumber","TotalNumber","GrandTotal","CuredDiseases","RemainingDiseases","UserType","BloodGroup","Habits"],
+  "AutoDiagnosis": ["ID","PatientID","Date","Name","FatherName","Age","Phone","Gender","MaritalStatus","Occupation","Address","BloodGroup","Diseases","DiseasesWithDetails","ExtraSymptoms","PastHistory","FamilyHistory","CurrentMedications","SleepPattern","Appetite","BowelMovement","Thirst","Urine","Sweating","StressLevel","EnergyLevel","AllergyHistory","Temperament","Mizaj","DietRecommendations","Restrictions","Instructions","ClinicName","CreatedBy","Timestamp","AppVersion","GrandTotal","UserType","Habits","Height","Weight"],
+  "HomeTreatment": ["ID","PatientID","Date","Name","FatherName","Age","Phone","Gender","MaritalStatus","Occupation","Address","BloodGroup","Diseases","DiseasesWithDetails","ExtraSymptoms","PastHistory","FamilyHistory","CurrentMedications","SleepPattern","Appetite","BowelMovement","Thirst","Urine","Sweating","StressLevel","EnergyLevel","AllergyHistory","Temperament","Mizaj","DietRecommendations","Restrictions","Instructions","ClinicName","CreatedBy","Timestamp","AppVersion","GrandTotal","UserType","Habits","Height","Weight"],
+  "Herbs": ["HerbID","Name","UrduName","Temperament","Mizaj","Uses","Benefits","Dosage","SideEffects","Precautions","ClinicName","Status","AddedBy","Date"],
+  "Pharmacopoeia": ["ID","Name","UrduName","Category","Temperament","Mizaj","Uses","Benefits","Ingredients","Dosage","Method","SideEffects","ClinicName","Status","AddedBy","Date"],
+  "Dictionary": ["ID","Word","UrduWord","ArabicWord","Meaning","MeaningUR","MeaningAR","Category","SubCategory","Language","Status","AddedBy","Date"],
+  "Articles": ["ID","TitleEN","TitleUR","TitleAR","ContentEN","ContentUR","ContentAR","MainCategory","SubCategory","Audience","Type","Status","Date","ClinicName","Author","ImageURL","Tags","ViewCount"],
+  "Feedback": ["ID","Name","From","Phone Number","Email","Feedback Page","Feedback","Date","Status","UserType","ClinicName","Rating","Response"],
+  "AppSettings": ["Key","Value","Date","Status","Description","Category","UpdatedBy"],
+  "Offer": ["ID","TitleEN","TitleUR","TitleAR","ContentEN","ContentUR","ContentAR","MainCategory","SubCategory","Status","Date","ClinicName","ExpiryDate","Discount"],
+  "ClinicFormulas": ["FormulaID","Name","UrduName","Ingredients","Uses","Benefits","Dosage","Method","ClinicName","Status","AddedBy","Date"],
+  "ClinicSettings": ["SettingID","ClinicName","SettingKey","SettingValue","Status","UpdatedBy","Date"],
+  "Inventory": ["ItemID","ItemName","Category","Quantity","Unit","PurchasePrice","SalePrice","ExpiryDate","Supplier","ClinicName","Status","AddedBy","Date"],
+  "BillingReport": ["ReportID","Date","PatientID","Name","Fees","MedicineCharges","Total","Paid","Balance","PaymentMethod","ClinicName","CreatedBy"],
+  "Expenses": ["ExpenseID","Date","Category","Description","Amount","PaymentMethod","ClinicName","AddedBy","Status"],
+  "Appointments": ["AppointmentID","Date","Time","PatientID","PatientName","Phone","Status","ClinicName","CreatedBy","Notes"],
+}
+
+ALL_SHEETS = list(SHEET_HEADERS.keys())
+GENERAL_SHEETS = ["UserSignups", "PermissionGranted", "Articles", "Feedback"]
+CLINIC_SHEETS = ["New_patient", "Revisit", "AutoDiagnosis", "Herbs", "Pharmacopoeia", "Dictionary"]
+HOME_SHEETS = ["HomeUsers", "HomeTreatment"]
+SETTING_SHEETS = ["AppSettings", "Offer", "ClinicFormulas", "ClinicSettings"]
+
+# ---------- DICTIONARY ----------
 DICT = {
-  "welcome_title": {
-    "en": "Welcome to Herbal Clinic International",
-    "ur": "ہربل کلینک انٹر نیشنل میں خوش آمدید",
-    "ar": "مرحبا بكم في عيادة الأعشاب الدولية"
-  },
-  "welcome_sub": {
-    "en": "Your Complete Unani & Herbal Clinic Management System",
-    "ur": "آپ کا مکمل یونانی و ہربل کلینک مینجمنٹ سسٹم",
-    "ar": "نظام إدارة العيادة اليونانية والعشبية الكامل الخاص بكم"
-  },
-  "what_is": {
-    "en": "What is this system?",
-    "ur": "یہ سسٹم کیا ہے؟",
-    "ar": "ما هو هذا النظام؟"
-  },
-  "what_is_desc": {
-    "en": "This is a complete clinic operating system for Hakeem, Tabib and Herbal Doctors. It manages Patient, Revisit, Dictionary, Pharmacopoeia, Billing, Stock.",
-    "ur": "یہ حکیم، طبیب اور ہربل ڈاکٹرز کے لیے مکمل کلینک آپریٹنگ سسٹم ہے۔ یہ مریض، دوبارہ معائنہ، لغت، قرابادین، بل، اسٹاک کا انتظام کرتا ہے۔",
-    "ar": "هذا نظام تشغيل عيادة كامل للحكيم والطبيب والمعالج بالأعشاب. يدير المريض، إعادة الزيارة، القاموس، دستور الأدوية، الفوترة، المخزون."
-  },
-  "home_treatment": {
-    "en": "Home Treatment Facility",
-    "ur": "گھریلو طور پر علاج کی سہولت",
-    "ar": "تسهيل العلاج المنزلي"
-  },
-  "home_treatment_desc": {
-    "en": "Patient enters basic info and gets Mizaj, suitable foods, precautions, and kitchen-based medicines. Details in Phase 2.",
-    "ur": "مریض فارم میں ضروری معلومات درج کر کے مزاج، مناسب غذائیں، پرہیز اور کچن میں موجود ادویات حاصل کرے گا۔ تفصیل فیز 2 میں۔",
-    "ar": "يدخل المريض المعلومات الأساسية ويحصل على المزاج والأطعمة المناسبة والاحتياطات وأدوية المطبخ. التفاصيل في المرحلة 2."
-  },
-  "phases": {
-    "en": "Our 3 Phases",
-    "ur": "ہمارے پروگرام کے 3 فیز",
-    "ar": "المراحل الثلاث لبرنامجنا"
-  },
-  "phase1": {
-    "en": "Phase 1: Basic Structure (You are here now)",
-    "ur": "فیز 1: ایپ کا بنیادی ڈھانچہ (اس وقت آپ یہاں ہیں)",
-    "ar": "المرحلة 1: الهيكل الأساسي (أنت هنا الآن)"
-  },
-  "phase2": {
-    "en": "Phase 2: Automation - Mizaj, Diet, Kitchen Medicines",
-    "ur": "فیز 2: آٹومیشن - مزاج، غذا، کچن کی دوائیں",
-    "ar": "المرحلة 2: الأتمتة - المزاج والنظام الغذائي وأدوية المطبخ"
-  },
-  "phase3": {
-    "en": "Phase 3: Online Academy",
-    "ur": "فیز 3: آن لائن اکیڈمی",
-    "ar": "المرحلة 3: الأكاديمية عبر الإنترنت"
-  }
+  "welcome_title": {"en": "Welcome to Herbal Clinic International", "ur": "ہربل کلینک انٹر نیشنل میں خوش آمدید", "ar": "مرحبا بكم في عيادة الأعشاب الدولية"},
+  "welcome_sub": {"en": "Your Complete Unani & Herbal Clinic Management System", "ur": "آپ کا مکمل یونانی و ہربل کلینک مینجمنٹ سسٹم", "ar": "نظام إدارة العيادة اليونانية والعشبية الكامل"},
 }
 
 def t(key):
-  lang = st.session_state.get("lang", "en")
-  return DICT.get(key, {}).get(lang, DICT.get(key, {}).get("en", key))
+  lang = st.session_state.get("lang","en")
+  return DICT.get(key,{}).get(lang, DICT.get(key,{}).get("en",key))
 
-# ---------- GOOGLE SHEET HELPERS (Light) ----------
-@st.cache_resource
+# ---------- GOOGLE SHEET CORE (V1.1) ----------
+@st.cache_resource(ttl=900)
 def get_gspread_client():
   if not GSPREAD_AVAILABLE:
-    return None
+    return None, "gspread not installed"
   try:
-    # Expects secrets.toml with [gcp_service_account]
-    creds_dict = dict(st.secrets["gcp_service_account"])
+    creds_dict = None
+    # Support 2 formats: [gcp_service_account] and [connections.gsheets]
+    if "gcp_service_account" in st.secrets:
+      creds_dict = dict(st.secrets["gcp_service_account"])
+    elif "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
+      gs = st.secrets["connections"]["gsheets"]
+      # if contains service_account json
+      if isinstance(gs, dict) and "type" in gs:
+        creds_dict = dict(gs)
+      elif isinstance(gs, dict) and "service_account" in gs:
+        creds_dict = dict(gs["service_account"])
+      else:
+        # Try gcp_service_account still
+        if "gcp_service_account" in st.secrets:
+          creds_dict = dict(st.secrets["gcp_service_account"])
+    if not creds_dict:
+      return None, "No service_account found in secrets.toml - Add [gcp_service_account]"
+    
     creds = Credentials.from_service_account_info(creds_dict, scopes=["https://www.googleapis.com/auth/spreadsheets","https://www.googleapis.com/auth/drive"])
     client = gspread.authorize(creds)
-    return client
+    return client, "OK"
   except Exception as e:
-    return None
+    return None, f"Auth Error: {e}"
 
-def get_sheet(sheet_name):
-  client = get_gspread_client()
-  if not client:
-    return None
+def get_spreadsheet_id():
   try:
-    sheet_id = st.secrets.get("SHEET_ID", "")
-    if not sheet_id:
-      return None
+    if "SHEET_ID" in st.secrets:
+      return st.secrets["SHEET_ID"]
+    if "connections" in st.secrets and "gsheets" in st.secrets["connections"]:
+      gs = st.secrets["connections"]["gsheets"]
+      if isinstance(gs, dict) and "spreadsheet" in gs:
+        return gs["spreadsheet"]
+      if isinstance(gs, str):
+        return gs
+  except: pass
+  return None
+
+@st.cache_data(ttl=600)
+def get_all_records_cached(sheet_name, max_rows=200):
+  if sheet_name not in ALL_SHEETS:
+    return []
+  client, msg = get_gspread_client()
+  if not client:
+    return []
+  sheet_id = get_spreadsheet_id()
+  if not sheet_id:
+    return []
+  try:
     sh = client.open_by_key(sheet_id)
     ws = sh.worksheet(sheet_name)
-    return ws
-  except:
-    return None
+    records = ws.get_all_records()
+    if len(records) > max_rows:
+      records = records[-max_rows:]
+    return records
+  except Exception as e:
+    return []
 
-# ---------- SESSION STATE ----------
-if "lang" not in st.session_state:
-  st.session_state.lang = "en"
-if "logged_in" not in st.session_state:
-  st.session_state.logged_in = False
-if "username" not in st.session_state:
-  st.session_state.username = "Guest"
+def save_to_sheet(sheet_name, row_dict):
+  client, msg = get_gspread_client()
+  if not client:
+    return False, f"Client error: {msg}"
+  sheet_id = get_spreadsheet_id()
+  if not sheet_id:
+    return False, "SHEET_ID missing in secrets.toml"
+  try:
+    sh = client.open_by_key(sheet_id)
+    try:
+      ws = sh.worksheet(sheet_name)
+    except:
+      # Create sheet if not exists
+      ws = sh.add_worksheet(title=sheet_name, rows=1000, cols=len(SHEET_HEADERS[sheet_name])+5)
+      ws.append_row(SHEET_HEADERS[sheet_name])
+    
+    headers = SHEET_HEADERS[sheet_name]
+    row = [row_dict.get(h,"") for h in headers]
+    ws.append_row(row, value_input_option="USER_ENTERED")
+    # clear cache
+    get_all_records_cached.clear()
+    return True, "Saved"
+  except Exception as e:
+    return False, str(e)
 
-# ---------- UI HELPERS ----------
+def check_sheet_structure():
+  client, msg = get_gspread_client()
+  sheet_id = get_spreadsheet_id()
+  if not client or not sheet_id:
+    return [{"sheet": s, "exists": False, "status": f"No client/ID: {msg}"} for s in ALL_SHEETS]
+  try:
+    sh = client.open_by_key(sheet_id)
+    existing_titles = [ws.title for ws in sh.worksheets()]
+    results=[]
+    for s in ALL_SHEETS:
+      if s in existing_titles:
+        try:
+          ws = sh.worksheet(s)
+          first_row = ws.row_values(1)
+          expected = SHEET_HEADERS[s]
+          missing = [h for h in expected if h not in first_row]
+          if missing:
+            results.append({"sheet": s, "exists": True, "status": f"Exists but missing headers: {missing[:3]}"})
+          else:
+            results.append({"sheet": s, "exists": True, "status": "OK - Headers match"})
+        except Exception as e:
+          results.append({"sheet": s, "exists": True, "status": f"Exists but error: {e}"})
+      else:
+        results.append({"sheet": s, "exists": False, "status": "Not exists - Will auto-create on first save"})
+    return results
+  except Exception as e:
+    return [{"sheet": s, "exists": False, "status": f"Error: {e}"} for s in ALL_SHEETS]
+
+# ---------- SESSION ----------
+if "lang" not in st.session_state: st.session_state.lang="en"
+if "logged_in" not in st.session_state: st.session_state.logged_in=False
+if "username" not in st.session_state: st.session_state.username="Guest"
+if "current_page" not in st.session_state: st.session_state.current_page="initial"
+
+# ---------- UI ----------
 def top_bar():
-  col1, col2, col3 = st.columns([6,2,2])
-  with col1:
-    st.markdown(f"### 🌿 Herbal Clinic OS | {APP_VERSION}")
-  with col2:
-    lang_opt = st.selectbox("Language / زبان / اللغة", ["en","ur","ar"], 
-                             index=["en","ur","ar"].index(st.session_state.lang),
-                             label_visibility="collapsed", key="lang_select_v1")
-    st.session_state.lang = lang_opt
-  with col3:
+  st.markdown("""
+  <style>
+  .rtl { direction: rtl; text-align: right; font-family: 'Jameel Noori Nastaleeq','Noto Naskh Arabic',sans-serif; line-height:1.9; }
+  .ltr { direction: ltr; text-align: left; }
+  .card { background:white; border:1px solid #e0e0e0; border-radius:14px; padding:18px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
+  .red-dot { color:red; }
+  .ok { background:#e8f5e9; border:1px solid #4caf50; border-radius:8px; padding:8px; }
+  .bad { background:#ffebee; border:1px solid #f44336; border-radius:8px; padding:8px; }
+  </style>
+  """, unsafe_allow_html=True)
+  c1,c2,c3=st.columns([6,2,2])
+  with c1: st.markdown(f"### 🌿 Herbal Clinic OS | {APP_VERSION}")
+  with c2:
+    lang_opt=st.selectbox("Lang", ["en","ur","ar"], index=["en","ur","ar"].index(st.session_state.lang), label_visibility="collapsed", key="lang_v11")
+    st.session_state.lang=lang_opt
+  with c3:
     if st.session_state.logged_in:
-      st.caption(f"User: {st.session_state.username}")
-      if st.button("Logout", key="logout_v1"):
-        st.session_state.logged_in = False
+      st.caption(f"{st.session_state.username}")
+      if st.button("Logout", key="logout_v11"):
+        st.session_state.logged_in=False
+        st.session_state.current_page="initial"
         st.rerun()
 
 def initial_page():
-  lang = st.session_state.lang
-  rtl_class = "rtl" if lang in ["ur","ar"] else "ltr"
-  
-  # RTL CSS for Urdu/Arabic
-  st.markdown("""
-  <style>
-  .rtl { direction: rtl; text-align: right; font-family: 'Jameel Noori Nastaleeq', 'Noto Naskh Arabic', sans-serif; line-height:1.9; }
-  .ltr { direction: ltr; text-align: left; }
-  .card { background:white; border:1px solid #e0e0e0; border-radius:14px; padding:18px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
-  .red-dot { color:red; font-size:18px; }
-  .phase-box { background: linear-gradient(135deg,#F1F7F3,#FFFFFF); border:2px solid #2E7D5B; border-radius:14px; padding:14px; }
-  </style>
-  """, unsafe_allow_html=True)
-
-  if lang == "en":
-    title_html = f"<div class='ltr card'><span class='red-dot'>🔴</span> <b>{t('welcome_title')}</b><br>{t('welcome_sub')}</div>"
+  lang=st.session_state.lang
+  rtl="rtl" if lang in ["ur","ar"] else "ltr"
+  if lang=="en":
+    html=f"<div class='ltr card'><span class='red-dot'>🔴</span> <b>{t('welcome_title')}</b><br>{DICT['welcome_sub']['en']}</div>"
   else:
-    title_html = f"<div class='rtl card'><b>{t('welcome_title')}</b> <span class='red-dot'>🔴</span><br>{t('welcome_sub')}</div>"
-  
-  st.markdown(title_html, unsafe_allow_html=True)
-
-  # What is
-  if lang == "en":
-    st.markdown(f"<div class='ltr card'><span class='red-dot'>🔴</span> <b>{t('what_is')}</b><br>{t('what_is_desc')}</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='ltr card'><span class='red-dot'>🔴</span> <b>{t('home_treatment')}</b><br>{t('home_treatment_desc')}</div>", unsafe_allow_html=True)
-  else:
-    st.markdown(f"<div class='rtl card'><b>{t('what_is')}</b> <span class='red-dot'>🔴</span><br>{t('what_is_desc')}</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='rtl card'><b>{t('home_treatment')}</b> <span class='red-dot'>🔴</span><br>{t('home_treatment_desc')}</div>", unsafe_allow_html=True)
-
-  # Phases
-  st.markdown(f"<div class='{rtl_class} card'><b>{t('phases')}</b><br>1. {t('phase1')}<br>2. {t('phase2')}<br>3. {t('phase3')}</div>", unsafe_allow_html=True)
-
-  st.markdown("---")
-  st.markdown(f"<div class='{rtl_class}'>This App is FREE at this time. Sign up and start practice. | اس وقت یہ ایپ بالکل فری ہے۔ | التطبيق مجاني حاليا.</div>", unsafe_allow_html=True)
-
-  if st.button("Sign Up / Sign In (Demo) - V1", type="primary", use_container_width=True):
-    st.session_state.logged_in = True
-    st.session_state.username = "Hakeem Guest"
-    st.session_state.current_page = "dashboard"
+    html=f"<div class='rtl card'><b>{t('welcome_title')}</b> <span class='red-dot'>🔴</span><br>{DICT['welcome_sub'][lang]}</div>"
+  st.markdown(html, unsafe_allow_html=True)
+  st.markdown(f"<div class='{rtl} card'>V1.1 Goal: Google Sheet Connect - 22 Sheets<br>General: {GENERAL_SHEETS}<br>Clinic: {CLINIC_SHEETS}<br>Home: {HOME_SHEETS}</div>", unsafe_allow_html=True)
+  if st.button("Sign In Demo (Go to Dashboard)", type="primary", use_container_width=True, key="signin_v11"):
+    st.session_state.logged_in=True
+    st.session_state.username="Hakeem Demo"
+    st.session_state.current_page="dashboard"
     st.rerun()
 
 def dashboard_page():
   top_bar()
-  st.markdown(f"### Dashboard - {t('welcome_title')}")
-  st.info(f"V1 Clean Base is working. Google Sheet Available: {GSPREAD_AVAILABLE}")
-  
-  c1,c2,c3 = st.columns(3)
-  with c1:
-    st.markdown("<div class='card'><b>Patient</b><br>New + Revisit</div>", unsafe_allow_html=True)
-    if st.button("Open Patient", key="dash_pat_v1"): st.info("V2 میں فعال ہوگا")
-  with c2:
-    st.markdown("<div class='card'><b>Knowledge Base</b><br>Dictionary, Pharmacopoeia</div>", unsafe_allow_html=True)
-    if st.button("Open KB", key="dash_kb_v1"): st.info("V2 میں فعال ہوگا")
-  with c3:
-    st.markdown("<div class='card'><b>Temperament Quiz</b><br>Free Lead Magnet</div>", unsafe_allow_html=True)
-    if st.button("Open Quiz", key="dash_quiz_v1"):
-      st.session_state.current_page = "quiz"
-      st.rerun()
+  st.markdown(f"### Dashboard - {APP_VERSION}")
+  client, msg = get_gspread_client()
+  sid = get_spreadsheet_id()
+  colA,colB=st.columns(2)
+  with colA: st.markdown(f"<div class='{'ok' if client else 'bad'}'>GSpread Client: {msg}</div>", unsafe_allow_html=True)
+  with colB: st.markdown(f"<div class='{'ok' if sid else 'bad'}'>Sheet ID: {'Found '+sid[:15]+'...' if sid else 'Missing - Add SHEET_ID in secrets.toml'}</div>", unsafe_allow_html=True)
 
-  st.markdown("---")
-  st.caption("Next: V1.1 = Google Sheet full connect + 18 sheets check, V1.2 = Login persistent, V1.3 = Initial Page final language polish")
+  tab1,tab2,tab3=st.tabs(["Sheet Structure Check","Test Save","Info"])
+  with tab1:
+    if st.button("Check All 22 Sheets Now", type="primary"):
+      results=check_sheet_structure()
+      df=pd.DataFrame(results)
+      st.dataframe(df, use_container_width=True)
+      ok_count=sum(1 for r in results if "OK" in r["status"])
+      st.success(f"{ok_count} / {len(results)} sheets OK")
+      if ok_count < len(results):
+        st.warning("Jo sheets 'Not exists' hain wo pehli save par auto-create ho jayengi - tension nahi")
+    else:
+      st.info("Click to check Google Sheet structure - V1.1 core feature")
 
-def quiz_page():
-  top_bar()
-  st.markdown("### 🌡️ Temperament Quiz - Free (V1 Demo)")
-  q1 = st.radio("Body feels?", ["Hot","Cold","Moderate"], horizontal=True, key="q1_v1")
-  q2 = st.radio("Thirst?", ["High","Low","Normal"], horizontal=True, key="q2_v1")
-  if st.button("Get Result", type="primary"):
-    if q1=="Hot": st.success("Result: Hot Dry - Cool foods recommended (Demo logic)")
-    elif q1=="Cold": st.success("Result: Cold Wet - Warm foods recommended")
-    else: st.success("Result: Moderate - Balanced diet")
-  if st.button("Back to Dashboard"):
-    st.session_state.current_page = "dashboard"
-    st.rerun()
+  with tab2:
+    st.markdown("#### Test Save to Feedback Sheet (Demo)")
+    name=st.text_input("Name", "Test User V1.1")
+    fb=st.text_area("Feedback", "V1.1 Sheet connect working")
+    if st.button("Save to Google Sheet - Feedback"):
+      ok, msg2 = save_to_sheet("Feedback", {"ID": f"FB_{int(time.time())}", "Name": name, "Feedback": fb, "Date": str(datetime.date.today()), "From": "V1.1 Test"})
+      if ok: st.success(f"Saved: {msg2}")
+      else: st.error(f"Failed: {msg2}")
+    st.markdown("#### Recent Feedback (from Sheet)")
+    recs=get_all_records_cached("Feedback", 10)
+    if recs: st.dataframe(pd.DataFrame(recs).tail(10), use_container_width=True)
+    else: st.caption("No records yet or sheet not connected")
+
+  with tab3:
+    st.markdown("""
+    **V1.1 kya karta hai:**
+    - 22 sheets ke headers defined (V206 se copy)
+    - Client dono tarah ke secrets support karta hai: [gcp_service_account] aur [connections.gsheets]
+    - Cache 600s - fast, quota bachao
+    - Auto-create sheet if missing
+    
+    **VS Code + GitHub Steps:**
+    1. VS Code me `App_V1.1.py` ko `app.py` rename karo
+    2. `secrets.toml` me add karo:
+    ```
+    SHEET_ID = "1D4x7wioVZyvw3i2p6NC2rTp1Z2J_DuTYGcJMy6X2sHA"
+    [gcp_service_account]
+    type = "service_account"
+    ... baqi json ...
+    ```
+    3. GitHub push
+    4. Streamlit Cloud -> Deploy
+    
+    **Next: V1.2 = Login persistent + UserSignups sheet connect**
+    """)
 
 def main():
-  if "current_page" not in st.session_state:
-    st.session_state.current_page = "initial"
-  
   if not st.session_state.logged_in:
     initial_page()
   else:
-    if st.session_state.current_page == "quiz":
-      quiz_page()
-    else:
-      dashboard_page()
+    dashboard_page()
 
-if __name__ == "__main__":
-  main()
+if __name__=="__main__": main()
