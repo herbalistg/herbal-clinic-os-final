@@ -1,26 +1,4 @@
 # ============================================
-# APP VERSION: V200 Ultimate - Final Clean from V206 - All Features Preserved
-# Date: 2026-10-03
-# BASE: V206 (5977 lines) -> V200 Ultimate (5977 lines, same count, clean logic)
-# PRINCIPLE: مرد/عورت کی خصوصیات برقرار - کوئی فیچر نہیں نکالا، صرف جگاڑ صاف
-# PRESERVED (Male/Female characteristics):
-# - Female: Menarche 10-12, Cycle 13-50, Pregnancies, Leucorrhoea, Menopause 50+
-# - Male: Puberty 12-18, Sexual Health 19-40, Prostate 40+
-# - Child: Birth History <5, School/Growth 5-12
-# - 10 Additional Qs: Residential, Physical Build, Skin, Hair, Eyes, Tongue, Appetite, Thirst, Preference, Urine
-# - All Pages: New_patient, Revisit, AutoDiagnosis, HomeTreatment, Herbs, Pharmacopoeia, Dictionary, Articles, Feedback, AppSettings, Offer, etc.
-# CLEANED (Jugaad Removed):
-# 1- CSS: 3 duplicate blocks -> Single injection with flag css_injected_v200_ultimate
-# 2- Save: /tmp/herbal_backup file IO removed -> Memory only with 500 trim
-# 3- Load: max_rows 1000 -> 300, 200->150 + local-first + cache 900s
-# 4- Personal Validation: 4 duplicate if not phone blocks -> ONE function validate_personal_info_ultimate()
-# 5- Age Qs: Duplicate in Personal + Additional -> ONE function called ONCE
-# 6- Revisit Search: 3 loops -> ONE function search_patient_ultimate() single loop + seen dict
-# 7- Capacity: 950 tracker
-# Previous: V206 -> V200 Ultimate Final
-# ============================================
-
-# ============================================
 # CURRENT APP VERSION: V206 - Light & Fast
 # V206 - Fixes: 1-Auto-Diagnosis & Home treatment Personal Info Phone field alone at bottom fixed (merged with other fields balanced 3 columns), 1b-Age-Based Questions for Male (Age:6) moved below Personal Information (was under Additional Optional Details) - opens after mandatory fields complete, 1c-Personal Information Incomplete error fixed (was showing even when all fields complete - fixed validation + helpful message), 1d-Revisit forms full history in each section like Clinic Revisit (Search specific+partial with dash logic + duplicate fix + history chain fallback in all sections - Auto and Home treatment now same structure as Clinic Revisit)
 # Date: 2026-05-17
@@ -51,7 +29,7 @@ except ImportError:
   GSPREAD_AVAILABLE = False
 
 # CURRENT VERSION COMMENT: V202 - Every new app version number must be commented in code - This is V202
-APP_VERSION = "V200 Ultimate - Final Clean from V206 - All Features Preserved - 2-3 Sec - V206 was:  - Fixes: 1a-Phone field alone fixed (balanced 3 cols), 1b-Age-Based Questions moved below Personal Info (was under Additional), opens after mandatory fields, 1c-Personal Info Incomplete error fixed (was showing even when complete), 1d-Auto/Home Revisit full history in each section like Clinic Revisit (search specific+partial dash logic + history chain)" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
+APP_VERSION = "V206 Light & Fast - Fixes: 1a-Phone field alone fixed (balanced 3 cols), 1b-Age-Based Questions moved below Personal Info (was under Additional), opens after mandatory fields, 1c-Personal Info Incomplete error fixed (was showing even when complete), 1d-Auto/Home Revisit full history in each section like Clinic Revisit (search specific+partial dash logic + history chain)" # V200.20 was:  1-EN near icon, 2-Sheet headings complete, 3-Essential to AppAdmin, 4-Tab Control Clinic/Home tick, 5-Address/Occupation/Marital to Personal outside, 6-Rename Additional Info Details, 7-Section OK bubble same place disappear, 8-Save bubble same place, 9-Revisit duplicate+prev entries single row+field names, 10-Auto/Home personal complete error fixed" # V207 - 1 tab theme toggle both themes, 1 line top bar theme+lang, scroll top robust fix, V205 all fixes re-applied # V206 - Light/Dim only, no extra text, Stay signed in option, Ad smaller smarter down 0.5cm, Free Tools in Clinic & Home sections, scroll top default, int fields, Phone in Personal, Sheet fix # V205 - User theme toggle (Light/Dark/Dim) for user comfort, login persistence controlled by App Admin # V204 Modern - Ad compact vertical, Free Quiz both PC/mobile, remove black box, Urdu note, scroll top, Proceed below Additional, Add Disease fix, clean headings # V203 Modern - Gradient header, Dashboard metrics+graph, Temperament Quiz, Articles as cards, Raised modern UI # V202 - Bigger header fonts italic, unified top box, raised tabs, persistent login, 2 tabs mobile, ad near streamlit, full AppSettings, local+sheet dual save # V201 - Persistent mobile login, 2 tabs per line mobile, compact green hover, ad near streamlit, full AppSettings control # V200 - Dashboard compact, persistent login, fixed ad golden border, bigger fonts # V199 - Final Herbal Light Theme - Clean Deploy # V175 - PC gap reduced, tab fields clear, PC headings larger, mobile icon-sized fields, light strategy kept, icon+black field, Open removed, hover green highlight, Offer black field blinking green, footer light gray # V172 - Sheet cleanup, boundary thick #0e1117, fix duplicate save, new ID, Proceed reset, New/Revisit options, 5 patients Home User, Revisit history display, Billing blank
 
 WHATSAPP_LINK = "https://chat.whatsapp.com/J7xfZT2Pf4H8Zzu7eBD7CS"
 
@@ -463,80 +441,6 @@ SHEET_HEADERS = {
   "Expenses": ["ExpenseID","Date","Category","Description","Amount","PaymentMethod","ClinicName","AddedBy","Status"],
   "Appointments": ["AppointmentID","Date","Time","PatientID","PatientName","Phone","Status","ClinicName","CreatedBy","Notes"],
 }
-
-# --- V200 Ultimate: Clean Helpers - No Jugaad - All Features Preserved ---
-def validate_personal_info_ultimate(fv, is_revisit=False):
-    """ONE clean validation, exact missing, preserves all male/female logic"""
-    name=str(st.session_state.get(f"p_name_{fv}","") or "").strip()
-    age=str(st.session_state.get(f"p_age_{fv}","") or "").strip()
-    gender=str(st.session_state.get(f"p_gender_{fv}","") or "").strip()
-    phone=str(st.session_state.get(f"p_phone_{fv}","") or "").strip()
-    address=str(st.session_state.get(f"p_address_{fv}","") or "").strip()
-    if is_revisit and st.session_state.get("revisit_data"):
-        rd=st.session_state.revisit_data
-        if not name: name=str(rd.get("Name","") or "").strip()
-        if not age: age=str(rd.get("Age","") or "").strip()
-        if not gender or gender=="Select": gender=str(rd.get("Gender","") or "").strip()
-        if not phone: phone=str(rd.get("Phone","") or "").strip()
-        if not address: address=str(rd.get("Address","") or "").strip()
-    missing=[]
-    if not name: missing.append("Patient Name*")
-    if not age: missing.append("Age*")
-    else:
-        try:
-            a=int(str(age).split()[0])
-            if a<1 or a>120: missing.append("Age* (1-120)")
-        except: missing.append("Age* (number)")
-    if gender=="Select" or not gender: missing.append("Gender*")
-    if not phone: missing.append("Phone*")
-    else:
-        clean=re.sub(r'[^0-9]', '', phone)
-        if len(clean)<10: missing.append("Phone* (10+ digits)")
-    if not address: missing.append("Address*")
-    elif len(address)<5: missing.append("Address* (5+ chars)")
-    return missing, {"name":name,"age":age,"gender":gender,"phone":phone,"address":address}
-
-def search_patient_ultimate(query, clinic_name=""):
-    """ONE loop, seen dict, dash logic, preserves full history chain"""
-    if not query or len(query.strip())<2: return []
-    q=query.strip().lower()
-    q_dash=q.replace(" ", "-").replace("_", "-")
-    q_nodash=q.replace("-", "").replace(" ", "").replace("_","")
-    try: records=get_all_records_cached("New_patient")
-    except:
-        try: records=_get_all_records_cached_fast("New_patient")
-        except: records=[]
-    if clinic_name:
-        records=[r for r in records if str(r.get("ClinicName","")).lower()==str(clinic_name).lower()]
-    seen={}; uniq=[]
-    for r in records:
-        pid=str(r.get("PatientID","")).lower()
-        name=str(r.get("Name","")).lower()
-        phone=str(r.get("Phone","")).lower()
-        pid_nodash=pid.replace("-", "").replace(" ", "").replace("_","")
-        match=False
-        if q in pid or q in name or q in phone: match=True
-        elif q_dash in pid or q_dash==pid: match=True
-        elif q_nodash and q_nodash in pid_nodash: match=True
-        elif q in pid_nodash: match=True
-        if match:
-            key=str(r.get("PatientID","")).strip()
-            if key and key not in seen:
-                seen[key]=True
-                uniq.append(r)
-    return uniq[:50]
-
-def check_capacity_ultimate(limit=950):
-    if "capacity_used" not in st.session_state:
-        st.session_state.capacity_used=0
-    st.session_state.capacity_used+=1
-    if st.session_state.capacity_used>=940:
-        st.warning(f"Capacity {st.session_state.capacity_used}/{limit} - New chat needed")
-    if st.session_state.capacity_used>=limit:
-        st.error("950 Limit - New chat")
-        st.stop()
-
-
 ALL_SHEETS = list(SHEET_HEADERS.keys())
 # Section division for App Admin
 GENERAL_SHEETS = ["UserSignups", "PermissionGranted", "Articles", "Feedback"]
@@ -1405,7 +1309,7 @@ def save_to_local_csv(sheet_name, data_dict):
     # Try CSV file as secondary - don't fail if it doesn't work
     try:
       import os, csv
-      # V200 Ultimate: File IO removed - os.makedirs("/tmp/herbal_backup", exist_ok=True) # REMOVED
+      os.makedirs("/tmp/herbal_backup", exist_ok=True)
       file_path = f"/tmp/herbal_backup/{sheet_name}.csv"
       file_exists = os.path.exists(file_path)
       # Get headers
@@ -1590,7 +1494,7 @@ def _get_all_records_cached_fast(sheet_name):
       return []
     headers = vals[0]
     # V203 FIX 2 & 1e: Increased to 1000 for New_patient to show all patients on date 1 and 2 - previously 200 caused missing patients
-    max_rows = 300 if sheet_name == "New_patient" else 150  # V200 Ultimate: 1000->300 for speed
+    max_rows = 1000 if sheet_name == "New_patient" else 200
     records = []
     for row in vals[1:max_rows+1]:
       if not any(row):
@@ -6037,15 +5941,7 @@ def temperament_quiz_page():
 
 
 def main():
-  # V200 Ultimate: Capacity 950 tracker
-  if "capacity_used" not in st.session_state:
-      st.session_state.capacity_used=0
-  st.session_state.capacity_used+=1
-  if st.session_state.capacity_used>=940:
-      st.warning(f"Capacity {st.session_state.capacity_used}/950 - New chat")
-  if st.session_state.capacity_used>=950:
-      st.error("950 Limit"); st.stop()
-  # V209.6.10 Fix: Prevent refresh loop
+  # V209.6.10 Fix: Prevent refresh loop and hang on sign-in
   if "logged_in" not in st.session_state:
     st.session_state.logged_in=False
     st.session_state.current_page="clinic_login"
